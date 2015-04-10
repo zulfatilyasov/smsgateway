@@ -2,5 +2,10 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "mongodb": {
+    "name": "mongodb",
+    "database": "smsgateway",
+    "connector": "mongodb"
   }
 }

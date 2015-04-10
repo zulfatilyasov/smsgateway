@@ -1,5 +1,5 @@
 {
-  "name": "sms-gateway",
+  "name": "sms-gateway-client",
   "version": "1.0.0",
   "scripts": {
     "build": "webpack -p --config webpack.production.config.js --progress",
@@ -9,6 +9,7 @@
     "autoprefixer-loader": "~1.2.0",
     "babel-core": "^5.0.10",
     "babel-loader": "^5.0.0",
+    "babel-runtime": "^5.0.12",
     "css-loader": "~0.9.1",
     "es6-loader": "^0.2.0",
     "file-loader": "~0.8.1",
@@ -19,15 +20,23 @@
     "react-hot-loader": "^1.2.4",
     "react-router": "^0.13.2",
     "style-loader": "~0.9.0",
+    "stylus-loader": "^1.1.0",
     "url-loader": "^0.5.5",
     "webpack": "^1.8.1",
     "webpack-dev-middleware": "^1.0.11",
     "webpack-dev-server": "~1.8.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://zulfatilyasov@bitbucket.org/zulfatilyasov/smsgateway.git"
+  },
   "dependencies": {
     "flux": "^2.0.1",
     "lodash": "^3.6.0",
+    "promise": "^7.0.0",
     "react": "^0.13.1",
-    "react-router": "^0.13.2"
+    "react-router": "^0.13.2",
+    "superagent": "^1.1.0",
+    "superagent-promise": "^0.2.0"
   }
 }

@@ -1,6 +1,5 @@
-To Start:
-```
-npm install
-npm start
-open localhost:8080/webpack-dev-server/bundle
-```
+to start development:
+npm run dev
+
+to build for production
+npm run build

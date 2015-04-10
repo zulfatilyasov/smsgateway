@@ -1,16 +1,36 @@
-var AppDispatcher = require('../AppDispatcher');
-var UserContstants = require('../constants/UserConstants.js');
+import AppDispatcher from '../AppDispatcher';
+import UserContstants from '../constants/UserConstants.js';
+import apiClient  from '../services/apiclient.es6';
 
 var UserActions = {
 
-    login:() => {
-        console.log('login action');
+    login: (creds) => {
+        apiClient.login(creds.email, creds.password)
+            .then(resp => {
+                var data = resp.body;
+
+                AppDispatcher.handleServerAction({
+                    actionType: UserContstants.LOG_IN_SUCCESS,
+                    data: data
+                });
+
+                var accessToken = data.id;
+                apiClient.setToken(accessToken);
+
+            }, err => {
+                AppDispatcher.handleServerAction({
+                    actionType: UserContstants.LOG_IN_FAIL,
+                    error: err
+                });
+            });
+
         AppDispatcher.handleViewAction({
-            actionType: UserContstants.LOG_IN
+            actionType: UserContstants.LOG_IN,
+            creds: creds
         });
     },
 
-    logout:() => {
+    logout: () => {
         AppDispatcher.handleViewAction({
             actionType: UserContstants.LOG_OUT
         });

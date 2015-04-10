@@ -9,10 +9,9 @@ var Menu = mui.Menu;
 require('./custom.less');
 var IconButton = mui.IconButton;
 var PageWithNav = require('./page-with-nav.jsx');
-var LoginPage = require('./pages/login-page.jsx');
+var LoginPage = require('./components/login/login-page.jsx');
 var userStore = require('./stores/UserStore.es6');
 var userActions = require('./actions/UserActions.es6');
-//require('../static/font-styles.css');
 
 var getState = function () {
     return {
@@ -24,7 +23,7 @@ var Master = React.createClass({
 
     mixins: [Router.State],
 
-    getInitialState: function () {
+    getInitialState(){
         return getState();
     },
 
@@ -40,11 +39,11 @@ var Master = React.createClass({
         this.setState(getState());
     },
 
-    _handleLogout: function () {
+    _handleLogout(){
         userActions.logout();
     },
 
-    render: function () {
+    render() {
 
         // var title =
         //   this.context.router.isActive('get-started') ? 'Get Started' :
