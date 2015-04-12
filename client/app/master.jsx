@@ -6,7 +6,6 @@ var AppBar = mui.AppBar;
 var AppCanvas = mui.AppCanvas;
 var FontIcon = mui.FontIcon;
 var Menu = mui.Menu;
-require('./custom.less');
 var IconButton = mui.IconButton;
 var PageWithNav = require('./page-with-nav.jsx');
 var LoginPage = require('./components/login/login-page.jsx');
@@ -51,10 +50,10 @@ var Master = React.createClass({
         //   this.context.router.isActive('components') ? 'Components' : '';
 
         var menuItems = [
-            {route: 'dashboard', text: 'Dashboard'},
-            {route: 'messages', text: 'Messages'},
-            {route: 'contacts', text: 'Contacts'},
-            {route: 'settings', text: 'Settings'}
+            {route: 'dashboard', text: 'Dashboard', iconClassName:'icon icon-dashboard'},
+            {route: 'messages', text: 'Messages',iconClassName:'icon icon-chat'},
+            {route: 'contacts', text: 'Contacts',iconClassName:'icon icon-users'},
+            {route: 'settings', text: 'Settings',iconClassName:'icon icon-settings'}
         ];
 
         var githubButton = (

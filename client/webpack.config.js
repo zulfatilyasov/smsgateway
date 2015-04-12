@@ -37,7 +37,7 @@ module.exports = {
             loader: 'url-loader?limit=8192'
         },{
             test: /\.styl$/,
-            loader: 'style!css!stylus'
+            loader: 'style!css!stylus?paths=node_modules/jeet/stylus/'
         }]
     },
     resolve: {

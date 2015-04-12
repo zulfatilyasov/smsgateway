@@ -1,12 +1,21 @@
 import React from 'react';
 import {Paper, TextField, RaisedButton, FlatButton} from 'material-ui';
 import userActions  from '../../actions/UserActions.es6';
+import userStore from '../../stores/UserStore.es6'
 import Spinner from '../spinner/spinner.jsx'
 import style from './login.styl'
 
 function validateEmail(email) {
     var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
     return re.test(email);
+}
+
+function getState () {
+    return {
+        inProgress:userStore.InProgress,
+        hasError:userStore.AuthError.hasError,
+        errorMessage:userStore.AuthError.message
+    };
 }
 
 var Login = React.createClass({
@@ -18,8 +27,22 @@ var Login = React.createClass({
             emailValid: false,
             passwordValid: false,
             emailErrorText: '',
-            passwordErrorText: ''
+            passwordErrorText: '',
+            inProgress: userStore.InProgress,
+            error:''
         };
+    },
+    
+    componentDidMount: function() {
+        userStore.addChangeListener(this._onChange);
+    },
+    
+    componentWillUnmount: function() {
+        userStore.removeChangeListener(this._onChange);
+    },
+    
+    _onChange: function() {
+        this.setState(getState());
     },
 
     _handleEmailBlur: function (e) {
@@ -42,20 +65,25 @@ var Login = React.createClass({
     },
 
     _handleEmailChange: function (e) {
-        this.setState({email: e.target.value});
+        this.email = e.target.value;
     },
 
     _handlePasswordChange: function (e) {
+        this.password = e.target.value;
+
         var isValid = e.target.value.length;
-        this.setState({password: e.target.value, passwordValid: isValid});
+
+        if(!this.state.passwordValid){
+            this.setState({password: e.target.value, passwordValid: isValid});
+        }
     },
 
     _handleLogin: function (e) {
         e.preventDefault();
 
         var creds = {
-            email: this.state.email,
-            password: this.state.password
+            email: this.email,
+            password: this.password
         };
 
         if (this.state.emailValid && this.state.passwordValid) {
@@ -64,6 +92,12 @@ var Login = React.createClass({
     },
 
     render: function () {
+        var className = this.state.inProgress ? 'hide' : '';
+        var loginButtonClass = 'login-button ' + className;
+
+        var errorClasses = 'auth-error';
+        errorClasses += this.state.hasError ? '' : ' hide';
+
         return (
             <div className="login-wrap">
                 <h1 className="login-header">SMS Gateway</h1>
@@ -71,13 +105,13 @@ var Login = React.createClass({
                 <form className="login-form" onSubmit={this._handleLogin}>
                     <Paper zDepth={1}>
                         <div className="padded">
-                            <Spinner/>
 
                             <TextField
                                 hintText="Email"
                                 errorText={this.state.emailErrorText}
                                 floatingLabelText="Enter your email"
                                 onChange={this._handleEmailChange}
+                                ref="emailInput"
                                 onBlur={this._handleEmailBlur}/>
 
                             <TextField
@@ -88,18 +122,27 @@ var Login = React.createClass({
                                 onChange={this._handlePasswordChange}
                                 onBlur={this._handlePasswordBlur}/>
 
-                            <RaisedButton
-                                primary={true}
-                                disabled={!this.state.emailValid || !this.state.passwordValid}
-                                onClick={this._handleLogin}
-                                className="login-button"
-                                label="Login"/>
 
-                            <div className="secondary-buttons">
+                            <div className="button-wrap">
+
+                                <div className={errorClasses}>
+                                    {this.state.errorMessage}
+                                </div>
+
+                                <Spinner width="40px" height="40px" show={this.state.inProgress}/>
+
+                                <RaisedButton
+                                    primary={true}
+                                    disabled={!this.state.emailValid || !this.state.passwordValid}
+                                    onClick={this._handleLogin}
+                                    className={loginButtonClass}
+                                    label="Login"/>
+                            </div>
+
+                            <div className='secondary-buttons'>
                                 <FlatButton secondary={true} className="register-button" label="Register"/>
                                 <FlatButton secondary={true} className="forgot-button" label="Forgot the password?"/>
                             </div>
-
                         </div>
                     </Paper>
                 </form>

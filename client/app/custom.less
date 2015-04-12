@@ -1,83 +1,106 @@
 @import "../node_modules/material-ui/src/less/scaffolding.less";
 @import "../node_modules/material-ui/src/less/components.less";
 @import "page-with-nav.less";
-
 a {
-  color: @accent-1-color;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
-}
-@navwidth : 230px;
-/* App Specific Styles */
-
-.mui-app-canvas {
-  height: 100%;
-  .mui-app-content-canvas{
-    height: 100%;
-  }
-  .page-with-nav-secondary-nav{
-    height: 100%;
-    top: 0px;
-    padding-top: 64px;
-    border-right: 1px solid #eee;
-    width: @navwidth;
-
-  }
-  .page-with-nav-content{
-    border-left: none;
-    margin-left: @navwidth;
-  }
-  .mui-app-bar {
-    .logout-icon-button {
-      .mui-tooltip {
-        left: -5px;
-        top: -25px;
-        padding: 2px 7px;
-        .mui-tooltip-label {
-          font-size: 14px;
-        }
-      }
-      float: right;
-      margin-right: -14px;
+    color: @accent-1-color;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
     }
-  }
+}
+
+@navwidth: 230px;
+/* App Specific Styles */
+.mui-app-canvas {
+    height: 100%;
+    .mui-app-content-canvas {
+        height: 100%;
+    }
+    .page-with-nav-secondary-nav {
+        height: 100%;
+        top: 0px;
+        padding-top: 64px;
+        border-right: 1px solid #eee;
+        width: @navwidth;
+    }
+    .page-with-nav-content {
+        border-left: none;
+        margin-left: @navwidth;
+    }
+    .mui-app-bar {
+        .logout-icon-button {
+            .mui-tooltip {
+                left: -5px;
+                top: -25px;
+                padding: 2px 7px;
+                .mui-tooltip-label {
+                    font-size: 14px;
+                }
+            }
+            float: right;
+            margin-right: -14px;
+        }
+    }
+}
+
+.button-icon {
+    color: #fff;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 12px;
+    line-height: 36px;
+}
+
+.mui-menu-item {
+    font-size: 1.2em;
+    .icon {
+        color: rgba(0, 0, 0, 0.54);
+    }
+}
+
+.mui-menu * {
+    transition: none;
+}
+
+.mui-is-selected {
+    .icon {
+        color: #ff4081;
+    }
 }
 
 .mui-app-bar {
-  .mui-app-bar-navigation-icon-button {
-    display: none;
-  }
+    .mui-app-bar-navigation-icon-button {
+        display: none;
+    }
 }
 
 .padded {
-  padding: @desktop-gutter;
+    padding: @desktop-gutter;
 }
 
-
 .center-both {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
 }
 
 .mui-font-icon {
-  color: rgba(255, 255, 255, 0.87);
-  &:hover {
-    color: #fff;
-  }
+    color: rgba(255, 255, 255, 0.87);
+    &:hover {
+        color: #fff;
+    }
 }
 
 .logo {
-  cursor: pointer;
-  .mui-font-style-headline;
-  .mui-text-full-white;
-  line-height: @app-bar-height;
-  .mui-font-weight-light;
-  background-color: @primary-1-color;
-  padding-left: @desktop-gutter;
-  padding-top: 0;
-  margin-bottom: @desktop-gutter-mini;
+    cursor: pointer;
+    .mui-font-style-headline;
+    .mui-text-full-white;
+    line-height: @app-bar-height;
+    .mui-font-weight-light;
+    background-color: @primary-1-color;
+    padding-left: @desktop-gutter;
+    padding-top: 0;
+    margin-bottom: @desktop-gutter-mini;
 }
