@@ -1,5 +1,7 @@
 var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
-  SEND_MESSAGE : null
+    SEND: null,
+    SEND_SUCCESS: null,
+    SEND_FAIL: null
 });

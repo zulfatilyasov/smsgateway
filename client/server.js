@@ -10,10 +10,11 @@ var app = new WebpackDevServer(webpack(config), {
 app.use(function(req, res) {
     console.log(req.url);
 });
-app.listen(3000, 'localhost', function (err, result) {
+var port = 3500;
+app.listen(port, 'localhost', function (err, result) {
     if (err) {
         console.log(err);
     }
 
-    console.log('Listening at localhost:3000');
+    console.log('Listening at localhost:' + port);
 });

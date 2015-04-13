@@ -28,6 +28,16 @@ class ApiClient {
             .end();
     }
 
+    sendMessage(message){
+        console.log(this.accessToken);
+        return request
+            .post(this.prefix + '/messages')
+            .send(message)
+            .set('Authorization', this.accessToken)
+            .end();
+    }
+
 }
 
+var devHost = 'http://192.168.0.2:3000';
 export default new ApiClient('', '/api');

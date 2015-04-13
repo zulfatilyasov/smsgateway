@@ -1,0 +1,23 @@
+{
+  "name": "Message",
+  "plural": "messages",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "properties": {
+    "userId": {
+      "type": "object",
+      "required": true
+    },
+    "text": {
+      "type": "string",
+      "required": true
+    },
+    "recipient": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}
