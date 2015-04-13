@@ -14,9 +14,6 @@ var UserActions = {
                         actionType: UserContstants.LOG_IN_SUCCESS,
                         data: data
                     });
-
-                    var accessToken = data.id;
-                    apiClient.setToken(accessToken);
                 }, loginDelay)
 
             }, err => {

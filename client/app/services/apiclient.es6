@@ -7,8 +7,8 @@ class ApiClient {
         this._pendingRequests = {};
     }
 
-    setToken(token) {
-        this.accessToken = token;
+    _getToken(){
+        return localStorage.getItem('sg-token');
     }
 
     _abortRequest(key) {
@@ -33,7 +33,7 @@ class ApiClient {
         return request
             .post(this.prefix + '/messages')
             .send(message)
-            .set('Authorization', this.accessToken)
+            .set('Authorization', this._getToken())
             .end();
     }
 
