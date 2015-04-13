@@ -30,4 +30,4 @@ class ApiClient {
 
 }
 
-export default new ApiClient('http://localhost:4000', '/api');
+export default new ApiClient('', '/api');
