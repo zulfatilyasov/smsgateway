@@ -1,106 +1,149 @@
 @import "../node_modules/material-ui/src/less/scaffolding.less";
 @import "../node_modules/material-ui/src/less/components.less";
 @import "page-with-nav.less";
+
 a {
-    color: @accent-1-color;
-    text-decoration: none;
-    &:hover {
-        text-decoration: underline;
-    }
+  color: @accent-1-color;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-@navwidth: 230px;
+@app-bar-height: 165px;
+@desktop-keyline-increment: 44px;
+@easing-cubic:cubic-bezier(0.215, 0.61, 0.355, 1);
+@navwidth: 140px;
 /* App Specific Styles */
+
 .mui-app-canvas {
+  height: 100%;
+  background: rgba(204, 204, 204, 0.1);
+  .mui-app-content-canvas {
+    margin-top: -140px;
     height: 100%;
-    .mui-app-content-canvas {
-        height: 100%;
+  }
+  .mui-paper > .mui-paper-container{
+    height: auto;
+  }
+  .page-with-nav-secondary-nav {
+    display: none;
+    height: 100%;
+    top: 0px;
+    padding-top: 24px;
+    //border-right: 1px solid #eee;
+    width: @navwidth;
+  }
+  .page-with-nav-content {
+    border-left: none;
+    margin-left: 0;
+    @media screen and (min-width: 768){
+      margin-left: @navwidth;
     }
-    .page-with-nav-secondary-nav {
-        height: 100%;
-        top: 0px;
-        padding-top: 64px;
-        border-right: 1px solid #eee;
-        width: @navwidth;
-    }
-    .page-with-nav-content {
-        border-left: none;
-        margin-left: @navwidth;
-    }
-    .mui-app-bar {
-        .logout-icon-button {
-            .mui-tooltip {
-                left: -5px;
-                top: -25px;
-                padding: 2px 7px;
-                .mui-tooltip-label {
-                    font-size: 14px;
-                }
-            }
-            float: right;
-            margin-right: -14px;
+  }
+  .mui-app-bar {
+    .logout-icon-button {
+      font-size: 18px;
+      .mui-tooltip {
+        left: -5px;
+        top: -25px;
+        padding: 2px 7px;
+        .mui-tooltip-label {
+          font-size: 14px;
         }
+      }
+      float: right;
+      margin-right: -14px;
     }
+  }
 }
 
 .button-icon {
-    color: #fff;
-    height: 100%;
-    display: inline-block;
-    vertical-align: middle;
-    padding-left: 12px;
-    line-height: 36px;
+  color: #fff;
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 12px;
+  line-height: 36px;
 }
 
-.mui-menu-item {
-    font-size: 1.2em;
-    .icon {
-        color: rgba(0, 0, 0, 0.54);
+.mui-menu{
+  background-color: rgba(255, 255, 255, 0);
+  .mui-menu-item {
+    transition: transform 0.5s @easing-cubic;
+
+    -webkit-transform: translateX(0px);
+    -moz-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    -o-transform: translateX(0px);
+    transform: translateX(0px);
+    &:hover:not(.mui-is-disabled){
+      background-color: transparent;
+      -webkit-transform: translateX(5px);
+      -moz-transform: translateX(5px);
+      -ms-transform: translateX(5px);
+      -o-transform: translateX(5px);
+      transform: translateX(5px);
     }
+    font-size: 1em;
+    .icon {
+      color: rgba(0, 0, 0, 0.54);
+      opacity: 1;
+    }
+  }
 }
-
 .mui-menu * {
-    transition: none;
+  transition: none;
 }
 
 .mui-is-selected {
-    .icon {
-        color: #ff4081;
-    }
+  .icon {
+    color: #ff4081;
+  }
 }
 
+.mui-predefined-layout-1 {
+  .mui-app-bar {
+    position: static;
+  }
+}
 .mui-app-bar {
-    .mui-app-bar-navigation-icon-button {
-        display: none;
-    }
+  height: @app-bar-height;
+  background-color: @teal-700;
+  .mui-app-bar-title {
+    font-size: 20px;
+    display: none;
+  }
+  .mui-app-bar-navigation-icon-button {
+  }
 }
 
 .padded {
-    padding: @desktop-gutter;
+  padding: @desktop-gutter;
 }
 
 .center-both {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
 }
 
 .mui-font-icon {
-    color: rgba(255, 255, 255, 0.87);
-    &:hover {
-        color: #fff;
-    }
+  color: rgba(255, 255, 255, 0.87);
+  &:hover {
+    color: #fff;
+  }
 }
 
 .logo {
-    cursor: pointer;
-    .mui-font-style-headline;
-    .mui-text-full-white;
-    line-height: @app-bar-height;
-    .mui-font-weight-light;
-    background-color: @primary-1-color;
-    padding-left: @desktop-gutter;
-    padding-top: 0;
-    margin-bottom: @desktop-gutter-mini;
+  cursor: pointer;
+  .mui-font-style-headline;
+  .mui-text-full-white;
+  line-height: @app-bar-height;
+  .mui-font-weight-light;
+  background-color: @primary-1-color;
+  padding-left: @desktop-gutter;
+  padding-top: 0;
+  margin-bottom: @desktop-gutter-mini;
 }

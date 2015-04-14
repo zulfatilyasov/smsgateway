@@ -11,6 +11,8 @@ var PageWithNav = require('./page-with-nav.jsx');
 var LoginPage = require('./components/login/login-page.jsx');
 var userStore = require('./stores/UserStore.es6');
 var userActions = require('./actions/UserActions.es6');
+var FloatingActionButton = mui.FloatingActionButton;
+var MenuButton = require('./components/menu-button/menu-button.jsx');
 
 var getState = function () {
     return {
@@ -64,15 +66,18 @@ var Master = React.createClass({
         );
 
         return (
-            <AppCanvas predefinedLayout={1}>
+            <AppCanvas>
 
                 <AppBar
                     className="mui-dark-theme"
                     onMenuIconButtonTouchTap={this._onMenuIconButtonTouchTap}
+                    showMenuIconButton={false}
                     title="SMS Gateway"
                     zDepth={0}>
                     {githubButton}
                 </AppBar>
+
+                <MenuButton/>
 
                 <PageWithNav menuItems={menuItems}/>
 

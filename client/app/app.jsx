@@ -1,4 +1,4 @@
-import muiStyles from './custom.less' 
+import muiStyles from './custom.less'
 import appStyles from './app.styl'
 
 var React = require('react'),

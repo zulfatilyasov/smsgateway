@@ -39,5 +39,5 @@ class ApiClient {
 
 }
 
-var devHost = 'http://192.168.0.2:3000';
-export default new ApiClient('', '/api');
+var devHost = 'http://192.168.0.2:3200';
+export default new ApiClient(devHost, '/api');

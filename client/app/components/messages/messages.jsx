@@ -1,47 +1,27 @@
 import React from 'react';
-import {TextField, FontIcon, RaisedButton} from 'material-ui';
+import {TextField,Tabs, Tab, Paper, FontIcon, RaisedButton} from 'material-ui';
+import Table from '../table/table.jsx';
 import styles from './messages.styl';
+import FormElements from './form-inner.jsx';
 import messageActions from '../../actions/MessageActions.es6';
 
 class Messages extends React.Component {
-    _handlePhoneChange(e){
-      this.recipientPhone = e.target.value;
-    }
-
-    _handleTextChange(e){
-      this.text = e.target.value;
-    }
-
-    _handleSendMessage(){
-      var message = {
-        text: this.text,
-        recipient:this.recipientPhone
-      };
-
-      messageActions.send(message);
+    _onActive(){
+        this.context.router.transitionTo(tab.props.route);
     }
     render() {
         return (
-
-          <form className="message-form">
-            <TextField
-              hintText="Phone number"
-              className="phoneInput"
-              onChange={this._handlePhoneChange.bind(this)}
-              floatingLabelText="Enter phone number" />
-
-            <TextField
-              hintText="Message text"
-              onChange={this._handleTextChange.bind(this)}
-              className="msgInput"
-              multiLine={true} />
-
-
-            <RaisedButton className="sendButton" onClick={this._handleSendMessage.bind(this)} linkButton={true} secondary={true} >
-              <FontIcon className="button-icon icon-paperplane"/>
-              <span className="mui-raised-button-label example-icon-button-label">Send</span>
-            </RaisedButton>
-          </form>
+            <div>
+                <Paper zDepth={1}>
+                    <form className="message-form">
+                        <h2>Outcoming messages</h2>
+                        <h4>All messages list</h4>
+                    </form>
+                    <div className="messages-list">
+                        <Table />
+                    </div>
+                </Paper>
+            </div>
         );
     }
 }
