@@ -2,8 +2,6 @@
     padding: 20px 0
     background-color: #009688
     color:#fff
-    .pad
-        padding-top: 0
 
     h4,h2,h3
         margin-left: 24px
@@ -13,21 +11,40 @@
         padding-top: 0
         color:#B2DFDB;
 
+
+.pad
+    padding-top: 0
+
+.formInner
     .button-icon
         font-size 16px
+        color:rgba(0, 0, 0, 0.87)
 
-    .phoneInput
-        col(1 / 3)
-        max-width: 200px
+    .input
+        min-width: 200px
+        col(0.3)
 
     .msgInput
-        col(2 / 3)
+        col(0.5)
 
     .button-icon
         bottom 2px
 
-    .sendButton
-        cf()
+    .button-wrap
+        position: relative
         width: 110px;
-        text-align center
-        margin-top 25px
+        col(0.2)
+        .spinner
+            margin-left: -17px
+        .sendButton
+            text-align center
+            margin-top 25px
+            transform scale(1)
+            opacity 1
+            z-index 5
+            transition: all 0.2s ease-in
+            &.hide
+                opacity 0
+                transform scale(0.5),
+                z-index -1
+

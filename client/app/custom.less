@@ -16,15 +16,21 @@ a {
 @navwidth: 140px;
 @left-nav-width: 250px;
 
-@primary-1-color:#009688;
-@flat-button-secondary-hover-color:#B2DFDB;
-@raised-button-primary-hover-color:#009688;
-@raised-button-primary-color:#00796B;
+@primary-1-color: #009688;
+@flat-button-secondary-hover-color: #B2DFDB;
+@raised-button-primary-hover-color: #00796B;
+@raised-button-primary-color: #009688;
 
-div.logo{
+div.logo {
   background-color: #00796b;
   line-height: 85px;
   padding-top: 80px;
+}
+
+.mui-raised-button {
+  .mui-raised-button-label {
+    top: 2px;
+  }
 }
 
 .mui-app-canvas {
@@ -107,7 +113,11 @@ div.logo{
       -o-transform: translateX(5px);
       transform: translateX(5px);
     }
-    font-size: 1em;
+    color: #727272;
+    &.mui-is-selected {
+      color: #212121;
+    }
+    font-size: 1.1em;
     .icon {
       color: rgba(0, 0, 0, 0.54);
       opacity: 1;

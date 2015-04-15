@@ -41,12 +41,13 @@ class MenuButton extends React.Component {
 
     render() {
         var style = {top: this.state.top, left: this.state.left};
+        var fill = '#727272';
 
         return (
             <div style={style} className="menu-button">
                 <FloatingActionButton iconClassName="" onClick={this.props.onMenuButtonClick}>
                     <SvgIcon>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                        <path fill={fill} d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                     </SvgIcon>
                 </FloatingActionButton>
             </div>

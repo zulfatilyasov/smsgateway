@@ -22,10 +22,10 @@ var AppLeftNav = React.createClass({
         var header = <div className="logo" onClick={this._onHeaderClick}>SMS Gateway</div>;
 
         this.menuItems = [
-            {route: 'messages', text: 'Messages'},
-            {route: 'contacts', text: 'Contacts'},
-            {route: 'settings', text: 'Settings'},
-            {route: 'logout', onClick: this._onLogoutClick, text: 'Logout'}
+            {route: 'messages', text: 'Messages',iconClassName:'icon icon-chat'},
+            {route: 'contacts', text: 'Contacts',iconClassName:'icon icon-users'},
+            {route: 'settings', text: 'Settings',iconClassName:'icon icon-cog'},
+            {route: 'logout', onClick: this._onLogoutClick, text: 'Logout',iconClassName:'icon icon-lock'}
         ];
 
         return (
