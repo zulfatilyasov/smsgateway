@@ -12,6 +12,7 @@ var AppRoutes = (
         <Route name="messages" handler={Messages}/>
         <Route name="settings" handler={Settings}/>
         <Route name="contacts" handler={Contacts}/>
+        <Route name="logout"/>
         <DefaultRoute handler={Messages}/>
     </Route>
 );

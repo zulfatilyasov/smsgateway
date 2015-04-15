@@ -13,6 +13,7 @@ var userStore = require('./stores/UserStore.es6');
 var userActions = require('./actions/UserActions.es6');
 var FloatingActionButton = mui.FloatingActionButton;
 var MenuButton = require('./components/menu-button/menu-button.jsx');
+var AppLeftNav = require('./app-left-nav.jsx');
 
 var getState = function () {
     return {
@@ -40,8 +41,8 @@ var Master = React.createClass({
         this.setState(getState());
     },
 
-    _handleLogout(){
-        userActions.logout();
+    _onMenuIconButtonTouchTap() {
+        this.refs.leftNav.toggle();
     },
 
     render() {
@@ -58,12 +59,6 @@ var Master = React.createClass({
             {route: 'settings', text: 'Settings',iconClassName:'icon icon-settings'}
         ];
 
-        var githubButton = (
-            <IconButton
-                onClick={this._handleLogout}
-                tooltip="Logout"
-                className="logout-icon-button mui-font-icon icon-exit"/>
-        );
 
         return (
             <AppCanvas>
@@ -74,10 +69,11 @@ var Master = React.createClass({
                     showMenuIconButton={false}
                     title="SMS Gateway"
                     zDepth={0}>
-                    {githubButton}
                 </AppBar>
 
-                <MenuButton/>
+                <AppLeftNav ref="leftNav" />
+
+                <MenuButton onMenuButtonClick={this._onMenuIconButtonTouchTap}/>
 
                 <PageWithNav menuItems={menuItems}/>
 
@@ -87,11 +83,8 @@ var Master = React.createClass({
 
             </AppCanvas>
         );
-    },
-
-    _onMenuIconButtonTouchTap: function () {
-        this.refs.leftNav.toggle();
     }
+
 
 });
 

@@ -12,10 +12,10 @@ class Messages extends React.Component {
     render() {
         return (
             <div>
-                <Paper zDepth={1}>
+                <Paper zDepth={2}>
                     <form className="message-form">
-                        <h2>Outcoming messages</h2>
-                        <h4>All messages list</h4>
+                        <h2>Messages</h2>
+                        <h4>Outcoming</h4>
                     </form>
                     <div className="messages-list">
                         <Table />

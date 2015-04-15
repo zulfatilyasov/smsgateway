@@ -4,11 +4,11 @@ import styles from './menu-button.styl'
 
 class MenuButton extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             top: 136,
-            left: this._getLeftPosition()
+            left: 155
         }
     }
     _getLeftPosition(){
@@ -22,7 +22,7 @@ class MenuButton extends React.Component {
         if (!pos) {
             return
         }
-        var newLeft = pos.left / 2;
+        return pos.left / 2;
     }
 
     handleResize(e) {
@@ -30,6 +30,7 @@ class MenuButton extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({left: this._getLeftPosition()});
         window.addEventListener('resize', this.handleResize.bind(this));
     }
 
@@ -43,7 +44,7 @@ class MenuButton extends React.Component {
 
         return (
             <div style={style} className="menu-button">
-                <FloatingActionButton iconClassName="">
+                <FloatingActionButton iconClassName="" onClick={this.props.onMenuButtonClick}>
                     <SvgIcon>
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                     </SvgIcon>

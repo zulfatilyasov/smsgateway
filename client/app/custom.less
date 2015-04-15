@@ -12,9 +12,20 @@ a {
 
 @app-bar-height: 165px;
 @desktop-keyline-increment: 44px;
-@easing-cubic:cubic-bezier(0.215, 0.61, 0.355, 1);
+@easing-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 @navwidth: 140px;
-/* App Specific Styles */
+@left-nav-width: 250px;
+
+@primary-1-color:#009688;
+@flat-button-secondary-hover-color:#B2DFDB;
+@raised-button-primary-hover-color:#009688;
+@raised-button-primary-color:#00796B;
+
+div.logo{
+  background-color: #00796b;
+  line-height: 85px;
+  padding-top: 80px;
+}
 
 .mui-app-canvas {
   height: 100%;
@@ -23,8 +34,19 @@ a {
     margin-top: -140px;
     height: 100%;
   }
-  .mui-paper > .mui-paper-container{
-    height: auto;
+  .mui-left-nav-menu {
+    z-index: 300;
+    .mui-paper {
+      .mui-paper-container {
+        height: 100%;
+      }
+    }
+  }
+  .mui-paper {
+    .mui-paper-container {
+
+      height: auto;
+    }
   }
   .page-with-nav-secondary-nav {
     display: none;
@@ -37,7 +59,7 @@ a {
   .page-with-nav-content {
     border-left: none;
     margin-left: 0;
-    @media screen and (min-width: 768){
+    @media screen and (min-width: 768) {
       margin-left: @navwidth;
     }
   }
@@ -67,7 +89,7 @@ a {
   line-height: 36px;
 }
 
-.mui-menu{
+.mui-menu {
   background-color: rgba(255, 255, 255, 0);
   .mui-menu-item {
     transition: transform 0.5s @easing-cubic;
@@ -77,7 +99,7 @@ a {
     -ms-transform: translateX(0px);
     -o-transform: translateX(0px);
     transform: translateX(0px);
-    &:hover:not(.mui-is-disabled){
+    &:hover:not(.mui-is-disabled) {
       background-color: transparent;
       -webkit-transform: translateX(5px);
       -moz-transform: translateX(5px);
@@ -92,6 +114,7 @@ a {
     }
   }
 }
+
 .mui-menu * {
   transition: none;
 }
@@ -107,6 +130,7 @@ a {
     position: static;
   }
 }
+
 .mui-app-bar {
   height: @app-bar-height;
   background-color: @teal-700;
