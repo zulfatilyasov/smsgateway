@@ -4,7 +4,7 @@ import mui, {Paper} from 'material-ui'
 class Settings extends React.Component {
     render() {
         return (
-            <Paper zDepth={2}>
+            <Paper zDepth={1}>
                 <form className="message-form">
                     <h2>Settings</h2>
                     <h4>Subscription and others</h4>

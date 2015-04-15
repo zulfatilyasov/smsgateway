@@ -4,7 +4,7 @@ import mui, {Paper} from 'material-ui'
 class Contacts extends React.Component {
     render() {
         return (
-            <Paper zDepth={2}>
+            <Paper zDepth={1}>
                 <form className="message-form">
                     <h2>Contacts list</h2>
                     <h4>Not yet implemented</h4>

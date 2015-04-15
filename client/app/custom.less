@@ -42,15 +42,13 @@ div.logo {
   }
   .mui-left-nav-menu {
     z-index: 300;
-    .mui-paper {
-      .mui-paper-container {
-        height: 100%;
-      }
-    }
   }
   .mui-paper {
+    &.mui-raised-button .mui-paper-container,
+    &.mui-left-nav-menu .mui-paper-container {
+      height: 100%;
+    }
     .mui-paper-container {
-
       height: auto;
     }
   }

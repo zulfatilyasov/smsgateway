@@ -90,6 +90,13 @@ var Login = React.createClass({
             userActions.login(creds);
         }
     },
+    _handePasswordRecovery:function(){
+        console.log('forgot password clicked');
+    },
+
+    _handleRegister:function(){
+        console.log('register clicked');
+    },
 
     render: function () {
         var className = this.state.inProgress ? 'hide' : '';
@@ -140,8 +147,8 @@ var Login = React.createClass({
                             </div>
 
                             <div className='secondary-buttons'>
-                                <FlatButton secondary={true} className="register-button" label="Register"/>
-                                <FlatButton secondary={true} className="forgot-button" label="Forgot the password?"/>
+                                <FlatButton linkButton={true} secondary={true} className="register-button" onClick={this._handleRegister} label="Register"/>
+                                <FlatButton linkButton={true} secondary={true} className="forgot-button" onClick={this._handePasswordRecovery} label="Forgot the password?"/>
                             </div>
                         </div>
                     </Paper>
