@@ -73,7 +73,7 @@ class FormInner extends React.Component {
 
                         <RaisedButton className={sendButtonClass} onClick={this._handleSendMessage.bind(this)} linkButton={true}>
                             <FontIcon className="button-icon icon-paperplane"/>
-                            <span className="mui-raised-button-label example-icon-button-label">Send</span>
+                            <span className="mui-raised-button-label icon-button-label">Send</span>
                         </RaisedButton>
                     </div>
                 </div>

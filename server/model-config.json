@@ -8,7 +8,12 @@
     ]
   },
   "User": {
-    "dataSource": "mongodb"
+    "dataSource": "db",
+    "public": false
+  },
+  "user": {
+    "dataSource": "mongodb",
+    "public": true
   },
   "AccessToken": {
     "dataSource": "mongodb",
@@ -29,5 +34,8 @@
   "Message": {
     "dataSource": "mongodb",
     "public": true
+  },
+  "Email": {
+    "dataSource": "emailDataSource"
   }
 }

@@ -7,5 +7,23 @@
     "database": "smsgateway",
     "name": "mongodb",
     "connector": "mongodb"
+  },
+  "emailDataSource": {
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "smtp",
+        "host": "smtp.gmail.com",
+        "secure": true,
+        "port": 465,
+        "tls": {
+          "rejectUnauthorized": false
+        },
+        "auth": {
+          "user": "zulfatkin",
+          "pass": "-z518009"
+        }
+      }
+    ]
   }
 }

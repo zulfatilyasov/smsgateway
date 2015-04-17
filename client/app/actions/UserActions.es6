@@ -4,12 +4,42 @@ import apiClient  from '../services/apiclient.es6';
 
 var loginDelay = 1000;
 var UserActions = {
+    register: (registrationData) => {
+        apiClient.register(registrationData)
+            .then(resp => {
+
+                var data = resp.body;
+                setTimeout(() => {
+                    AppDispatcher.handleServerAction({
+                        actionType: UserContstants.REGISTER_SUCCESS,
+                        data: data
+                    });
+                }, loginDelay);
+
+            }, err => {
+
+                var error  = err.response.body.error;
+                setTimeout(() => {
+                    AppDispatcher.handleServerAction({
+                        actionType: UserContstants.REGISTER_FAIL,
+                        error: error
+                    });
+                }, loginDelay);
+
+            });
+
+        AppDispatcher.handleViewAction({
+            actionType: UserContstants.REGISTER,
+            registrationData: registrationData
+        });
+    },
+
     login: (creds) => {
         apiClient.login(creds.email, creds.password)
             .then(resp => {
                 var data = resp.body;
 
-                setTimeout(() =>{
+                setTimeout(() => {
                     AppDispatcher.handleServerAction({
                         actionType: UserContstants.LOG_IN_SUCCESS,
                         data: data
@@ -17,10 +47,11 @@ var UserActions = {
                 }, loginDelay)
 
             }, err => {
-                setTimeout(()=>{
+                var error  = err.response.body.error;
+                setTimeout(()=> {
                     AppDispatcher.handleServerAction({
                         actionType: UserContstants.LOG_IN_FAIL,
-                        error: err
+                        error: error
                     });
                 }, loginDelay);
             });

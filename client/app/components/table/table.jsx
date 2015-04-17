@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './table.less';
+import classBuilder from 'classnames';
 
 class Table extends React.Component {
     constructor(props) {
@@ -14,9 +15,13 @@ class Table extends React.Component {
         console.log(items);
         for (var i = items.length - 1; i >= 0; i--) {
             var item = items[i];
+            var classNames = classBuilder({
+                success: item.status === 'Sent',
+                fail: item.status === 'Failed'
+            });
             if (item) {
                 rows.push(<tr>
-                    <td data-title="Status" className="status">{item.status}</td>
+                    <td data-title="Status" className={classNames}>{item.status}</td>
                     <td data-title="Contact">{item.contact}</td>
                     <td data-title="Message">{item.message}</td>
                 </tr>);

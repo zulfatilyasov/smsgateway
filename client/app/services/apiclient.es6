@@ -28,6 +28,13 @@ class ApiClient {
             .end();
     }
 
+    register(registrationData) {
+        return request
+            .post(this.prefix + '/users')
+            .send(registrationData)
+            .end();
+    }
+
     sendMessage(message){
         console.log(this.accessToken);
         return request
@@ -36,7 +43,6 @@ class ApiClient {
             .set('Authorization', this._getToken())
             .end();
     }
-
 }
 
 var devHost = 'http://192.168.0.2:3200';
