@@ -1,16 +1,18 @@
-var config = require('../../server/config.json');
 var path = require('path');
 
 module.exports = function (User) {
     //send verification email after registration
     User.afterRemote('create', function (context, user, next) {
         console.log('> user.afterRemote triggered');
+        var appSettings = User.app.locals.settings;
 
         var options = {
             text:'{href}',
             type: 'email',
+            host: appSettings.domain,
+            port: appSettings.domainPort,
             to: user.email,
-            from: 'zulfatbox@gmail.com',
+            from: 'noreply@zulfat.net',
             subject: 'Thanks for registering.',
             template: path.resolve(__dirname, '../../server/views/verify.ejs'),
             redirect: '/?name=' + user.name,

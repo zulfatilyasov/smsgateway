@@ -1,29 +1,31 @@
 {
-  "db": {
-    "name": "db",
-    "connector": "memory"
-  },
-  "mongodb": {
-    "database": "smsgateway",
-    "name": "mongodb",
-    "connector": "mongodb"
-  },
-  "emailDataSource": {
-    "connector": "mail",
-    "transports": [
-      {
-        "type": "smtp",
-        "host": "smtp.gmail.com",
-        "secure": true,
-        "port": 465,
-        "tls": {
-          "rejectUnauthorized": false
-        },
-        "auth": {
-          "user": "zulfatkin",
-          "pass": "-z518009"
-        }
-      }
-    ]
-  }
+    "db": {
+        "name": "db",
+        "connector": "memory"
+    },
+    "mongodb": {
+        "database": "smsgateway",
+        "name": "mongodb",
+        "connector": "mongodb"
+    },
+    "mandrill": {
+        "connector": "lb-connector-mandrill",
+        "apikey": "8LERgIxL5ItrPwJUwrSTXg"
+    },
+    "emailDataSource": {
+        "connector": "mail",
+        "transports": [{
+            "type": "smtp",
+            "host": "smtp.gmail.com",
+            "secure": true,
+            "port": 465,
+            "tls": {
+                "rejectUnauthorized": false
+            },
+            "auth": {
+                "user": "zulfatkin",
+                "pass": "-z518009"
+            }
+        }]
+    }
 }
