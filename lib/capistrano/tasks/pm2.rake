@@ -26,6 +26,13 @@ namespace :pm2 do
     end
   end
 
+  def delete_current
+    within current_release do
+      execute :pm2, :stop, fetch(:app_command)
+      execute :pm2, :delete, fetch(:app_command)
+    end
+  end
+
   def start_app
     within current_path do
       execute :pm2, :start, fetch(:app_command)
@@ -35,6 +42,7 @@ namespace :pm2 do
   desc 'Restart app gracefully'
   task :restart do
     on roles(:app) do
+      delete_current
       case app_status
       when nil
         info 'App is not registerd'
