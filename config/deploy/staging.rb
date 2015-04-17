@@ -5,6 +5,9 @@
 
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 server '84.200.69.19', user: 'root', roles: %w{app web}, other_property: :other_value
+set :default_env, {
+    'NODE_ENV' =>'staging'
+}
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 
