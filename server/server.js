@@ -13,12 +13,8 @@ app.start = function() {
 };
 
 app.use(loopback.logger('dev'));
-//app.use(function(req, res) {
-//    console.log(req.url);
-//});
 
 app.use(loopback.static(path.join(__dirname, '..', 'client', 'build')));
-
 
 boot(app, __dirname, function(err) {
     if (err) throw err;
