@@ -2,6 +2,7 @@
   "restApiRoot": "/api",
   "domain": "smsgateway.zulfat.net",
   "domainPort": 80,
+  "emailFrom": "mail@zulfat.net",
   "host": "0.0.0.0",
   "port": 3200,
   "remoting": {

@@ -7,12 +7,12 @@ module.exports = function (User) {
         var appSettings = User.app.locals.settings;
 
         var options = {
-            text:'{href}',
+            text: '{href}',
             type: 'email',
             host: appSettings.domain,
             port: appSettings.domainPort,
             to: user.email,
-            from: 'noreply@zulfat.net',
+            from: appSettings.emailFrom,
             subject: 'Thanks for registering.',
             template: path.resolve(__dirname, '../../server/views/verify.ejs'),
             redirect: '/?name=' + user.name,
