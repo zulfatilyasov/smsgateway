@@ -28,7 +28,7 @@ namespace :pm2 do
 
   def delete_current
     within current_path do
-      stop_app
+      execute :pm2, :stop, fetch(:pm2_name)
       execute :pm2, :delete, fetch(:pm2_name)
     end
   end
