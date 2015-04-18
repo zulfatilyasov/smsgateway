@@ -27,7 +27,7 @@ namespace :pm2 do
   end
 
   def delete_current
-    within previous_release do
+    within current_path do
       execute :pm2, :stop, :all
       execute :pm2, :delete, :all
     end
