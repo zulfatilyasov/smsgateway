@@ -16,26 +16,26 @@ namespace :pm2 do
 
   def restart_app
     within current_path do
-      execute :pm2, :restart, fetch(:app_command)
+      execute :pm2, :restart, fetch(:pm2_name)
     end
   end
 
   def stop_app
     within current_path do
-      execute :pm2, :stop, fetch(:app_command)
+      execute :pm2, :stop, fetch(:pm2_name)
     end
   end
 
   def delete_current
     within current_path do
-      execute :pm2, :stop, :all
-      execute :pm2, :delete, :all
+      execute :pm2, :stop, fetch(:pm2_name)
+      execute :pm2, :delete, fetch(:pm2_name)
     end
   end
 
   def start_app
     within current_path do
-      execute :pm2, :start, fetch(:app_command)
+      execute 'pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}' 
     end
   end
 

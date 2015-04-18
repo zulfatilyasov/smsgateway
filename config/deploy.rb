@@ -10,6 +10,7 @@ set :repo_url, 'git@bitbucket.org:zulfatilyasov/smsgateway.git'
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, '/root/sms-gateway'
 set :app_command, 'server/server.js'
+set :pm2_name, 'smsgateway'
 # Default value for :scm is :git
 # set :scm, :git
 
