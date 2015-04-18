@@ -35,7 +35,7 @@ namespace :pm2 do
 
   def start_app
     within current_path do
-      execute "pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
+      execute "cd #{current_path} && pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
     end
   end
 
