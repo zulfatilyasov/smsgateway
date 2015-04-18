@@ -28,8 +28,8 @@ namespace :pm2 do
 
   def delete_current
     within previous_release do
-      execute :pm2, :stop, fetch(:app_command)
-      execute :pm2, :delete, fetch(:app_command)
+      execute :pm2, :stop, :all
+      execute :pm2, :delete, :all
     end
   end
 
