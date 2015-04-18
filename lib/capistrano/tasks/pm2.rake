@@ -27,7 +27,7 @@ namespace :pm2 do
   end
 
   def delete_current
-    within current_release do
+    within previous_release do
       execute :pm2, :stop, fetch(:app_command)
       execute :pm2, :delete, fetch(:app_command)
     end
