@@ -28,14 +28,14 @@ namespace :pm2 do
 
   def delete_current
     within current_path do
-      execute :pm2, :stop, fetch(:pm2_name)
+      stop_app
       execute :pm2, :delete, fetch(:pm2_name)
     end
   end
 
   def start_app
     within current_path do
-      execute 'pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}' 
+      execute "pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
     end
   end
 
