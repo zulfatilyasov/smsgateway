@@ -11,6 +11,7 @@ function getState() {
         messages: messageStore.MessageList
     }
 }
+
 class Messages extends React.Component {
     constructor(props) {
         super(props);
