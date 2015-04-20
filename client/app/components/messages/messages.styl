@@ -14,8 +14,17 @@
 
 .pad
     padding-top: 0
+    padding-bottom 0
+    cf()
+
+.section-body
+    cf()
+    
+.messages-list
+    col(1)
 
 .formInner
+    cf()
     .button-icon
         font-size 14px
         color:rgba(0, 0, 0, 0.87)
@@ -25,20 +34,22 @@
         col(0.3)
 
     .msgInput
-        col(0.5)
+        height 72px !important
+        col(0.6)
 
     .button-icon
         bottom 2px
 
     .button-wrap
         position: relative
-        width: 110px;
-        col(0.2)
+        col(0.1)
         .spinner
             margin-left: -17px
         .sendButton
             text-align center
             margin-top 25px
+            width: 80px
+            float right
             transform scale(1)
             opacity 1
             z-index 5

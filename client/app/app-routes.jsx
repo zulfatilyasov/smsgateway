@@ -2,7 +2,7 @@ import React  from 'react';
 import Router, {Route, Redirect, DefaultRoute}  from 'react-router';
 import Master  from './master.jsx';
 import Messages from './components/messages/messages.jsx';
-import Settings  from './components/settings/settings.jsx';
+import Settings  from './components/settings/settings.cjsx';
 import Contacts  from './components/contacts/contacts.jsx';
 import Dashboard  from './components/dashboard/dashboard.jsx';
 

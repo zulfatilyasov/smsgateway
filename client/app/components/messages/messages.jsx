@@ -38,7 +38,7 @@ class Messages extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="message-form-wrap">
                 <Paper zDepth={1}>
                     <form className="message-form">
                         <h2>Outcoming Messages</h2>

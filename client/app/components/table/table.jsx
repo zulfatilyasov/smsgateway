@@ -7,12 +7,11 @@ class Table extends React.Component {
         super(props);
     }
 
-
     render() {
 
         var rows = [];
         var items = this.props.rowItems;
-        console.log(items);
+
         for (var i = items.length - 1; i >= 0; i--) {
             var item = items[i];
             var classNames = classBuilder({
