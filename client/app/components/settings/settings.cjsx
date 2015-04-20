@@ -9,6 +9,9 @@ Settings = React.createClass
                 <h2 className="header">Settings</h2>
                 <h4>Subscription and others</h4>
             </form>
+            <div>
+                <h1></h1>
+            </div>
         </Paper>
 
 module.exports = Settings

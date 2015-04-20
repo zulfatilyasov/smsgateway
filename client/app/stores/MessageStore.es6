@@ -1,4 +1,4 @@
-import BaseStore from './BaseStore';
+import BaseStore from './BaseStore.coffee';
 import MessageConstants from '../constants/MessageConstants.js';
 
 var storeInstance;

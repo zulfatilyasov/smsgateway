@@ -1,7 +1,7 @@
 import React from 'react'
 import messageActions from  '../../actions/MessageActions.es6';
 import messageStore from '../../stores/MessageStore.es6';
-import Spinner from '../spinner/spinner.jsx';
+import Spinner from '../spinner/spinner.cjsx';
 import {TextField,  FontIcon,FlatButton, RaisedButton} from 'material-ui';
 
 function getState() {

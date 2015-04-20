@@ -1,8 +1,8 @@
 React = require('react')
 {Paper, TextField, RaisedButton, FlatButton} =  require('material-ui');
-userActions = require('../../actions/UserActions.es6')
-userStore = require('../../stores/UserStore.es6')
-Spinner = require('../spinner/spinner.jsx')
+userActions = require('../../actions/UserActions.coffee')
+userStore = require('../../stores/UserStore.coffee')
+Spinner = require('../spinner/spinner.cjsx')
 classBuilder = require('classnames')
 style = require('./login.styl')
 
@@ -16,7 +16,7 @@ Login = React.createClass(
         emailErrorText: ''
         nameErrorText: ''
         passwordErrorText: ''
-        inProgress: userStore.InProgress
+        inProgress: userStore.InProgress()
         error: ''
         needVerification: false
         isLogin: true
@@ -29,7 +29,7 @@ Login = React.createClass(
         userStore.removeChangeListener @_onChange
 
     _onChange: ->
-        @setState getState()
+        @setState(getState())
 
     _handleEmailBlur: (e) ->
         errorMsg = ''
@@ -179,10 +179,10 @@ Login = React.createClass(
 )
 
 getState = ->
-    inProgress: userStore.InProgress
-    hasError: userStore.AuthError.hasError
-    errorMessage: userStore.AuthError.message
-    needVerification: userStore.NeedVerification
+    inProgress: userStore.InProgress()
+    hasError: userStore.AuthError().hasError
+    errorMessage: userStore.AuthError().message
+    needVerification: userStore.NeedVerification()
     name: getParameterByName 'name'
 
 validateEmail = (email) ->

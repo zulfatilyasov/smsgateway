@@ -9,15 +9,15 @@ var Menu = mui.Menu;
 var IconButton = mui.IconButton;
 var PageWithNav = require('./page-with-nav.jsx');
 var LoginPage = require('./components/login/login-page.cjsx');
-var userStore = require('./stores/UserStore.es6');
-var userActions = require('./actions/UserActions.es6');
+var userStore = require('./stores/UserStore.coffee');
+var userActions = require('./actions/UserActions.coffee');
 var FloatingActionButton = mui.FloatingActionButton;
 var MenuButton = require('./components/menu-button/menu-button.jsx');
 var AppLeftNav = require('./app-left-nav.jsx');
 
 var getState = function () {
     return {
-        authenticated: userStore.isAuthenticated
+        authenticated: userStore.isAuthenticated()
     };
 };
 
