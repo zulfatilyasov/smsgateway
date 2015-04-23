@@ -77,12 +77,12 @@ Login = React.createClass
 
     _handleEmailBlur: (e) ->
         errorMsg = ''
-        if !e.target.value
+        if !@email?.length
             errorMsg = 'email is required'
-        else if validateEmail(e.target.value) == false
+        else if validateEmail(@email) == false
             errorMsg = 'email is not valid'
         isValid = errorMsg == ''
-
+        
         @setState
             emailErrorText: errorMsg
             emailValid: isValid
@@ -133,7 +133,7 @@ Login = React.createClass
             rightButtonLabel:'register'
 
     _handlePasswordBlur: (e) ->
-        errorMsg = if e.target.value then '' else 'password is required'
+        errorMsg = if @password?.length then '' else 'password is required'
         isValid = errorMsg == ''
         @setState
             passwordErrorText: errorMsg
@@ -202,6 +202,7 @@ Login = React.createClass
             password: @password
 
         if @state.formValid
+            debugger
             userActions.login formData
 
     _registerClickHandler: (e) ->
@@ -272,6 +273,7 @@ Login = React.createClass
                             {
                                 if @state.isRegister or @state.isLogin or @state.isRequestReset
                                     <TextField
+                                        className="email-input"
                                         hintText="Enter your email"
                                         errorText={@state.emailErrorText}
                                         floatingLabelText="Email"
@@ -283,6 +285,7 @@ Login = React.createClass
                             {
                                 if @state.isRegister or @state.isLogin
                                     <TextField
+                                        className="password-input"
                                         hintText="Enter your password"
                                         errorText={@state.passwordErrorText}
                                         floatingLabelText="Password"
