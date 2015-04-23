@@ -1,11 +1,35 @@
 {
-  "name": "user",
-  "base": "User",
-  "emailVerificationRequired":true,
-  "idInjection": true,
-  "properties": {},
-  "validations": [],
-  "relations": {},
-  "acls": [],
-  "methods": []
+    "name": "user",
+    "base": "User",
+    "emailVerificationRequired": true,
+    "idInjection": true,
+    "properties": {},
+    "validations": [],
+    "relations": {},
+    "acls": [{
+        "accessType": "EXECUTE",
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "ALLOW",
+        "property": "requestResetPassword"
+    }, {
+        "accessType": "EXECUTE",
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "ALLOW",
+        "property": "confirmResetPassword"
+    }, {
+        "accessType": "EXECUTE",
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "ALLOW",
+        "property": "setPassword"
+    }, {
+        "accessType": "EXECUTE",
+        "principalType": "ROLE",
+        "principalId": "$unauthenticated",
+        "permission": "DENY",
+        "property": "setPassword"
+    }],
+    "methods": []
 }

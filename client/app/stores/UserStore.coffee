@@ -4,6 +4,8 @@ userConstants = require '../constants/UserConstants.js';
 
 _authenticationInProgress = false
 _needVerification = false
+_requestedPasswordReset = false
+_passwordResetSucceeded = false
 _authError = 
     hasError: false
     message: ''
@@ -24,11 +26,18 @@ class UserStore extends BaseStore
         @NeedVerification = ->
             _needVerification
 
+        @RequestedPasswordReset = ->
+            _requestedPasswordReset
+
+        @PasswordResetSucceeded = ->
+            _passwordResetSucceeded
+
 actions = {}
 
 actions[userConstants.LOG_IN] = (action) ->
     _authenticationInProgress = true
     _authError.hasError = false
+    _passwordResetSucceeded = false
     storeInstance.emitChange()
 
 actions[userConstants.LOG_IN_SUCCESS] = (action) ->
@@ -46,22 +55,52 @@ actions[userConstants.LOG_IN_FAIL] = (action) ->
 
 actions[userConstants.REGISTER] = (action) ->
     _authenticationInProgress = true
+    _passwordResetSucceeded = false
     _authError.hasError = false
-
     storeInstance.emitChange()
 
 actions[userConstants.REGISTER_SUCCESS] = (action) -> 
     _authenticationInProgress = false
     _needVerification = true
-
     storeInstance.emitChange()
 
 actions[userConstants.REGISTER_FAIL] = (action) ->
     _authenticationInProgress = false
-
     _authError.message = 'Registration failed. Check your data'
     _authError.hasError = true
+    storeInstance.emitChange()
 
+actions[userConstants.RESET_PASSWORD] = (action) ->
+    _authenticationInProgress = true
+    _authError.hasError = false
+    storeInstance.emitChange()
+
+actions[userConstants.RESET_PASSWORD_SUCCESS] = (action) -> 
+    _authenticationInProgress = false
+    _requestedPasswordReset = true
+    storeInstance.emitChange()
+
+actions[userConstants.RESET_PASSWORD_FAIL] = (action) ->
+    _authenticationInProgress = false
+    _authError.message = 'Password reset failed'
+    _authError.hasError = true
+    storeInstance.emitChange()
+
+actions[userConstants.SET_PASSWORD] = (action) ->
+    _authenticationInProgress = true
+    _authError.hasError = false
+    storeInstance.emitChange()
+
+actions[userConstants.SET_PASSWORD_SUCCESS] = (action) -> 
+    _authenticationInProgress = false
+    _passwordResetSucceeded = true
+    storeInstance.emitChange()
+
+actions[userConstants.SET_PASSWORD_FAIL] = (action) ->
+    _authenticationInProgress = false
+    _passwordResetSucceeded = false
+    _authError.message = 'Password reset failed'
+    _authError.hasError = true
     storeInstance.emitChange()
 
 actions[userConstants.LOG_OUT] = ->

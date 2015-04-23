@@ -1,7 +1,7 @@
 var React = require('react'),
     Router = require('react-router'),
     mui = require('material-ui'),
-    userActions = require('./actions/UserActions.es6')
+    userActions = require('./actions/UserActions.coffee')
 
 
 var AppLeftNav = React.createClass({

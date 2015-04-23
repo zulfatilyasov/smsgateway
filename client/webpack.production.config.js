@@ -33,6 +33,12 @@ module.exports = {
         }, {
             test: /\.styl$/,
             loader: 'style!css!stylus?paths=node_modules/jeet/stylus/'
+        }, {
+            test: /\.cjsx$/,
+            loaders: ['react-hot', 'coffee', 'cjsx']
+        }, {
+            test: /\.coffee$/,
+            loader: 'coffee'
         }]
     },
     resolve: {

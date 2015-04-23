@@ -36,6 +36,23 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
     
+    requestResetPassword: (email) ->
+        request
+            .post @prefix + '/users/request_reset_password'
+            .send email
+            .end()
+
+    resetPassword: (accessToken, password, confirmation) ->
+        requestData =
+            accessToken: accessToken
+            password: password
+            confirmation: confirmation
+
+        request
+            .post @prefix + '/users/setPassword'
+            .send requestData
+            .set 'Authorization', accessToken
+            .end()
 
 devHost = 'http://192.168.0.2:3200'
 module.exports = new ApiClient '', '/api'

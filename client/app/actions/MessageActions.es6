@@ -1,4 +1,4 @@
-import AppDispatcher from '../AppDispatcher';
+import AppDispatcher from '../AppDispatcher.coffee';
 import MessageContstants from '../constants/MessageConstants.js';
 import apiClient  from '../services/apiclient.es6';
 

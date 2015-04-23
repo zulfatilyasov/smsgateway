@@ -9,5 +9,11 @@ module.exports = keyMirror({
     LOG_OUT_FAIL: null,
     REGISTER: null,
     REGISTER_SUCCESS: null,
-    REGISTER_FAIL: null
+    REGISTER_FAIL: null,
+    RESET_PASSWORD_SUCCESS: null,
+    RESET_PASSWORD_FAIL: null,
+    RESET_PASSWORD: null,
+    SET_PASSWORD_SUCCESS: null,
+    SET_PASSWORD_FAIL: null,
+    SET_PASSWORD: null
 });

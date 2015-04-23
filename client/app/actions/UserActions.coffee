@@ -15,7 +15,7 @@ UserActions =
                         data: data
                 , loginDelay
 
-            , err ->
+            , (err) ->
                 error = err.response.body.error
                 setTimeout ->
                     AppDispatcher.handleServerAction
@@ -54,5 +54,49 @@ UserActions =
     logout: -> 
         AppDispatcher.handleViewAction
             actionType: UserContstants.LOG_OUT
+
+    requestResetPassword: (email) ->
+        apiClient.requestResetPassword(email)
+            .then (resp) ->
+                data = resp.body
+                setTimeout ->
+                    AppDispatcher.handleServerAction
+                        actionType: UserContstants.RESET_PASSWORD_SUCCESS
+                        data: data
+                , loginDelay
+
+            , (err) ->
+                error = err.response.body.error;
+                setTimeout -> 
+                    AppDispatcher.handleServerAction
+                        actionType: UserContstants.RESET_PASSWORD_FAIL
+                        error: error
+                , loginDelay
+
+        AppDispatcher.handleViewAction
+            actionType: UserContstants.RESET_PASSWORD
+            email: email
+
+    resetPassword: (accessToken, password, confirmation) ->
+        apiClient.resetPassword accessToken, password, confirmation
+            .then (resp) ->
+                data = resp.body
+                setTimeout ->
+                    AppDispatcher.handleServerAction
+                        actionType: UserContstants.SET_PASSWORD_SUCCESS
+                        data: data
+                , loginDelay
+
+            , (err) ->
+                setTimeout -> 
+                    AppDispatcher.handleServerAction
+                        actionType: UserContstants.SET_PASSWORD_FAIL
+                        error: err
+                , loginDelay
+
+        AppDispatcher.handleViewAction
+            actionType: UserContstants.SET_PASSWORD
+
+
 
 module.exports = UserActions;
