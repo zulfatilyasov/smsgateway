@@ -1,6 +1,7 @@
 var React = require('react');
 var TestUtils = require('react/lib/ReactTestUtils');
 var Login = require('./login.cjsx');
+var userActions = require('../../actions/UserActions.coffee');
 
 describe('Login', function() {
     var login;
@@ -54,7 +55,6 @@ describe('Login', function() {
         TestUtils.Simulate.blur(emailInput);
         var error = TestUtils.scryRenderedDOMComponentsWithClass(email, 'mui-text-field-error');
         expect(error.length).toBe(0);
-        debugger
     });
 
     it('requires a password', function() {
@@ -71,9 +71,16 @@ describe('Login', function() {
             }
         });
         expect(login.password).toBe(password);
+    });
 
+    it('should call action login after clicking on primary button', function() {
+        spyOn(userActions, 'login');
         var button = TestUtils.findRenderedDOMComponentWithTag(primaryButton, 'button');
         expect(button.getDOMNode().disabled).toBe(false);
-        TestUtils.Simulate.click(primaryButton);
+        TestUtils.Simulate.click(button);
+        expect(userActions.login).toHaveBeenCalledWith({
+            email: login.email,
+            password: login.password
+        });
     });
 });

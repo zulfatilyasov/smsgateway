@@ -82,7 +82,7 @@ Login = React.createClass
         else if validateEmail(@email) == false
             errorMsg = 'email is not valid'
         isValid = errorMsg == ''
-        
+
         @setState
             emailErrorText: errorMsg
             emailValid: isValid
@@ -195,6 +195,7 @@ Login = React.createClass
             userActions.resetPassword @accessToken, @password, @confirmation
     
     _loginClickHandler: (e) ->
+        debugger
         e.preventDefault()
 
         formData =
@@ -202,7 +203,6 @@ Login = React.createClass
             password: @password
 
         if @state.formValid
-            debugger
             userActions.login formData
 
     _registerClickHandler: (e) ->
