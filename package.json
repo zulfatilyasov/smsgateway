@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server/server.js",
   "scripts": {
-    "test": "karma start --single-run",
+    "test": "jasmine-node --matchall -m _test\\. --verbose server --coffee --color && karma start --single-run",
     "start": "PORT=3200 nodemon server/server.js"
   },
   "dependencies": {

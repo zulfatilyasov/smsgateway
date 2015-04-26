@@ -30,8 +30,8 @@ module.exports = function(Message) {
         }
     });
 
-    messenger.on(consts.MESSAGE_RECEIVED, msgHelpers.saveReceivedMessage);
-    messenger.on(consts.UPDATE_MESSAGE_STATUS, msgHelpers.updateMessageStatus);
+    // messenger.on(consts.MESSAGE_RECEIVED, msgHelpers.saveReceivedMessage);
+    // messenger.on(consts.UPDATE_MESSAGE_STATUS, msgHelpers.updateMessageStatus);
 
     //
     //Message.observe('before save', function(ctx, next) {
