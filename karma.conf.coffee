@@ -15,12 +15,22 @@ module.exports = (config) ->
 
     # list of files / patterns to load in the browser
     files: [
-      'tests.webpack.js'
+        'server/**/*_test.js',
+        'client/app/**/*_test.js'
     ],
 
     preprocessors: {
-      'tests.webpack.js': [ 'webpack', 'sourcemap' ]
+        'server/**/*_test.js': ['webpack','sourcemap'],
+        'client/app/**/*_test.js': ['webpack','sourcemap']
     },
+
+    # files: [
+    #   'tests.webpack.js'
+    # ],
+
+    # preprocessors: {
+    #   'tests.webpack.js': [ 'webpack', 'sourcemap' ]
+    # },
 
     reporters: ['progress', 'dots' ],
 

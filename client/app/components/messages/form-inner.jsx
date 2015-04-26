@@ -41,7 +41,8 @@ class FormInner extends React.Component {
     _handleSendMessage() {
         var message = {
             text: this.text,
-            recipient: this.recipientPhone
+            recipient: this.recipientPhone,
+            origin: 'web'
         };
 
         messageActions.send(message);

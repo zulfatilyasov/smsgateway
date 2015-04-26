@@ -1,14 +1,21 @@
+var messenger = require('../../server/io/messenger.coffee')
+var consts = require('./messageConstants.coffee');
+var MessageHelpers = require('./messageHelpers.coffee');
+
 module.exports = function(Message) {
+    var msgHelpers = new MessageHelpers(Message);
+
     Message.observe('after save', function(ctx, next) {
-        var io = Message.app.io;
-        if (ctx.instance) {
-            io.emit('send-message', ctx.instance);
-            console.log('socket io emitted send-message: %s#%s', ctx.Model.modelName, ctx.instance.id);
-        } else {
-            console.log('Updated %s matching %j',
-                ctx.Model.pluralModelName,
-                ctx.where);
+        if (ctx.instance && ctx.instance.origin === 'web') {
+            messenger.sendMessageToUserMobile(ctx.instance.userId, ctx.instance);
+            console.log('socket io emitted send-message to mobile: %s#%s', ctx.instance.userId, ctx.instance.text);
+        } 
+
+        if(ctx.instance && ctx.instance.origin === 'mobile'){
+            messenger.sendMessageToUserWeb(ctx.instance.userId, ctx.instance);
+            console.log('socket io emitted send-message to web: %s#%s', ctx.instance.userId, ctx.instance.text);
         }
+
         next();
     });
 
@@ -22,6 +29,10 @@ module.exports = function(Message) {
             next(new Error('must be logged in to save message'))
         }
     });
+
+    messenger.on(consts.MESSAGE_RECEIVED, msgHelpers.saveReceivedMessage);
+    messenger.on(consts.UPDATE_MESSAGE_STATUS, msgHelpers.updateMessageStatus);
+
     //
     //Message.observe('before save', function(ctx, next) {
     //    if (ctx.instance) {

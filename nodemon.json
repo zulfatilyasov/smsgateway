@@ -1,0 +1,6 @@
+{
+  "verbose": true,
+  "watch":["./server", "./common"],
+  "ignore":["./client/", "*_test.js"],
+  "ext":"js coffee"
+}

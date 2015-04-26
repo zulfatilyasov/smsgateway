@@ -1,6 +1,8 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var path = require('path');
+require('coffee-script/register');
+var messenger = require('./io/messenger.coffee');
 
 var app = module.exports = loopback();
 
@@ -21,8 +23,6 @@ boot(app, __dirname, function(err) {
 
     if (require.main === module) {
         app.io = require('socket.io')(app.start());
-        app.io.on('connection', function(socket) {
-            console.log('user connected');
-        });
+        messenger.initialize(app);
     }
 });
