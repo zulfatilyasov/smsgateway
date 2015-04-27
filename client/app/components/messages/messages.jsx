@@ -3,8 +3,9 @@ import {TextField,Tabs, Tab, Paper, FontIcon, RaisedButton} from 'material-ui';
 import Table from '../table/table.jsx';
 import styles from './messages.styl';
 import FormElements from './form-inner.jsx';
-import messageActions from '../../actions/MessageActions.es6';
 import messageStore from '../../stores/MessageStore.es6';
+import userStore from '../../stores/UserStore.coffee';
+import messageActions from '../../actions/MessageActions.coffee';
 
 function getState() {
     return {
@@ -21,6 +22,7 @@ class Messages extends React.Component {
     }
 
     componentDidMount() {
+        messageActions.getUserMessages(userStore.userId());
         messageStore.addChangeListener(this._onChange.bind(this));
     }
 
@@ -37,6 +39,7 @@ class Messages extends React.Component {
     }
 
     render() {
+        var content = this.state.messages.length ? <Table rowItems={this.state.messages}/> : <div className="no-messages">No messages</div>;
         return (
             <div className="message-form-wrap">
                 <Paper zDepth={1}>
@@ -49,7 +52,7 @@ class Messages extends React.Component {
                             <FormElements/>
                         </div>
                         <div className="messages-list">
-                            <Table rowItems={this.state.messages}/>
+                            {content}
                         </div>
                     </div>
                 </Paper>

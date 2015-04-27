@@ -19,6 +19,7 @@
 @table-bg-hover: rgba(0, 0, 0, .12);
 @table-bg-active: @table-bg-hover;
 @table-border-color: #e0e0e0;
+@status-max-width:50px;
 
 // Mixins
 //
@@ -42,11 +43,39 @@
   thead {
     th {
       font-size: 16px;
+      &.status-th{
+        max-width: @status-max-width
+      }
+      &.icon{
+        max-width: 15px;
+        padding-right: 0;
+      }
     }
   }
   tbody {
     td {
       font-size: 14px;
+      &.status-td{
+        @media screen and (min-width: 768px){
+          max-width: @status-max-width
+        }
+      }
+      &.icon{
+        max-width: 15px;
+        padding: 22px 0;
+        padding-left: 25px;
+
+        .mui-font-icon{
+          color: #212121;
+          font-size: 22px; 
+          &.outcoming{
+            color:#388E3C;
+          }
+          &.incoming{
+            color:#AFB42B;
+          }
+        }
+      }
     }
   }
   > thead,
@@ -61,13 +90,45 @@
         vertical-align: top;
         border-top: 0;
         .transition(all .3s ease);
+        @media screen and (min-width: 768px) {
+          .status-block{
+            display: inline-block;
+            padding: 0px 10px;
+            border-radius: 3px;
+            // border: 1px solid #fff; 
+          }
+        }
         &.success {
-          //padding-left: 33px;
-          color: #00796B;
+          color: #388E3C;
+          .status{
+            @media screen and (min-width: 768px){
+              border-color: #388E3C;
+            }
+          }
+        }
+        &.received{
+          .status{
+            @media screen and (min-width: 768px){
+              border-color: #AFB42B;
+            }
+          }
+          color: #AFB42B;
+        }
+        &.sending{
+          .status{
+            @media screen and (min-width: 768px){
+              border-color: #795548;
+            }
+          }
+          color: #795548;
         }
         &.fail {
-          //padding-left: 33px;
-          color: #79120e;
+          .status{
+            @media screen and (min-width: 768px){
+              border-color: #F44336;
+            }
+          }
+          color: #F44336;
         }
       }
     }
@@ -160,6 +221,7 @@
     > td,
     > th {
       background-color: @table-bg-hover;
+      cursor: pointer
     }
   }
 }

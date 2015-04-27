@@ -32,6 +32,9 @@ class UserStore extends BaseStore
         @PasswordResetSucceeded = ->
             _passwordResetSucceeded
 
+        @userId = ->
+            localStorage.getItem 'sg-userId'
+
 actions = {}
 
 actions[userConstants.LOG_IN] = (action) ->
@@ -42,6 +45,7 @@ actions[userConstants.LOG_IN] = (action) ->
 
 actions[userConstants.LOG_IN_SUCCESS] = (action) ->
     localStorage.setItem 'sg-token', action.data.id
+    localStorage.setItem 'sg-userId', action.data.userId
     _authenticationInProgress = false
     storeInstance.emitChange()
 

@@ -14,6 +14,7 @@ var userActions = require('./actions/UserActions.coffee');
 var FloatingActionButton = mui.FloatingActionButton;
 var MenuButton = require('./components/menu-button/menu-button.jsx');
 var AppLeftNav = require('./app-left-nav.jsx');
+var messageActions = require('./actions/MessageActions.coffee');
 
 var getState = function () {
     return {
@@ -30,6 +31,7 @@ var Master = React.createClass({
     },
 
     componentDidMount() {
+        messageActions.startReceiving();
         userStore.addChangeListener(this._onChange);
     },
 

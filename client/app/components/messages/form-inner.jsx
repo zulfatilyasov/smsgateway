@@ -42,6 +42,7 @@ class FormInner extends React.Component {
         var message = {
             text: this.text,
             recipient: this.recipientPhone,
+            outcoming:true,
             origin: 'web'
         };
 

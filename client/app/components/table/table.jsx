@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './table.less';
 import classBuilder from 'classnames';
+import {FontIcon} from 'material-ui';
 
 class Table extends React.Component {
     constructor(props) {
@@ -14,13 +15,21 @@ class Table extends React.Component {
 
         for (var i = items.length - 1; i >= 0; i--) {
             var item = items[i];
-            var classNames = classBuilder({
-                success: item.status === 'Sent',
-                fail: item.status === 'Failed'
+            var statusClass = classBuilder({
+                'status-td':true,
+                success: item.status === 'sent',
+                fail: item.status === 'failed',
+                sending: item.status === 'sending',
+                received: item.status === 'received'
+            });
+            var iconClassName = classBuilder({
+                'icon-arrow-with-circle-left outcoming': item.outcoming,
+                'icon-arrow-with-circle-right incoming': item.incoming
             });
             if (item) {
                 rows.push(<tr>
-                    <td data-title="Status" className={classNames}>{item.status}</td>
+                    <td className="icon"><FontIcon  className={iconClassName} /></td>
+                    <td data-title="Status " className={statusClass}><div className="status status-block">{item.status}</div></td>
                     <td data-title="Contact">{item.contact}</td>
                     <td data-title="Message">{item.message}</td>
                 </tr>);
@@ -31,9 +40,10 @@ class Table extends React.Component {
                 <table id="table" className="table table-hover table-bordered table-mc-light-blue">
                     <thead>
                     <tr>
-                        <th>Status</th>
+                        <th className="icon"></th>
+                        <th className="status-th">Status</th>
                         <th>Contact</th>
-                        <th>Messge</th>
+                        <th>Message</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -3,31 +3,7 @@ import MessageConstants from '../constants/MessageConstants.js';
 
 var storeInstance;
 
-var _messageList = [{
-    status: 'Sent',
-    contact: '+79263233574',
-    message: 'lorem impsum'
-}, {
-    status: 'Sent',
-    contact: '+79274608372',
-    message: 'hello sms gateway'
-}, {
-    status: 'Sent',
-    contact: '+79274608372',
-    message: 'another message'
-}, {
-    status: 'Sent',
-    contact: '+79274608372',
-    message: 'How do you do?'
-}, {
-    status: 'Sent',
-    contact: '+79274608372',
-    message: 'Get you message delivered'
-}, {
-    status: 'Sent',
-    contact: '+79274608372',
-    message: 'this is first'
-}];
+var _messageList = [];
 
 var _sendInProgress = false;
 var _error = '';
@@ -57,6 +33,7 @@ actions[MessageConstants.SEND_SUCCESS] = action => {
     _sendInProgress = false;
     _messageList.push({
         status: 'Sent',
+        outcoming: true,
         contact: action.message.recipient,
         message: action.message.text
     });
@@ -67,10 +44,26 @@ actions[MessageConstants.SEND_FAIL] = action => {
     _sendInProgress = false;
     _messageList.push({
         status: 'Failed',
+        outcoming: true,
         contact: action.message.recipient,
         message: action.message.text
     });
     _error = action.error;
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.MESSAGE_RECEIVED] = action => {
+    _messageList.push({
+        status: 'received',
+        incoming: true,
+        contact: action.message.recipient,
+        message: action.message.text
+    });
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.RECEIVED_ALL_MESSAGES] = action => {
+    _messageList = action.messages 
     storeInstance.emitChange();
 };
 

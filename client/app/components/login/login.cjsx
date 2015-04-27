@@ -72,7 +72,6 @@ Login = React.createClass
                 requestedPasswordReset:userStore.RequestedPasswordReset()
                 name: getParameterByName 'name'
                 
-        console.log state
         return state
 
     _handleEmailBlur: (e) ->
@@ -195,7 +194,6 @@ Login = React.createClass
             userActions.resetPassword @accessToken, @password, @confirmation
     
     _loginClickHandler: (e) ->
-        debugger
         e.preventDefault()
 
         formData =

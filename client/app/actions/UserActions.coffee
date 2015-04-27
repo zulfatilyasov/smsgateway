@@ -32,7 +32,6 @@ UserActions =
         apiClient.login(creds.email, creds.password)
             .then (resp) ->
                 data = resp.body
-
                 setTimeout ->
                     AppDispatcher.handleServerAction
                         actionType: UserContstants.LOG_IN_SUCCESS

@@ -29,6 +29,12 @@ class ApiClient
             .send registrationData
             .end()
 
+    getUserMessages: (userId) ->
+        request
+            .get "#{@prefix}/users/#{userId}/messages"
+            .set 'Authorization', @_getToken()
+            .end()
+
     sendMessage: (message) ->
         request
             .post @prefix + '/messages'
