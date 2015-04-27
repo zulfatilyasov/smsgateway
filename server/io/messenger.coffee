@@ -9,7 +9,8 @@ class Messenger
     @io.use (socket, next) =>
       if socket.request._query?.registerToken
         accessToken = socket.request._query.registerToken
-        @registerClient(accessToken, socket.id, next)
+        origin = socket.request._query.origin
+        @registerClient(accessToken, origin, socket.id, next)
 
     @io.on 'connection', (socket) ->
       console.log 'client connected'
@@ -17,13 +18,15 @@ class Messenger
   on: (messageId, callback) ->
     @io.on messageId, callback
 
-  registerClient: (accessToken, clientId, next) ->
+  registerClient: (accessToken, origin, clientId, next) ->
     @app.models.AccessToken.findById accessToken, (err, token) ->
       if err
         next(err)
+      if !token
+        next(new Error('not authorized'))
       else
-        db.hset token.userId, 'mobile', clientId, ->
-          console.log "registered client #{clientId} userId #{token.userId}"
+        db.hset token.userId, origin, clientId, ->
+          console.log "registered client #{clientId} userId #{token.userId} from #{origin}"
           next()
 
   sendMessageToUserMobile: (userId, message) ->
