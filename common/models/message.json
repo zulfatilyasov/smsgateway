@@ -8,11 +8,11 @@
       "type": "object",
       "required": true
     },
-    "text": {
+    "body": {
       "type": "string",
       "required": true
     },
-    "recipient": {
+    "address": {
       "type": "string"
     }
   },

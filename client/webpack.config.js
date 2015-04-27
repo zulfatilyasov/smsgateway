@@ -18,6 +18,7 @@ module.exports = {
         new webpack.NoErrorsPlugin()
     ],
     module: {
+        postLoaders: [],
         loaders: [{
             test: /\.jsx$/,
             exclude: /node_modules/,
@@ -43,7 +44,7 @@ module.exports = {
             loaders: ['react-hot', 'coffee', 'cjsx']
         }, {
             test: /\.coffee$/,
-            loader: 'coffee'
+            loader: 'transform?envify!coffee'
         }]
     },
     resolve: {

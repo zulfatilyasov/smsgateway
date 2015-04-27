@@ -7,17 +7,8 @@ var apiUrl = 'http://192.168.0.2:3200';
 var app = new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     hot: true,
-    historyApiFallback: true,
-    proxy: {
-        "/api*": "http://192.168.0.2:3200"
-    }
+    historyApiFallback: true
 });
-
-// app.use('/api', function(req, res) {
-//     console.log(req.url);
-//     var url = apiUrl + '/api' + req.url;
-//     req.pipe(request(url)).pipe(res);
-// });
 
 var port = 3000;
 app.listen(port, 'localhost', function(err, result) {

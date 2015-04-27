@@ -60,5 +60,11 @@ class ApiClient
             .set 'Authorization', accessToken
             .end()
 
-devHost = 'http://192.168.0.2:3200'
-module.exports = new ApiClient '', '/api'
+apihost=''
+if process.env.NODE_ENV == "development"
+    apihost = 'http://192.168.0.2:3200'
+    console.log('development only')
+    
+console.log 'api host is ' + apihost
+
+module.exports = new ApiClient apihost, '/api'

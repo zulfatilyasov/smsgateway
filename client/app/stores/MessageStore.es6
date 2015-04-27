@@ -34,8 +34,8 @@ actions[MessageConstants.SEND_SUCCESS] = action => {
     _messageList.push({
         status: 'Sent',
         outcoming: true,
-        contact: action.message.recipient,
-        message: action.message.text
+        address: action.message.address,
+        body: action.message.body
     });
     storeInstance.emitChange();
 };
@@ -45,8 +45,8 @@ actions[MessageConstants.SEND_FAIL] = action => {
     _messageList.push({
         status: 'Failed',
         outcoming: true,
-        contact: action.message.recipient,
-        message: action.message.text
+        address: action.message.address,
+        body: action.message.body
     });
     _error = action.error;
     storeInstance.emitChange();
@@ -56,8 +56,8 @@ actions[MessageConstants.MESSAGE_RECEIVED] = action => {
     _messageList.push({
         status: 'received',
         incoming: true,
-        contact: action.message.recipient,
-        message: action.message.text
+        address: action.message.address,
+        body: action.message.body
     });
     storeInstance.emitChange();
 };

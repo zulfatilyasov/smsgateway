@@ -31,7 +31,7 @@ class FormInner extends React.Component {
     }
 
     _handlePhoneChange(e) {
-        this.recipientPhone = e.target.value;
+        this.address = e.target.value;
     }
 
     _handleTextChange(e) {
@@ -40,9 +40,10 @@ class FormInner extends React.Component {
 
     _handleSendMessage() {
         var message = {
-            text: this.text,
-            recipient: this.recipientPhone,
-            outcoming:true,
+            body: this.text,
+            status: 'sent',
+            address: this.address,
+            outcoming: true,
             origin: 'web'
         };
 

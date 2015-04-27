@@ -38,7 +38,7 @@ module.exports = {
             loaders: ['react-hot', 'coffee', 'cjsx']
         }, {
             test: /\.coffee$/,
-            loader: 'coffee'
+            loader: 'transform?envify!coffee'
         }]
     },
     resolve: {

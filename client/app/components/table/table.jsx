@@ -20,8 +20,9 @@ class Table extends React.Component {
                 success: item.status === 'sent',
                 fail: item.status === 'failed',
                 sending: item.status === 'sending',
-                received: item.status === 'received'
+                received: item.incoming === true
             });
+            
             var iconClassName = classBuilder({
                 'icon-arrow-with-circle-left outcoming': item.outcoming,
                 'icon-arrow-with-circle-right incoming': item.incoming
@@ -30,8 +31,8 @@ class Table extends React.Component {
                 rows.push(<tr>
                     <td className="icon"><FontIcon  className={iconClassName} /></td>
                     <td data-title="Status " className={statusClass}><div className="status status-block">{item.status}</div></td>
-                    <td data-title="Contact">{item.contact}</td>
-                    <td data-title="Message">{item.message}</td>
+                    <td data-title="Contact">{item.address}</td>
+                    <td data-title="Message">{item.body}</td>
                 </tr>);
             }
         }

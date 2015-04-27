@@ -75,14 +75,15 @@ describe('Socket io messenger', function() {
 
     it('should save connected clientId to redis', function() {
         var next = jasmine.createSpy('next');
-        messenger.registerClient(fakeAccessTokenId, fakeClientId, next);
+        var origin
+        messenger.registerClient(fakeAccessTokenId, origin, fakeClientId, next);
 
         expect(fakeFindById).toHaveBeenCalledWith(fakeAccessTokenId, jasmine.any(Function));
-        expect(fakeRedisDb.hset).toHaveBeenCalledWith(fakeUserId, 'mobile', fakeClientId, jasmine.any(Function))
+        expect(fakeRedisDb.hset).toHaveBeenCalledWith(fakeUserId, origin, fakeClientId, jasmine.any(Function))
         expect(next).toHaveBeenCalled();
 
         var wrongToken = 'this token doesnt exist'
-        messenger.registerClient(wrongToken, fakeClientId, next);
+        messenger.registerClient(wrongToken, origin, fakeClientId, next);
         expect(fakeFindById).toHaveBeenCalledWith(wrongToken, jasmine.any(Function));
         expect(next).toHaveBeenCalledWith(notFoundError);
     });
