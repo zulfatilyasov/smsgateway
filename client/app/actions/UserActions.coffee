@@ -99,5 +99,4 @@ UserActions =
             actionType: UserContstants.SET_PASSWORD
 
 
-debugger
 module.exports = UserActions;

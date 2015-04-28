@@ -34,6 +34,18 @@ set :pm2_name, 'smsgateway'
 # set :keep_releases, 5
 namespace :deploy do
 
+  after :updated do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      within current_path do
+        execute :npm, :run, :build
+      end
+    end
+  end
+
+end
+
+namespace :deploy do
+
   desc 'Restart application'
   task :restart do
     invoke 'pm2:restart'

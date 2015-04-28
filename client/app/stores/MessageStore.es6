@@ -69,7 +69,7 @@ actions[MessageConstants.RECEIVED_ALL_MESSAGES] = action => {
 };
 
 actions[MessageConstants.CLEAN] = action => {
-    _messageList = [] 
+    _messageList = []
     storeInstance.emitChange();
 };
 

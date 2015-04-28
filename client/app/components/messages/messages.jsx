@@ -31,6 +31,7 @@ class Messages extends React.Component {
             userActions.logout();
             return
         }
+        debugger;
         messageActions.getUserMessages(userId);
         messageStore.addChangeListener(this._onChange.bind(this));
     }

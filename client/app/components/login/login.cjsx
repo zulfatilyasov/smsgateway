@@ -1,6 +1,7 @@
 React = require('react')
 {Paper, TextField, RaisedButton, FlatButton} =  require('material-ui');
 userActions = require('../../actions/UserActions.coffee')
+messageActions = require('../../actions/MessageActions.coffee')
 userStore = require('../../stores/UserStore.coffee')
 Spinner = require('../spinner/spinner.cjsx')
 classBuilder = require('classnames')
@@ -51,6 +52,7 @@ Login = React.createClass
         userStore.addChangeListener @_onChange
 
     componentWillUnmount: ->
+        messageActions.getUserMessages(userStore.userId())
         userStore.removeChangeListener @_onChange
 
     _onChange: ->

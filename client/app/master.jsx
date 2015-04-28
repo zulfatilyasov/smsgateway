@@ -74,8 +74,6 @@ var Master = React.createClass({
         ];
 
 
-        var pageContent = <div>
-        </div>
         return (
             <AppCanvas>
 

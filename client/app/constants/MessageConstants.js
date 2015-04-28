@@ -6,5 +6,6 @@ module.exports = keyMirror({
     SEND_FAIL: null,
     RECEIVED_ALL_MESSAGES: null,
     MESSAGE_RECEIVED:null,
-    GET_ALL_MESSAGES_FAIL:null
+    GET_ALL_MESSAGES_FAIL:null,
+    CLEAN:null
 });

@@ -8,11 +8,13 @@ MessageActions =
 
     clean: ->
         @messagesLoaded = false
+        console.log 'called clean'
         AppDispatcher.handleViewAction
             actionType: MessageConstants.CLEAN
 
     getUserMessages: (userId) ->
         if @messagesLoaded
+            console.log 'masseges already loaded'
             return
 
         console.log 'called get user messages'
