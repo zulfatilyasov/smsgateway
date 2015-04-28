@@ -65,6 +65,7 @@ actions[MessageConstants.MESSAGE_RECEIVED] = action => {
 
 actions[MessageConstants.RECEIVED_ALL_MESSAGES] = action => {
     _messageList = action.messages 
+    console.log(_messageList);
     storeInstance.emitChange();
 };
 

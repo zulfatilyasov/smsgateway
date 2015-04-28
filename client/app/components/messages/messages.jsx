@@ -29,10 +29,9 @@ class Messages extends React.Component {
         var userId = userStore.userId();
         if(!userId){
             userActions.logout();
-            return
+        } else {
+            messageActions.getUserMessages(userId);
         }
-        debugger;
-        messageActions.getUserMessages(userId);
         messageStore.addChangeListener(this._onChange.bind(this));
     }
 

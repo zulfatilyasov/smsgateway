@@ -7,6 +7,7 @@ class Messenger
     @app = app
     @io = app.io
     @io.use (socket, next) =>
+      console.log socket.request._query
       if socket.request._query?.registerToken
         accessToken = socket.request._query.registerToken
         origin = socket.request._query.origin

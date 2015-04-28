@@ -34,11 +34,15 @@ var Master = React.createClass({
     },
 
     componentDidMount() {
-        messageActions.startReceiving();
+        if(this.state.authenticated){
+            messageActions.startReceiving();
+        }
+
         this.setState({
             mounted: true,
             authenticated: userStore.isAuthenticated()
         });
+        
         userStore.addChangeListener(this._onChange);
     },
 

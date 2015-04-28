@@ -52,6 +52,7 @@ Login = React.createClass
         userStore.addChangeListener @_onChange
 
     componentWillUnmount: ->
+        messageActions.startReceiving()
         messageActions.getUserMessages(userStore.userId())
         userStore.removeChangeListener @_onChange
 
