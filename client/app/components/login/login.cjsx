@@ -54,6 +54,7 @@ Login = React.createClass
         userStore.removeChangeListener @_onChange
 
     _onChange: ->
+        console.log 'called on changed login'
         @setState(@getState())
 
     getState: ->

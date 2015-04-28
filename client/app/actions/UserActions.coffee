@@ -1,6 +1,7 @@
 AppDispatcher = require '../AppDispatcher.coffee'
 UserContstants = require '../constants/UserConstants.js'
 apiClient  = require '../services/apiclient.coffee'
+messageActions = require './MessageActions.coffee'
 
 loginDelay = 1000;
 UserActions = 
@@ -51,6 +52,7 @@ UserActions =
             creds: creds
 
     logout: -> 
+        messageActions.clean()
         AppDispatcher.handleViewAction
             actionType: UserContstants.LOG_OUT
 
@@ -97,5 +99,5 @@ UserActions =
             actionType: UserContstants.SET_PASSWORD
 
 
-
+debugger
 module.exports = UserActions;

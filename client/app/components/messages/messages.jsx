@@ -6,6 +6,8 @@ import FormElements from './form-inner.jsx';
 import messageStore from '../../stores/MessageStore.es6';
 import userStore from '../../stores/UserStore.coffee';
 import messageActions from '../../actions/MessageActions.coffee';
+import userActions from '../../actions/UserActions.coffee';
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 function getState() {
     return {
@@ -24,7 +26,12 @@ class Messages extends React.Component {
 
     componentDidMount() {
         this.setState({ mounted: true });
-        messageActions.getUserMessages(userStore.userId());
+        var userId = userStore.userId();
+        if(!userId){
+            userActions.logout();
+            return
+        }
+        messageActions.getUserMessages(userId);
         messageStore.addChangeListener(this._onChange.bind(this));
     }
 
@@ -33,6 +40,7 @@ class Messages extends React.Component {
     }
 
     _onChange() {
+        console.log('called on changed messages.jsx')
         if(this.state.mounted){
             this.setState(getState());
         }
@@ -48,7 +56,9 @@ class Messages extends React.Component {
             <div className="message-form-wrap">
                 <Paper zDepth={1}>
                     <form className="message-form">
-                        <h2>Outcoming Messages</h2>
+                        <ReactCSSTransitionGroup transitionName="fadeDown">
+                            <h2>Outcoming Messages</h2>
+                        </ReactCSSTransitionGroup>
                         <h4>Compose new message</h4>
                     </form>
                     <div className="section-body">

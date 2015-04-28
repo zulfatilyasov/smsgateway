@@ -27,21 +27,32 @@ var Master = React.createClass({
     mixins: [Router.State],
 
     getInitialState(){
-        return getState();
+        return {
+            mounted: false,
+            authenticated: userStore.isAuthenticated()
+        };
     },
 
     componentDidMount() {
         messageActions.startReceiving();
-        this.setState(getState());
+        this.setState({
+            mounted: true,
+            authenticated: userStore.isAuthenticated()
+        });
         userStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount() {
+        this.setState({mounted:false});
+        console.log('masterjsx will unmounted')
         userStore.removeChangeListener(this._onChange);
     },
 
     _onChange() {
-        this.setState(getState());
+        if(this.state.mounted){
+            console.log('called on changed master')
+            this.setState(getState());
+        }
     },
 
     _onMenuIconButtonTouchTap() {
@@ -64,8 +75,6 @@ var Master = React.createClass({
 
 
         var pageContent = <div>
-                <MenuButton onMenuButtonClick={this._onMenuIconButtonTouchTap}/>
-                <PageWithNav menuItems={menuItems}/>
         </div>
         return (
             <AppCanvas>
@@ -79,9 +88,11 @@ var Master = React.createClass({
                 </AppBar>
 
                 <AppLeftNav ref="leftNav" />
+                <MenuButton onMenuButtonClick={this._onMenuIconButtonTouchTap}/>
+                <PageWithNav menuItems={menuItems}/>
 
                 {
-                    this.state.authenticated ? pageContent  : <LoginPage />
+                    this.state.authenticated ? null  : <LoginPage />
                 }
 
             </AppCanvas>

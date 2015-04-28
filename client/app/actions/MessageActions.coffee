@@ -1,17 +1,18 @@
 AppDispatcher = require '../AppDispatcher.coffee'
 MessageConstants = require '../constants/MessageConstants.js'
-userActions = require './UserActions.coffee'
 apiClient = require '../services/apiclient.coffee'
 config = require '../config.coffee'
 
-messagesLoaded = false
 MessageActions = 
-    getUserMessages: (userId) ->
-        if not userId
-            userActions.logout()
-            return 
+    messagesLoaded : false
 
-        if messagesLoaded
+    clean: ->
+        @messagesLoaded = false
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.CLEAN
+
+    getUserMessages: (userId) ->
+        if @messagesLoaded
             return
 
         console.log 'called get user messages'
@@ -21,7 +22,7 @@ MessageActions =
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.RECEIVED_ALL_MESSAGES
                         messages: messages
-                    messagesLoaded = true
+                    @messagesLoaded = true
                 , (err) ->
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.GET_ALL_MESSAGES_FAIL

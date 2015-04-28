@@ -68,6 +68,11 @@ actions[MessageConstants.RECEIVED_ALL_MESSAGES] = action => {
     storeInstance.emitChange();
 };
 
+actions[MessageConstants.CLEAN] = action => {
+    _messageList = [] 
+    storeInstance.emitChange();
+};
+
 storeInstance = new MessageStore(actions);
 
 module.exports = storeInstance;

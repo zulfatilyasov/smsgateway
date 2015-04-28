@@ -16,7 +16,7 @@ class BaseStore
             if actions[action.actionType]
                 console.log action.actionType
                 actions[action.actionType](action)
-
+                
             return true
 
     emitChange: ->
