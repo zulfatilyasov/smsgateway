@@ -3,6 +3,17 @@ import styles from './table.less';
 import classBuilder from 'classnames';
 import {FontIcon} from 'material-ui';
 
+function getItemStatusText(item) {
+    if(item.incoming)
+        return 'Received';
+    if(item.status === 'sent')
+        return 'Sent'
+    if(item.status === 'failed')
+        return 'Failed'
+    if(item.status === 'sending')
+        return 'Sending'
+}
+
 class Table extends React.Component {
     constructor(props) {
         super(props);
@@ -22,7 +33,7 @@ class Table extends React.Component {
                 sending: item.status === 'sending',
                 received: item.incoming === true
             });
-            
+            item.statusText = getItemStatusText(item);
             var iconClassName = classBuilder({
                 'icon-arrow-with-circle-left outcoming': item.outcoming,
                 'icon-arrow-with-circle-right incoming': item.incoming
@@ -30,7 +41,7 @@ class Table extends React.Component {
             if (item) {
                 rows.push(<tr key={item.id}>
                     <td className="icon"><FontIcon  className={iconClassName} /></td>
-                    <td data-title="Status " className={statusClass}><div className="status status-block">{item.status}</div></td>
+                    <td data-title="Status " className={statusClass}><div className="status status-block">{item.statusText}</div></td>
                     <td data-title="Contact">{item.address}</td>
                     <td data-title="Message">{item.body}</td>
                 </tr>);
