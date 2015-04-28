@@ -1,4 +1,5 @@
 request = require 'superagent-promise'
+config = require '../config.coffee'
 
 class ApiClient 
     constructor: (host = '', baseUrl = '') ->
@@ -60,11 +61,5 @@ class ApiClient
             .set 'Authorization', accessToken
             .end()
 
-apihost=''
-if process.env.NODE_ENV == "development"
-    apihost = 'http://192.168.0.2:3200'
-    console.log('development only')
-    
-console.log 'api host is ' + apihost
 
-module.exports = new ApiClient apihost, '/api'
+module.exports = new ApiClient config.host, '/api'
