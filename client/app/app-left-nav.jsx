@@ -22,6 +22,7 @@ var AppLeftNav = React.createClass({
         var header = <div className="logo" onClick={this._onHeaderClick}>SMS Gateway</div>;
 
         this.menuItems = [
+            {route: 'dashboard', text: 'Dashboard',iconClassName:'icon icon-dashboard'},
             {route: 'messages', text: 'Messages',iconClassName:'icon icon-chat'},
             {route: 'contacts', text: 'Contacts',iconClassName:'icon icon-users'},
             {route: 'settings', text: 'Settings',iconClassName:'icon icon-cog'},
@@ -55,7 +56,6 @@ var AppLeftNav = React.createClass({
     },
 
     _onLeftNavChange: function (e, key, payload) {
-        console.log(payload);
         if (payload.onClick) {
             payload.onClick();
         }

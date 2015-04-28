@@ -1,15 +1,15 @@
-var webpack = require('webpack');
+    var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
     context: __dirname,
     entry: [
-        './app/app'
+        './client/app/app'
     ],
     output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(__dirname, 'client', 'build'),
         filename: '[name].js',
-        publicPath: '/scripts/'
+        publicPath: '/client/scripts/'
     },
     plugins: [],
     module: {
@@ -44,9 +44,9 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.es6', '.jsx', '.css'],
         alias: {
-            actions: __dirname + '/app/actions',
-            constants: __dirname + '/app/constants',
-            stores: __dirname + '/app/stores'
+            actions: __dirname + '/client/app/actions',
+            constants: __dirname + '/client/app/constants',
+            stores: __dirname + '/client/app/stores'
         }
     }
 };

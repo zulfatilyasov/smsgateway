@@ -1,9 +1,7 @@
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require('./webpack.config');
-var request = require('request');
 
-var apiUrl = 'http://192.168.0.2:3200';
 var app = new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     hot: true,

@@ -1,17 +1,16 @@
 var webpack = require('webpack');
 var path = require('path');
-
 module.exports = {
     context: __dirname,
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
-        './app/app'
+        './client/app/app'
     ],
     output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(__dirname, 'client', 'build'),
         filename: '[name].js',
-        publicPath: '/scripts/'
+        publicPath: '/client/scripts/'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
@@ -38,7 +37,7 @@ module.exports = {
             loader: 'url-loader?limit=8192'
         }, {
             test: /\.styl$/,
-            loader: 'style!css!stylus?paths=node_modules/jeet/stylus/'
+            loader: 'style!css!stylus'
         }, {
             test: /\.cjsx$/,
             loaders: ['react-hot', 'coffee', 'cjsx']
@@ -50,9 +49,9 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.es6', '.jsx', '.css', '.coffee', '.cjsx'],
         alias: {
-            actions: __dirname + '/app/actions',
-            constants: __dirname + '/app/constants',
-            stores: __dirname + '/app/stores'
+            actions: __dirname + '/client/app/actions',
+            constants: __dirname + '/client/app/constants',
+            stores: __dirname + '/client/app/stores'
         }
     }
 };

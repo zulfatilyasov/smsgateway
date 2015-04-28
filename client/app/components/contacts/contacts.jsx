@@ -9,7 +9,7 @@ class Contacts extends React.Component {
                     <h2>Contacts list</h2>
                     <h4>Not yet implemented</h4>
                 </form>
-                <div className="messages-list">
+                <div className="">
                     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 </div>

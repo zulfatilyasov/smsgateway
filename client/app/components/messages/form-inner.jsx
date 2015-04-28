@@ -1,5 +1,5 @@
 import React from 'react'
-import messageActions from  '../../actions/MessageActions.es6';
+import messageActions from  '../../actions/MessageActions.coffee';
 import messageStore from '../../stores/MessageStore.es6';
 import Spinner from '../spinner/spinner.cjsx';
 import {TextField,  FontIcon,FlatButton, RaisedButton} from 'material-ui';
@@ -14,11 +14,13 @@ class FormInner extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sending: false
+            sending: false,
+            mounted:false
         }
     }
 
     componentDidMount() {
+        this.setState({mounted:true});
         messageStore.addChangeListener(this._onChange.bind(this));
     }
 
@@ -27,7 +29,9 @@ class FormInner extends React.Component {
     }
 
     _onChange() {
-        this.setState(getState());
+        if(this.state.mounted){
+            this.setState(getState());
+        }
     }
 
     _handlePhoneChange(e) {
@@ -35,12 +39,14 @@ class FormInner extends React.Component {
     }
 
     _handleTextChange(e) {
-        this.text = e.target.value;
+        this.body = e.target.value;
     }
 
-    _handleSendMessage() {
+    _handleSendMessage(e) {
+        e.preventDefault();
+
         var message = {
-            body: this.text,
+            body: this.body,
             status: 'sent',
             address: this.address,
             outcoming: true,

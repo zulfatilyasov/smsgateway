@@ -32,7 +32,7 @@ actions[MessageConstants.SEND] = action => {
 actions[MessageConstants.SEND_SUCCESS] = action => {
     _sendInProgress = false;
     _messageList.push({
-        status: 'Sent',
+        status: 'sent',
         outcoming: true,
         address: action.message.address,
         body: action.message.body
@@ -43,7 +43,8 @@ actions[MessageConstants.SEND_SUCCESS] = action => {
 actions[MessageConstants.SEND_FAIL] = action => {
     _sendInProgress = false;
     _messageList.push({
-        status: 'Failed',
+        id: (new Date()).toUTCString(),
+        status: 'failed',
         outcoming: true,
         address: action.message.address,
         body: action.message.body

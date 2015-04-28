@@ -1,5 +1,1 @@
-to start development:
-npm run dev
-
-to build for production
-npm run build
+#SMS Gateway web client

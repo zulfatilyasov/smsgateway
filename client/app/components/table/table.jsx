@@ -28,7 +28,7 @@ class Table extends React.Component {
                 'icon-arrow-with-circle-right incoming': item.incoming
             });
             if (item) {
-                rows.push(<tr>
+                rows.push(<tr key={item.id}>
                     <td className="icon"><FontIcon  className={iconClassName} /></td>
                     <td data-title="Status " className={statusClass}><div className="status status-block">{item.status}</div></td>
                     <td data-title="Contact">{item.address}</td>

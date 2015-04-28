@@ -62,6 +62,10 @@ var Master = React.createClass({
         ];
 
 
+        var pageContent = <div>
+                <MenuButton onMenuButtonClick={this._onMenuIconButtonTouchTap}/>
+                <PageWithNav menuItems={menuItems}/>
+        </div>
         return (
             <AppCanvas>
 
@@ -75,12 +79,9 @@ var Master = React.createClass({
 
                 <AppLeftNav ref="leftNav" />
 
-                <MenuButton onMenuButtonClick={this._onMenuIconButtonTouchTap}/>
-
-                <PageWithNav menuItems={menuItems}/>
-
+                
                 {
-                    this.state.authenticated ? null : <LoginPage />
+                    this.state.authenticated ? pageContent  : <LoginPage />
                 }
 
             </AppCanvas>

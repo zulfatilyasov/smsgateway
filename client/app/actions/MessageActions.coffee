@@ -3,14 +3,19 @@ MessageConstants = require '../constants/MessageConstants.js'
 apiClient = require '../services/apiclient.coffee'
 config = require '../config.coffee'
 
+messagesLoaded = false
 MessageActions = 
     getUserMessages: (userId) ->
+        if messagesLoaded
+            return
+        console.log 'called get user messages'
         apiClient.getUserMessages userId
             .then (resp) ->
                     messages = resp.body
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.RECEIVED_ALL_MESSAGES
                         messages: messages
+                    messagesLoaded = true
                 , (err) ->
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.GET_ALL_MESSAGES_FAIL
@@ -26,6 +31,7 @@ MessageActions =
                 message: message
 
     send: (message) ->
+        console.log 'called send message'
         apiClient.sendMessage message
             .then (resp) ->
                 setTimeout ->

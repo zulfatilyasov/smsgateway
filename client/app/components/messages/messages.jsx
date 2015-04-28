@@ -17,11 +17,13 @@ class Messages extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            mounted:false,
             messages:messageStore.MessageList
         };
     }
 
     componentDidMount() {
+        this.setState({ mounted: true });
         messageActions.getUserMessages(userStore.userId());
         messageStore.addChangeListener(this._onChange.bind(this));
     }
@@ -31,7 +33,9 @@ class Messages extends React.Component {
     }
 
     _onChange() {
-        this.setState(getState());
+        if(this.state.mounted){
+            this.setState(getState());
+        }
     }
 
     _onActive() {
