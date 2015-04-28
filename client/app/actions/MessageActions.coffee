@@ -1,13 +1,19 @@
 AppDispatcher = require '../AppDispatcher.coffee'
 MessageConstants = require '../constants/MessageConstants.js'
+userActions = require './UserActions.coffee'
 apiClient = require '../services/apiclient.coffee'
 config = require '../config.coffee'
 
 messagesLoaded = false
 MessageActions = 
     getUserMessages: (userId) ->
+        if not userId
+            userActions.logout()
+            return 
+
         if messagesLoaded
             return
+
         console.log 'called get user messages'
         apiClient.getUserMessages userId
             .then (resp) ->

@@ -17,7 +17,7 @@
   },
   "AccessToken": {
     "dataSource": "mongodb",
-    "public": false
+    "public": true
   },
   "ACL": {
     "dataSource": "mongodb",

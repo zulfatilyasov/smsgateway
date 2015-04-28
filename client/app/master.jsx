@@ -32,6 +32,7 @@ var Master = React.createClass({
 
     componentDidMount() {
         messageActions.startReceiving();
+        this.setState(getState());
         userStore.addChangeListener(this._onChange);
     },
 
@@ -79,7 +80,6 @@ var Master = React.createClass({
 
                 <AppLeftNav ref="leftNav" />
 
-                
                 {
                     this.state.authenticated ? pageContent  : <LoginPage />
                 }
