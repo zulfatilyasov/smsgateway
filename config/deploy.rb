@@ -32,17 +32,17 @@ set :pm2_name, 'smsgateway'
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
-namespace :deploy do
+# namespace :deploy do
 
-  after :updated do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      within current_path do
-        execute :npm, :run, :build
-      end
-    end
-  end
+#   after :updated, :clear_cache do
+#     on roles(:web), in: :groups, limit: 3, wait: 10 do
+#       within current_path do
+#         execute :npm, :run, :build
+#       end
+#     end
+#   end
 
-end
+# end
 
 namespace :deploy do
 
