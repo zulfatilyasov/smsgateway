@@ -29,8 +29,8 @@ MessageList = React.createClass
         <div>
             {
                 if @state.messages.length 
-                    @state.messages.map (m) ->
-                        <MessageItem  key={m.id} {...m} />
+                    for msg in @state.messages by -1
+                        <MessageItem  key={msg.id} {...msg} />
                 else
                     if @state.loading
                         <div className="no-messages">Loading messages...</div>

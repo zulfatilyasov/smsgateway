@@ -2,7 +2,7 @@ import React from 'react'
 import messageActions from  '../../actions/MessageActions.coffee';
 import messageStore from '../../stores/MessageStore.es6';
 import Spinner from '../spinner/spinner.cjsx';
-import {TextField,  FontIcon,FlatButton, RaisedButton} from 'material-ui';
+import {TextField,  FontIcon, FlatButton, RaisedButton} from 'material-ui';
 
 function getState() {
     return {
@@ -52,7 +52,7 @@ class FormInner extends React.Component {
             outcoming: true,
             origin: 'web'
         };
-
+       
         messageActions.send(message);
     }
 
@@ -65,14 +65,14 @@ class FormInner extends React.Component {
             <div className="pad">
                 <div className="formInner">
                     <TextField
-                        hintText="Phone number"
+                        hintText="Enter message address"
                         className="input phoneInput"
                         onChange={this._handlePhoneChange.bind(this)}
-                        floatingLabelText="Enter phone number"/>
+                        floatingLabelText="Address"/>
 
                     <TextField
-                        hintText="Message text"
-                        floatingLabelText="Enter message text"
+                        hintText="Enter message body"
+                        floatingLabelText="Body"
                         onChange={this._handleTextChange.bind(this)}
                         className="input msgInput"
                         multiLine={true}/>
@@ -80,9 +80,13 @@ class FormInner extends React.Component {
                     <div className="button-wrap">
                         <Spinner width="40px" height="40px" show={this.state.sending}/>
 
-                        <RaisedButton className={sendButtonClass} onClick={this._handleSendMessage.bind(this)} linkButton={true}>
+                        <RaisedButton className={sendButtonClass} primary={true} onClick={this._handleSendMessage.bind(this)} linkButton={true}>
                             <FontIcon className="button-icon icon-paperplane"/>
                             <span className="mui-raised-button-label icon-button-label">Send</span>
+                        </RaisedButton>
+
+                        <RaisedButton className="cancel-button" onClick={this.props.cancelClickHandler} linkButton={true}>
+                            <span className="mui-raised-button-label">Cancel</span>
                         </RaisedButton>
                     </div>
                 </div>

@@ -42,7 +42,6 @@ class ApiClient
 
     getUserMessages: (userId, section) ->
         filter = @_getMessagesFilter(section)
-        console.log filter
         request
             .get "#{@prefix}/users/#{userId}/messages#{filter}"
             .set 'Authorization', @_getToken()

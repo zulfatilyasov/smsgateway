@@ -1,9 +1,13 @@
 React = require 'react'
 MessageList = require './messageList.cjsx'
+headerEvents = require '../../headerEvents.coffee'
 
-AllMessages = React.createClass
+Outcoming = React.createClass
+    componentDidMount: ->
+        headerEvents.emitChange('Outcoming')
+
     render: ->
         <div>
             <MessageList section="outcoming" />
         </div>
-module.exports = AllMessages
+module.exports = Outcoming
