@@ -5,6 +5,7 @@ describe('Message Actions', function() {
     var dispatcher = jasmine.createSpyObj('dispatcher', ['handleViewAction']);
     var apiClient = jasmine.createSpyObj('apiClient', ['getUserMessages']);
     var userId = '123';
+    var section = 'outcoming';
     var messages = ['hello'];
 
     apiClient.getUserMessages.and.callFake(function(userId) {
@@ -27,8 +28,8 @@ describe('Message Actions', function() {
     });
 
     it('should get messages through api', function() {
-        messageActions.getUserMessages(userId);
-        expect(apiClient.getUserMessages).toHaveBeenCalledWith(userId);
+        messageActions.getUserMessages(userId, section);
+        expect(apiClient.getUserMessages).toHaveBeenCalledWith(userId, section);
         expect(dispatcher.handleViewAction).toHaveBeenCalledWith({
             actionType: MessageContstants.RECEIVED_ALL_MESSAGES,
             messages: messages
