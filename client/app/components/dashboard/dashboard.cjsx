@@ -2,16 +2,16 @@ React = require 'react'
 {Paper} = require 'material-ui'
 ReactCSSTransitionGroupAppear = require '../../react-helpers/ReactCSSTransitionAppear.jsx'
 
-Settings = React.createClass
+Dashboard = React.createClass
     render: ->
         <Paper zDepth={1}>
             <div className="section">
                 <div className="section-header">
                     <ReactCSSTransitionGroupAppear transitionName="fadeDown">
-                        <h2>Settings</h2>
+                        <h2>Dashboard</h2>
                     </ReactCSSTransitionGroupAppear>
                     <ReactCSSTransitionGroupAppear transitionName="fadeDown2">
-                        <h4>Subsciption and notifications</h4>
+                        <h4>not implented yet</h4>
                     </ReactCSSTransitionGroupAppear>
                 </div>
                 <div className="section-body">
@@ -20,5 +20,5 @@ Settings = React.createClass
                 </div>
             </div>
         </Paper>
-
-module.exports = Settings
+        
+module.exports = Dashboard

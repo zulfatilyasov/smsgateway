@@ -1,0 +1,66 @@
+.message-item
+  cf()
+  border-bottom: 1px solid #eee
+  &:hover
+    background #f4f4f4
+    cursor pointer
+  .message-icon
+    col(1/10)
+    padding-right 20px
+  .message-inner
+    padding: 16px 0
+    font-size 14px
+    col(9/10)
+    .address, .body
+      height 30px
+      line-height 30px
+
+.message-icon{
+  max-width: 15px;
+  padding: 32px 0;
+  padding-left: 25px;
+
+  .mui-font-icon{
+    color: #212121;
+    font-size: 22px; 
+    &.outcoming{
+      color:#388E3C;
+    }
+    &.incoming{
+      color:#AFB42B;
+    }
+  }
+}
+address 
+  &.success {
+    color: #388E3C;
+    .status{
+      @media screen and (min-width: 768px){
+        border-color: #388E3C;
+      }
+    }
+  }
+  &.received{
+    .status{
+      @media screen and (min-width: 768px){
+        border-color: #AFB42B;
+      }
+    }
+    color: #AFB42B;
+  }
+  &.sending{
+    .status{
+      @media screen and (min-width: 768px){
+        border-color: #795548;
+      }
+    }
+    color: #795548;
+  }
+  &.fail {
+    .status{
+      @media screen and (min-width: 768px){
+        border-color: #F44336;
+      }
+    }
+    color: #F44336;
+  }

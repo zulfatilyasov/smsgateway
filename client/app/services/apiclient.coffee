@@ -10,6 +10,16 @@ class ApiClient
     _getToken: ->
         localStorage.getItem 'sg-token'
 
+    _getMessagesFilter: (section = 'all') ->
+        if section is 'all'
+            return ''
+        if section is 'outcoming'
+            return '?filter[where][outcoming]=true'
+        if section is 'incoming'
+            return '?filter[where][incoming]=true'
+        if section is 'starred'
+            return '?filter[where][starred]=true'
+
     _abortRequest: (key) ->
         if @_pendingRequests[key]
             @_pendingRequests[key]._callback = ->
@@ -30,9 +40,11 @@ class ApiClient
             .send registrationData
             .end()
 
-    getUserMessages: (userId) ->
+    getUserMessages: (userId, section) ->
+        filter = @_getMessagesFilter(section)
+        console.log filter
         request
-            .get "#{@prefix}/users/#{userId}/messages"
+            .get "#{@prefix}/users/#{userId}/messages#{filter}"
             .set 'Authorization', @_getToken()
             .end()
 

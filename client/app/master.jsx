@@ -7,10 +7,8 @@ var AppCanvas = mui.AppCanvas;
 var FontIcon = mui.FontIcon;
 var Menu = mui.Menu;
 var IconButton = mui.IconButton;
-var PageWithNav = require('./page-with-nav.jsx');
 var LoginPage = require('./components/login/login-page.cjsx');
 var userStore = require('./stores/UserStore.coffee');
-var userActions = require('./actions/UserActions.coffee');
 var FloatingActionButton = mui.FloatingActionButton;
 var MenuButton = require('./components/menu-button/menu-button.jsx');
 var AppLeftNav = require('./app-left-nav.jsx');
@@ -28,7 +26,6 @@ var Master = React.createClass({
 
     getInitialState(){
         return {
-            mounted: false,
             authenticated: userStore.isAuthenticated()
         };
     },
@@ -39,7 +36,6 @@ var Master = React.createClass({
         }
 
         this.setState({
-            mounted: true,
             authenticated: userStore.isAuthenticated()
         });
         
@@ -47,13 +43,12 @@ var Master = React.createClass({
     },
 
     componentWillUnmount() {
-        this.setState({mounted:false});
         console.log('masterjsx will unmounted')
         userStore.removeChangeListener(this._onChange);
     },
 
     _onChange() {
-        if(this.state.mounted){
+        if(this.isMounted()){
             console.log('called on changed master')
             this.setState(getState());
         }
@@ -91,12 +86,9 @@ var Master = React.createClass({
 
                 <AppLeftNav ref="leftNav" />
                 <MenuButton onMenuButtonClick={this._onMenuIconButtonTouchTap}/>
-                <PageWithNav menuItems={menuItems}/>
-
-                {
-                    this.state.authenticated ? null  : <LoginPage />
-                }
-
+                <div className="mui-app-content-canvas">
+                    <RouteHandler />
+                </div>
             </AppCanvas>
         );
     }

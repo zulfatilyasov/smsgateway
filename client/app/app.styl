@@ -1,33 +1,65 @@
 @import '../../node_modules/jeet/stylus/jeet'
 @import './components/messages'
+@import './components/page-with-nav'
+
+body-bg = #F4F4F4
 
 body
     overflow-y scroll !important
+    background: body-bg
+    .mui-app-canvas
+        background: body-bg
 
 .pad
     padding 1.6rem
 
 .mui-app-content-canvas
-    center(1200px)
+    center(1100px)
 
 .hidden
     display: none
 
-.section-body
-    background-color: #fff
+.section
+    cf()
+    .section-header
+        padding: 20px 0
+        background-color: #009688
+        color:#fff
 
-.page-with-nav
-    .page-with-nav-content
-        max-width none
-        h1
+        h4,h2,h3
+            margin-left: 24px
+            margin-bottom: 0
+            color:#fff
+        h4
+            padding-top: 0
+            color:#B2DFDB;
+
+    .section-body
+        col(1)
+        background-color: #fff
+        .no-messages
             text-align center
+            font-size 16px
+            padding 40px 0
+.mui-menu-item 
+    // border-bottom: 1px solid #eee
+    .mui-menu-item-icon
+        margin-right 10px
+.fadeDown2-enter
+  opacity: 0
+  transform: translateY(15px)translateZ(0)
+  transition: transform .35s , opacity .35s
+ 
+.fadeDown2-enter.fadeDown2-enter-active 
+  transform: translateY(0px)translateZ(0)
+  transition-delay: .09625s;
+  opacity: 1
 
+.fadeDown-enter
+  opacity: 0
+  transform: translateY(15px)translateZ(0)
+  transition: transform .35s , opacity .35s
 
-.fadeDown-enter {
-  opacity: 0.01;
-  transition: opacity .5s ease-in;
-}
-
-.fadeDown-enter.fadeDown-enter-active {
-  opacity: 1;
-}
+.fadeDown-enter.fadeDown-enter-active 
+  transform: translateY(0px)translateZ(0)
+  opacity: 1

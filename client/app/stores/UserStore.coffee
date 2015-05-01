@@ -1,7 +1,6 @@
 BaseStore = require './BaseStore.coffee';
 userConstants = require '../constants/UserConstants.js';
 
-
 _authenticationInProgress = false
 _needVerification = false
 _requestedPasswordReset = false
@@ -15,7 +14,9 @@ class UserStore extends BaseStore
         super(actions)
 
         @isAuthenticated = ->
-           !!localStorage.getItem 'sg-token'
+           token = localStorage.getItem 'sg-token'
+           userId = localStorage.getItem 'sg-userId'
+           return userId and token
 
         @InProgress = ->
             _authenticationInProgress

@@ -1,0 +1,28 @@
+.page-with-nav
+  cf()
+  .secondary-content
+     border-left:1px solid #eee
+
+  @media (min-width:768px)
+    .secondary-nav
+      col(1/4, gutter:0)
+    .secondary-content
+      min-height 300px
+      col(3/4, gutter:0) 
+ 
+  @media (min-width:965px)
+    .secondary-nav
+      col(2/9, gutter:0)
+    .secondary-content
+      col(7/9, gutter:0) 
+
+  @media (min-width:1200px)
+    .secondary-nav
+      col(1/6, gutter:0)
+    .secondary-content
+      col(5/6, gutter:0) 
+
+.mui-menu-item.mui-is-selected
+  .mui-menu-item-icon, span
+      color:#795548
+    

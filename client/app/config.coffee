@@ -1,4 +1,4 @@
-devHost = 'http://192.168.0.2:3200'
+devHost = 'http://localhost:3200'
 
 config = 
   host: ''

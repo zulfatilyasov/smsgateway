@@ -8,17 +8,16 @@ MessageActions =
 
     clean: ->
         @messagesLoaded = false
-        console.log 'called clean'
         AppDispatcher.handleViewAction
             actionType: MessageConstants.CLEAN
 
-    getUserMessages: (userId) ->
+    getUserMessages: (userId, section) ->
         if @messagesLoaded
             console.log 'masseges already loaded'
             return
 
         console.log 'called get user messages'
-        apiClient.getUserMessages userId
+        apiClient.getUserMessages userId, section
             .then (resp) ->
                     messages = resp.body
                     AppDispatcher.handleViewAction
@@ -28,7 +27,10 @@ MessageActions =
                 , (err) ->
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.GET_ALL_MESSAGES_FAIL
-                        messages: messages
+                        error: err
+
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.GET_MESSAGES
 
     startReceiving: ->
         token = localStorage.getItem 'sg-token'

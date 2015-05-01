@@ -40,8 +40,8 @@ class Table extends React.Component {
             });
             if (item) {
                 rows.push(<tr key={item.id}>
-                    <td className="icon"><FontIcon  className={iconClassName} /></td>
-                    <td data-title="Status " className={statusClass}><div className="status status-block">{item.statusText}</div></td>
+                    <td className="icon"><FontIcon className={iconClassName} /></td>
+                    <td data-title="Status" className={statusClass}><div className="status status-block">{item.statusText}</div></td>
                     <td data-title="Contact">{item.address}</td>
                     <td data-title="Message">{item.body}</td>
                 </tr>);

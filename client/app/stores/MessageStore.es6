@@ -7,8 +7,13 @@ var _messageList = [];
 
 var _sendInProgress = false;
 var _error = '';
+var _inProgress = false;
 
 class MessageStore extends BaseStore {
+    get InProgress(){
+        return _inProgress;
+    }
+
     get MessageList() {
         return _messageList;
     }
@@ -64,14 +69,24 @@ actions[MessageConstants.MESSAGE_RECEIVED] = action => {
 };
 
 actions[MessageConstants.RECEIVED_ALL_MESSAGES] = action => {
-    _messageList = action.messages 
-    console.log(_messageList);
+    _messageList = action.messages;
+    _inProgress = false;
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.GET_ALL_MESSAGES_FAIL] = action => {
+    _inProgress = false;
+    _error = 'failed to get messages';
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.GET_MESSAGES] = action => {
+    _inProgress = true;
     storeInstance.emitChange();
 };
 
 actions[MessageConstants.CLEAN] = action => {
-    _messageList = []
-    storeInstance.emitChange();
+    _messageList = [];
 };
 
 storeInstance = new MessageStore(actions);

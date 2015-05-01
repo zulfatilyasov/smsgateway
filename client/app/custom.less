@@ -1,7 +1,5 @@
 @import "../../node_modules/material-ui/src/less/scaffolding.less";
 @import "../../node_modules/material-ui/src/less/components.less";
-@import "page-with-nav.less";
-
 a {
   color: @accent-1-color;
   text-decoration: none;
@@ -29,11 +27,8 @@ div.logo {
 
 
 .mui-app-canvas {
-  height: 100%;
-  background: rgba(204, 204, 204, 0.1);
   .mui-app-content-canvas {
-    margin-top: -140px;
-    height: 100%;
+    margin-top: -116px;
   }
   .mui-left-nav-menu {
     z-index: 300;
@@ -45,21 +40,6 @@ div.logo {
     }
     .mui-paper-container {
       height: auto;
-    }
-  }
-  .page-with-nav-secondary-nav {
-    display: none;
-    height: 100%;
-    top: 0px;
-    padding-top: 24px;
-    //border-right: 1px solid #eee;
-    width: @navwidth;
-  }
-  .page-with-nav-content {
-    border-left: none;
-    margin-left: 0;
-    @media screen and (min-width: 768) {
-      margin-left: @navwidth;
     }
   }
   .mui-app-bar {
@@ -94,20 +74,19 @@ div.logo {
 .mui-menu {
   background-color: rgba(255, 255, 255, 0);
   .mui-menu-item {
-    transition: transform 0.2s @easing-cubic;
-
-    -webkit-transform: translateX(0px);
-    -moz-transform: translateX(0px);
-    -ms-transform: translateX(0px);
-    -o-transform: translateX(0px);
-    transform: translateX(0px);
+    // transition: transform 0.2s @easing-cubic;
+    // -webkit-transform: translateX(0px);
+    // -moz-transform: translateX(0px);
+    // -ms-transform: translateX(0px);
+    // -o-transform: translateX(0px);
+    // transform: translateX(0px);
     &:hover:not(.mui-is-disabled) {
-      background-color: transparent;
-      -webkit-transform: translateX(5px);
-      -moz-transform: translateX(5px);
-      -ms-transform: translateX(5px);
-      -o-transform: translateX(5px);
-      transform: translateX(5px);
+      // -webkit-transform: translateX(5px);
+      // background:transparent;
+      // -moz-transform: translateX(5px);
+      // -ms-transform: translateX(5px);
+      // -o-transform: translateX(5px);
+      // transform: translateX(5px);
     }
     color: #727272;
     &.mui-is-selected {

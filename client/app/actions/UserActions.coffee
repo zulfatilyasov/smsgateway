@@ -2,13 +2,13 @@ AppDispatcher = require '../AppDispatcher.coffee'
 UserContstants = require '../constants/UserConstants.js'
 apiClient  = require '../services/apiclient.coffee'
 messageActions = require './MessageActions.coffee'
+router = require '../router.coffee'
 
 loginDelay = 1000;
 UserActions = 
     register: (registrationData) ->
         apiClient.register registrationData
             .then (resp) ->
-
                 data = resp.body
                 setTimeout  ->
                     AppDispatcher.handleServerAction
@@ -52,7 +52,7 @@ UserActions =
             creds: creds
 
     logout: -> 
-        messageActions.clean()
+        router.transitionTo('/login');
         AppDispatcher.handleViewAction
             actionType: UserContstants.LOG_OUT
 

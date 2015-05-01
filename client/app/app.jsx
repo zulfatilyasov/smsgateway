@@ -1,22 +1,17 @@
 import muiStyles from './custom.less'
 import appStyles from './app.styl'
 import injectTapEventPlugin from "react-tap-event-plugin";
+import routeActions  from './actions/RouteActions.coffee'
+import userStore from './stores/UserStore.coffee'
 
 var React = require('react'),
     Router = require('react-router'),
+    router = require('./router.coffee'),
     AppRoutes = require('./app-routes.jsx');
 
 injectTapEventPlugin();
 
-Router
-    // Runs the router, similiar to the Router.run method. You can think of it as an
-    // initializer/constructor method.
-    .create({
-        routes: AppRoutes,
-        scrollBehavior: Router.ScrollToTopBehavior
-    })
-    // This is our callback function, whenever the url changes it will be called again.
-    // Handler: The ReactComponent class that will be rendered
-    .run(function (Handler) {
-        React.render(<Handler/>, document.body);
-    });
+router.run(function (Handler, state) {
+    routeActions.checkPermissions(state);
+    React.render(<Handler/>, document.body)
+});

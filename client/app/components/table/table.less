@@ -10,7 +10,7 @@
 // ---------------------
 @table-header-font-weight: 400;
 @table-header-font-color: #757575;
-@pink-A100: #B2DFDB;
+@pink-A100: #f4f4f4;
 @table-cell-padding: 1.6rem;
 @table-condensed-cell-padding: @table-cell-padding/2;
 
@@ -97,38 +97,6 @@
             border-radius: 3px;
             // border: 1px solid #fff; 
           }
-        }
-        &.success {
-          color: #388E3C;
-          .status{
-            @media screen and (min-width: 768px){
-              border-color: #388E3C;
-            }
-          }
-        }
-        &.received{
-          .status{
-            @media screen and (min-width: 768px){
-              border-color: #AFB42B;
-            }
-          }
-          color: #AFB42B;
-        }
-        &.sending{
-          .status{
-            @media screen and (min-width: 768px){
-              border-color: #795548;
-            }
-          }
-          color: #795548;
-        }
-        &.fail {
-          .status{
-            @media screen and (min-width: 768px){
-              border-color: #F44336;
-            }
-          }
-          color: #F44336;
         }
       }
     }

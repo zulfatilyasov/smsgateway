@@ -13,18 +13,21 @@ var PageWithNav = React.createClass({
   },
 
   render: function() {
+    var contentStyle = {minHeight:this.state.contentHeight}
+
     return (
-      <div className="mui-app-content-canvas page-with-nav">
-        <div className="page-with-nav-content">
-          <RouteHandler />
-        </div>
-        <div className="page-with-nav-secondary-nav">
+      <div className="page-with-nav">
+        <div className="secondary-nav">
           <Menu 
             ref="menuItems" 
             zDepth={0} 
+            autoWidth={false}
             menuItems={this.props.menuItems} 
             selectedIndex={this._getSelectedIndex()} 
             onItemClick={this._onMenuItemClick} />
+        </div>
+        <div style={contentStyle} className="secondary-content">
+          <RouteHandler />
         </div>
       </div>
     );
@@ -37,6 +40,14 @@ var PageWithNav = React.createClass({
     for (var i = menuItems.length - 1; i >= 0; i--) {
       currentItem = menuItems[i];
       if (currentItem.route && this.context.router.isActive(currentItem.route)) return i;
+    };
+  },
+
+  getInitialState: function() {
+    var pageHeaderHeight = 165;
+    var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    return {
+      contentHeight: viewportHeight - pageHeaderHeight
     };
   },
 

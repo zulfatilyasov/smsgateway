@@ -23,7 +23,7 @@ var AppLeftNav = React.createClass({
 
         this.menuItems = [
             {route: 'dashboard', text: 'Dashboard',iconClassName:'icon icon-dashboard'},
-            {route: 'messages', text: 'Messages',iconClassName:'icon icon-chat'},
+            {route: 'allmessages', text: 'Messages',iconClassName:'icon icon-chat'},
             {route: 'contacts', text: 'Contacts',iconClassName:'icon icon-users'},
             {route: 'settings', text: 'Settings',iconClassName:'icon icon-cog'},
             {route: 'logout', onClick: this._onLogoutClick, text: 'Logout',iconClassName:'icon icon-lock'}
