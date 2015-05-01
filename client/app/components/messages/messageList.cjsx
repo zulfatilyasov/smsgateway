@@ -33,7 +33,7 @@ MessageList = React.createClass
                         <MessageItem  key={msg.id} {...msg} />
                 else
                     if @state.loading
-                        <div className="no-messages">Loading messages...</div>
+                        <div className="no-messages"></div>
                     else 
                         <div className="no-messages">No messages</div>
             }
