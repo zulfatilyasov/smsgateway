@@ -29,16 +29,16 @@
                 loader: 'babel-loader?optional=runtime'
             }, {
                 test: /\.css$/,
-                loader: 'style!url-loader!css'
+                loader: 'style!url-loader!css!autoprefixer'
             }, {
                 test: /\.less$/,
-                loader: "style!css!less"
+                loader: "style!css!autoprefixer!less"
             }, {
                 test: /\.(woff|ttf|eot|svg|png)$/,
                 loader: 'url-loader?limit=8192'
             }, {
                 test: /\.styl$/,
-                loader: 'style!css!stylus?paths=node_modules/jeet/stylus/'
+                loader: 'style!css!autoprefixer!stylus?paths=node_modules/jeet/stylus/'
             }, {
                 test: /\.cjsx$/,
                 loaders: ['react-hot', 'coffee', 'cjsx']

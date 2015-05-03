@@ -75,8 +75,8 @@ var PageWithNav = React.createClass({
               </div>
               <div className="actions">
                 <div className="buttons">
-                  <RaisedButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" primary={true} />
-                  <RaisedButton className="search" label="Search" secondary={true} />
+                  <FlatButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" primary={true} />
+                  <FlatButton className="search" label="Search" secondary={true} />
                 </div>
               </div>
             </div>
