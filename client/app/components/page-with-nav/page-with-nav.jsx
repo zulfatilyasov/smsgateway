@@ -31,7 +31,6 @@ var PageWithNav = React.createClass({
   },
 
   onChange:function () {
-    debugger
     if(messageStore.IsSending){
       this.setState({readyToClose: true});
     }
@@ -75,7 +74,7 @@ var PageWithNav = React.createClass({
               </div>
               <div className="actions">
                 <div className="buttons">
-                  <FlatButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" primary={true} />
+                  <RaisedButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" primary={true} />
                   <FlatButton className="search" label="Search" secondary={true} />
                 </div>
               </div>

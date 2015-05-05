@@ -27,7 +27,7 @@ MessageItem = React.createClass
 
     statuText = getItemStatusText(@props)
 
-    <div className="message-item">
+    <div className="message-item animated">
       <div className="message-icon">
         <FontIcon className={iconClassName} />
       </div>
