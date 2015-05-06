@@ -8,6 +8,7 @@ var React = require('react'),
   headerEvents = require('../../headerEvents.coffee'),
   NewMessageForm = require('../messages/form-inner.jsx'),
   messageStore = require('../../stores/MessageStore.es6'),
+  SearchBar = require('../../components/search/searchbar.cjsx'),
   Menu = mui.Menu;
 
 
@@ -55,6 +56,11 @@ var PageWithNav = React.createClass({
       open:this.state.showForm
     });
 
+    var searchFormClasses = classBuilder({
+      searchForm:true,
+      open:this.state.showSearchForm
+    });
+
     return (
       <div className="page-with-nav">
         <div className="secondary-nav">
@@ -75,13 +81,18 @@ var PageWithNav = React.createClass({
               <div className="actions">
                 <div className="buttons">
                   <RaisedButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" primary={true} />
-                  <FlatButton className="search" label="Search" secondary={true} />
+                  <FlatButton onClick={this.handleSearchClick} className="search" label="Search" secondary={true} />
                 </div>
               </div>
             </div>
             <div className={formClasses}>
               <div className="form-content">
                 <NewMessageForm cancelClickHandler={this.cancelClickHandler}/>
+              </div>
+            </div>
+            <div className={searchFormClasses}>
+              <div className="form-content">
+                <SearchBar closeClickHandler={this.cancelClickHandler} />
               </div>
             </div>
           </div>
@@ -92,8 +103,16 @@ var PageWithNav = React.createClass({
   },
 
   cancelClickHandler:function () {
-    this.setState({showForm:false});
+    this.setState({
+      showForm:false,
+      showSearchForm:false
+     });
   },
+
+  handleSearchClick: function () {
+    this.setState({showSearchForm:true});
+  },
+
   handleCreateMessageClick: function () {
     this.setState({showForm:true});
   },
