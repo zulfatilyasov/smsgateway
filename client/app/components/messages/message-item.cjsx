@@ -21,7 +21,7 @@ MessageItem = React.createClass
     @toggleZIndex()
     if data.payload is 'star'
       messageActions.updateMessageStar(@props.id, !@props.starred)
-      
+
     if data.payload is 'resend'
       messageActions.resend
         address:@props.address
@@ -37,6 +37,9 @@ MessageItem = React.createClass
       @setState({zindex:98})
 
   componentDidMount: ->
+    if @props.new
+      $(this.getDOMNode()).addClass('active')
+      
     $(this.getDOMNode()).find('.mui-menu-control')[0].onclick = @toggleZIndex
 
   render: ->

@@ -97,7 +97,7 @@
         "url": "https://zulfatilyasov@bitbucket.org/zulfatilyasov/smsgateway.git"
     },
     "description": "smsgateway",
-    "pre-push": [
+    "pre-commit": [
         "npm run build"
     ]
 }

@@ -41,12 +41,8 @@ actions[MessageConstants.SEND] = action => {
 
 actions[MessageConstants.SEND_SUCCESS] = action => {
     _sendInProgress = false;
-    _messageList.push({
-        status: 'sent',
-        outcoming: true,
-        address: action.message.address,
-        body: action.message.body
-    });
+    action.message.new = true
+    _messageList.push(action.message);
     storeInstance.emitChange();
 };
 

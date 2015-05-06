@@ -15,7 +15,6 @@ MessageList = React.createClass
     render: ->
         <div>
             {
-                console.log @props.messages.length
                 if @props.messages.length 
                     for msg in @props.messages by -1
                         msg.key = msg.id

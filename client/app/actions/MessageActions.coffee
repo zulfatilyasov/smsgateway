@@ -88,9 +88,10 @@ MessageActions =
         apiClient.sendMessage message
             .then (resp) ->
                 setTimeout ->
+                    savedMessage = resp.body
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.SEND_SUCCESS
-                        message: message
+                        message: savedMessage
                 , 1000
 
             , (err) ->
