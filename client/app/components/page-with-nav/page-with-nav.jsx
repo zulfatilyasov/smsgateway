@@ -8,6 +8,7 @@ var React = require('react'),
   headerEvents = require('../../headerEvents.coffee'),
   NewMessageForm = require('../messages/form-inner.jsx'),
   messageStore = require('../../stores/MessageStore.es6'),
+  messageActions = require('../../actions/MessageActions.coffee'),
   SearchBar = require('../../components/search/searchbar.cjsx'),
   Menu = mui.Menu;
 
@@ -34,6 +35,10 @@ var PageWithNav = React.createClass({
   onChange:function () {
     if(messageStore.IsSending){
       this.setState({readyToClose: true});
+    }
+
+    if(messageStore.MessageToResend && !this.state.showForm){
+      this.setState({showForm:true});
     }
 
     if(!messageStore.IsSending) {
@@ -107,6 +112,7 @@ var PageWithNav = React.createClass({
       showForm:false,
       showSearchForm:false
      });
+    messageActions.clearResend();
   },
 
   handleSearchClick: function () {

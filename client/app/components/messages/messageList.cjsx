@@ -15,10 +15,11 @@ MessageList = React.createClass
     render: ->
         <div>
             {
-                console.log @props.messages
+                console.log @props.messages.length
                 if @props.messages.length 
                     for msg in @props.messages by -1
-                        <MessageItem  key={msg.id} {...msg} />
+                        msg.key = msg.id
+                        <MessageItem {...msg} />
                 else
                     if @state.loading
                         <div className="no-messages"></div>
@@ -29,5 +30,5 @@ MessageList = React.createClass
 
     componentDidMount: ->
         animateItems()
-        
+
 module.exports = MessageList

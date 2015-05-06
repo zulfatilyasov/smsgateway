@@ -60,6 +60,14 @@ class ApiClient
             .send email
             .end()
 
+    updateMessageStar:(messageId, starred) ->
+        data =
+            starred: starred
+        request
+            .put @prefix + '/messages/' + messageId
+            .send data
+            .end()
+
     searchUserMessages: (userId, query) ->
         request
             .get "#{@prefix}/users/#{userId}/messages?filter={\"where\": {\"body\": {\"like\": \"#{query}\"}}}" 

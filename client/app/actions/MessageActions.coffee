@@ -11,6 +11,32 @@ MessageActions =
         AppDispatcher.handleViewAction
             actionType: MessageConstants.CLEAN
 
+    resend:(msg) ->
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.RESEND
+            message:msg
+
+    clearResend:->
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.CLEARRESEND
+
+    updateMessageStar: (messageId, starred)->
+        apiClient.updateMessageStar(messageId, starred)
+            .then (resp) ->
+                    message = resp.body
+                    AppDispatcher.handleViewAction
+                        actionType: MessageConstants.MESSAGE_STAR_UPDATED
+                        message: message
+
+                , (err) ->
+                    AppDispatcher.handleViewAction
+                        actionType: MessageConstants.MESSAGE_STAR_FAILED
+                        error: err
+
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.MESSAGE_STAR
+            starred: starred
+
     searchUserMessages: (userId, query) ->
         apiClient.searchUserMessages(userId, query) 
             .then (resp) ->

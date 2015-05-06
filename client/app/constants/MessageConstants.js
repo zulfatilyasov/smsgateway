@@ -11,5 +11,10 @@ module.exports = keyMirror({
     CLEAN:null,
     SEARCH_MESSAGES:null,
     GET_SEARCHED_MESSAGES_FAIL:null,
-    RECEIVED_SEARCHED_MESSAGES:null
+    RECEIVED_SEARCHED_MESSAGES:null,
+    MESSAGE_STAR_UPDATED:null,
+    MESSAGE_STAR_FAILED:null,
+    MESSAGE_STAR:null,
+    RESEND:null,
+    CLEARRESEND:null
 });

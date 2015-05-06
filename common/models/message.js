@@ -6,14 +6,14 @@ module.exports = function(Message) {
     var msgHelpers = new MessageHelpers(Message);
 
     Message.observe('after save', function(ctx, next) {
-        if (ctx.instance && ctx.instance.origin === 'web') {
+        if (ctx.instance && ctx.isNewInstance && ctx.instance.origin === 'web') {
             messenger.sendMessageToUserMobile(ctx.instance.userId, ctx.instance);
-            console.log('socket io emitted send-message to mobile: %s#%s', ctx.instance.userId, ctx.instance.text);
+            console.log('socket io emitted send-message to mobile: %s#%s', ctx.instance.userId, ctx.instance.body);
         } 
 
-        if(ctx.instance && ctx.instance.origin === 'mobile'){
+        if(ctx.instance && ctx.isNewInstance && ctx.instance.origin === 'mobile'){
             messenger.sendMessageToUserWeb(ctx.instance.userId, ctx.instance);
-            console.log('socket io emitted send-message to web: %s#%s', ctx.instance.userId, ctx.instance.text);
+            console.log('socket io emitted send-message to web: %s#%s', ctx.instance.userId, ctx.instance.body);
         }
 
         next();

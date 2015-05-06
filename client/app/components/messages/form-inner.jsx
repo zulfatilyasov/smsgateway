@@ -5,9 +5,20 @@ import Spinner from '../spinner/spinner.cjsx';
 import {TextField,  FontIcon, FlatButton, RaisedButton} from 'material-ui';
 
 function getState() {
-    return {
-        sending: messageStore.IsSending
+    var messageToResend = messageStore.MessageToResend;
+
+    var state = {
+        sending: messageStore.IsSending,
     };
+
+    if (messageToResend){
+        state.addressValue = messageToResend.address;
+        state.bodyValue = messageToResend.body;
+        state.addressKey = messageToResend.address;
+        state.bodyKey = messageToResend.body;
+    }
+
+    return state;
 }
 
 class FormInner extends React.Component {
@@ -15,7 +26,11 @@ class FormInner extends React.Component {
         super(props);
         this.state = {
             sending: false,
-            mounted:false
+            mounted:false,
+            addressValue:'',
+            addressKey:'address',
+            bodyValue:'',
+            bodyKey:'body'
         }
     }
 
@@ -65,7 +80,9 @@ class FormInner extends React.Component {
             <div className="pad">
                 <div className="formInner">
                     <TextField
+                        key={this.state.addressKey}
                         hintText="Enter message address"
+                        defaultValue={this.state.addressValue}
                         className="input phoneInput"
                         onChange={this._handlePhoneChange.bind(this)}
                         floatingLabelText="Address"/>
@@ -73,6 +90,8 @@ class FormInner extends React.Component {
                     <TextField
                         hintText="Enter message body"
                         floatingLabelText="Body"
+                        key={this.state.bodyKey}
+                        defaultValue={this.state.bodyValue}
                         onChange={this._handleTextChange.bind(this)}
                         className="input msgInput"
                         multiLine={true}/>

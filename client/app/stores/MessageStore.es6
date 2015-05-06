@@ -1,10 +1,11 @@
 import BaseStore from './BaseStore.coffee';
 import MessageConstants from '../constants/MessageConstants.js';
+import _ from 'lodash';
 
 var storeInstance;
 
 var _messageList = [];
-
+var _messageToResend = null
 var _sendInProgress = false;
 var _error = '';
 var _inProgress = false;
@@ -24,6 +25,10 @@ class MessageStore extends BaseStore {
 
     get Error() {
         return error;
+    }
+
+    get MessageToResend(){
+        return _messageToResend
     }
 }
 
@@ -95,8 +100,26 @@ actions[MessageConstants.SEARCH_MESSAGES] = action => {
     storeInstance.emitChange();
 };
 
+actions[MessageConstants.MESSAGE_STAR_UPDATED] = action => {
+    var message = action.message;
+    _messageList = _.map(_messageList, (m) => {
+                        return m.id === message.id ? message : m
+                    });
+    console.log('messages count ' + _messageList.length);
+    storeInstance.emitChange();
+};
+
 actions[MessageConstants.CLEAN] = action => {
     _messageList = [];
+};
+
+actions[MessageConstants.RESEND] = action => {
+    _messageToResend = action.message;
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.CLEARRESEND] = action => {
+    _messageToResend = null;
 };
 
 storeInstance = new MessageStore(actions);

@@ -1,6 +1,7 @@
 .message-item
   cf()
   border-bottom: 1px solid #eee
+  position relative
   &:hover
     background #f4f4f4
     cursor pointer
@@ -10,10 +11,39 @@
   .message-inner
     padding: 8px 0
     font-size 14px
-    col(9/10)
+    col(8/10)
     .address, .body
       height 30px
       line-height 30px
+
+  .message-actions
+    col(1/10) 
+    height 20px
+    margin-top 30px
+    cf()
+    .star
+      col(1/2)
+      .icon
+        color #cddc39
+    .menu-icon
+      col(1/2)
+    .mui-drop-down-icon
+      float right
+      width 15px !important
+      &.mui-open
+        .mui-menu
+          visibility: visible
+      .mui-menu
+        background #009688
+        visibility:hidden
+        top: 0px !important
+        right: 27px !important
+        &.mui-open
+        .mui-menu-item
+          color: #fff 
+    .icon
+      color #212121
+      font-size 16px
 
 .message-icon{
   max-width: 15px;
