@@ -98,6 +98,5 @@
     },
     "description": "smsgateway",
     "pre-commit": [
-        "npm run build"
     ]
 }
