@@ -68,20 +68,30 @@ actions[MessageConstants.MESSAGE_RECEIVED] = action => {
     storeInstance.emitChange();
 };
 
-actions[MessageConstants.RECEIVED_ALL_MESSAGES] = action => {
+var receivedMessages = action => {
     _messageList = action.messages;
     _inProgress = false;
     storeInstance.emitChange();
 };
 
-actions[MessageConstants.GET_ALL_MESSAGES_FAIL] = action => {
+var getMessagesFail = action => {
     _inProgress = false;
     _error = 'failed to get messages';
     storeInstance.emitChange();
 };
 
-actions[MessageConstants.GET_MESSAGES] = action => {
+var getMessages = action => {
     _inProgress = true;
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.RECEIVED_ALL_MESSAGES] = receivedMessages;
+actions[MessageConstants.GET_ALL_MESSAGES_FAIL] = getMessagesFail;
+actions[MessageConstants.GET_MESSAGES] = getMessages;
+actions[MessageConstants.RECEIVED_SEARCHED_MESSAGES] = receivedMessages;
+actions[MessageConstants.GET_SEARCHED_MESSAGES_FAIL] = getMessagesFail;
+actions[MessageConstants.SEARCH_MESSAGES] = action => {
+    _messageList = [];
     storeInstance.emitChange();
 };
 

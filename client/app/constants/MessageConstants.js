@@ -8,5 +8,8 @@ module.exports = keyMirror({
     MESSAGE_RECEIVED:null,
     GET_ALL_MESSAGES_FAIL:null,
     GET_MESSAGES:null,
-    CLEAN:null
+    CLEAN:null,
+    SEARCH_MESSAGES:null,
+    GET_SEARCHED_MESSAGES_FAIL:null,
+    RECEIVED_SEARCHED_MESSAGES:null
 });

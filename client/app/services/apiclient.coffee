@@ -60,6 +60,12 @@ class ApiClient
             .send email
             .end()
 
+    searchUserMessages: (userId, query) ->
+        request
+            .get "#{@prefix}/users/#{userId}/messages?filter={\"where\": {\"body\": {\"like\": \"#{query}\"}}}" 
+            .set 'Authorization', @_getToken()
+            .end()
+
     resetPassword: (accessToken, password, confirmation) ->
         requestData =
             accessToken: accessToken

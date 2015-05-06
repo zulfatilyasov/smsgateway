@@ -11,6 +11,22 @@ MessageActions =
         AppDispatcher.handleViewAction
             actionType: MessageConstants.CLEAN
 
+    searchUserMessages: (userId, query) ->
+        apiClient.searchUserMessages(userId, query) 
+            .then (resp) ->
+                    messages = resp.body
+                    AppDispatcher.handleViewAction
+                        actionType: MessageConstants.RECEIVED_SEARCHED_MESSAGES
+                        messages: messages
+
+                , (err) ->
+                    AppDispatcher.handleViewAction
+                        actionType: MessageConstants.GET_SEARCHED_MESSAGES_FAIL
+                        error: err
+
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.SEARCH_MESSAGES
+
     getUserMessages: (userId, section) ->
         if @messagesLoaded
             console.log 'masseges already loaded'

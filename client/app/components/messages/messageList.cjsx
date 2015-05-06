@@ -1,6 +1,5 @@
 React = require 'react'
 MessageItem = require './message-item.cjsx'
-messageStore = require '../../stores/MessageStore.es6'
 $ = require '../../services/zepto.js'
 
 animateItems = ->
@@ -12,14 +11,11 @@ animateItems = ->
             .css("animation-delay", i*delay+'ms')
             .addClass('active')
 
-getState = ->
-    loading:messageStore.InProgress
-
 MessageList = React.createClass
     render: ->
         <div>
             {
-                console.log @props.messages.length
+                console.log @props.messages
                 if @props.messages.length 
                     for msg in @props.messages by -1
                         <MessageItem  key={msg.id} {...msg} />
@@ -31,17 +27,7 @@ MessageList = React.createClass
             }
         </div>
 
-    getInitialState: ->
-        loading: messageStore.InProgress
-
     componentDidMount: ->
-        messageStore.addChangeListener(@_onChange)
         animateItems()
-
-    componentWillUnmount: ->
-        messageStore.removeChangeListener(@_onChange)
-    
-    _onChange:->
-        @setState(getState()) 
-
+        
 module.exports = MessageList
