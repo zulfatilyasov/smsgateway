@@ -4,23 +4,6 @@ import messageStore from '../../stores/MessageStore.es6';
 import Spinner from '../spinner/spinner.cjsx';
 import {TextField,  FontIcon, FlatButton, RaisedButton} from 'material-ui';
 
-function getState() {
-    var messageToResend = messageStore.MessageToResend;
-
-    var state = {
-        sending: messageStore.IsSending,
-    };
-
-    if (messageToResend){
-        state.addressValue = messageToResend.address;
-        state.bodyValue = messageToResend.body;
-        state.addressKey = messageToResend.address;
-        state.bodyKey = messageToResend.body;
-    }
-
-    return state;
-}
-
 class FormInner extends React.Component {
     constructor(props) {
         super(props);
@@ -43,9 +26,26 @@ class FormInner extends React.Component {
         messageStore.removeChangeListener(this._onChange.bind(this));
     }
 
+    getState(){
+        var state = {
+            sending: messageStore.IsSending,
+        };
+
+        if (messageStore.MessageToResend){
+            state.addressKey = messageStore.MessageToResend.address;
+            state.addressValue = messageStore.MessageToResend.address;
+            this.address = messageStore.MessageToResend.address;
+            state.bodyValue = messageStore.MessageToResend.body;
+            state.bodyKey = messageStore.MessageToResend.body;
+            this.body = messageStore.MessageToResend.body;
+        }
+
+        return state;
+    }
+
     _onChange() {
         if(this.state.mounted){
-            this.setState(getState());
+            this.setState(this.getState());
         }
     }
 
