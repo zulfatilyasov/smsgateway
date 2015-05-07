@@ -41,7 +41,8 @@ actions[MessageConstants.SEND] = action => {
 
 actions[MessageConstants.SEND_SUCCESS] = action => {
     _sendInProgress = false;
-    action.message.new = true
+    action.message.new = true;
+    _messageToResend = null;
     _messageList.push(action.message);
     storeInstance.emitChange();
 };
@@ -100,7 +101,6 @@ actions[MessageConstants.MESSAGE_STAR_UPDATED] = action => {
     _messageList = _.map(_messageList, (m) => {
                         return m.id === message.id ? message : m
                     });
-    console.log('messages count ' + _messageList.length);
     storeInstance.emitChange();
 };
 
