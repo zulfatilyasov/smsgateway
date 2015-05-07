@@ -60,12 +60,11 @@ actions[MessageConstants.SEND_FAIL] = action => {
 };
 
 actions[MessageConstants.MESSAGE_RECEIVED] = action => {
-    _messageList.push({
-        status: 'received',
-        incoming: true,
-        address: action.message.address,
-        body: action.message.body
-    });
+    var message = action.message;
+    message.status = 'received';
+    message.incoming = true;
+    message.new = true;
+    _messageList.push(message);
     storeInstance.emitChange();
 };
 
