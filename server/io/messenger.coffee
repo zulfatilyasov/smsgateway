@@ -1,5 +1,5 @@
 redis = require 'redis'
-db = redis.createClient() 
+db = redis.createClient('6379', 'redis')
 ioconstants = require './ioConstants.coffee'
 
 class Messenger
