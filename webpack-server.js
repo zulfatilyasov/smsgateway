@@ -8,7 +8,7 @@ var app = new WebpackDevServer(webpack(config), {
     historyApiFallback: true
 });
 
-var port = 3000;
+var port = 3100;
 app.listen(port, 'localhost', function(err, result) {
     if (err) {
         console.log(err);

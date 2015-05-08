@@ -85,28 +85,27 @@ MessageActions =
                 message: message
 
         socket.on ioConstants.UPDATE_MESSAGE, (message) ->
-            AppDispatcher.handleServerAction
-                actionType: MessageConstants.UPDATE_MESSAGE
-                message: message
+            notifyUpdate = ->
+                AppDispatcher.handleServerAction
+                    actionType: MessageConstants.UPDATE_MESSAGE
+                    message: message
+
+            setTimeout notifyUpdate, 2500
 
     send: (message) ->
         console.log 'called send message'
         apiClient.sendMessage message
             .then (resp) ->
-                setTimeout ->
-                    savedMessage = resp.body
-                    AppDispatcher.handleViewAction
-                        actionType: MessageConstants.SEND_SUCCESS
-                        message: savedMessage
-                , 1000
+                savedMessage = resp.body
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.SEND_SUCCESS
+                    message: savedMessage
 
             , (err) ->
-                setTimeout ->
-                    AppDispatcher.handleViewAction
-                        actionType: MessageConstants.SEND_FAIL
-                        error: err
-                        message:message
-                , 1000
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.SEND_FAIL
+                    error: err
+                    message:message
 
         AppDispatcher.handleViewAction
             actionType: MessageConstants.SEND

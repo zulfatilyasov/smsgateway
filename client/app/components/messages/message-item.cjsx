@@ -49,7 +49,8 @@ MessageItem = React.createClass
     ]
 
     iconClassName = classBuilder
-        'icon-arrow-with-circle-left outcoming': @props.outcoming
+        'icon-arrow-with-circle-left outcoming': @props.status is 'sent'
+        'icon-paper-plane sending': @props.status is 'sending'
         'icon-arrow-with-circle-right incoming': @props.incoming
 
     statusClass = classBuilder

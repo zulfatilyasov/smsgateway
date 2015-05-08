@@ -20,6 +20,7 @@ module.exports = function(Message) {
 
         if (ctx.instance && !ctx.isNewInstance) {
             messenger.updateUserMessageOnWeb(ctx.instance.userId, ctx.instance);
+            console.log('socket io emitted update-message to web: %s#%s', ctx.instance.userId, ctx.instance.body);
         }
 
         next();
