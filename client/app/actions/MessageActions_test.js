@@ -1,4 +1,3 @@
-
 describe('Message Actions', function() {
     var injector = require('inject?-../constants/MessageConstants.js!./MessageActions.coffee');
     var MessageContstants = require('../constants/MessageConstants.js');
@@ -8,10 +7,10 @@ describe('Message Actions', function() {
     var section = 'outcoming';
     var messages = ['hello'];
     var ioconstants = {
-        SEND_MESSAGE: 'send-message'
-        MESSAGE_RECEIVED: 'message-received'
-        UPDATE_MESSAGE_STATUS: 'update-message'
-        STATUS_SENT: 'sent'
+        SEND_MESSAGE: 'send-message',
+        MESSAGE_RECEIVED: 'message-received',
+        UPDATE_MESSAGE_STATUS: 'update-message',
+        STATUS_SENT: 'sent',
         STATUS_PENDING: 'pending'
     };
 
@@ -28,7 +27,7 @@ describe('Message Actions', function() {
     var messageActions = injector({
         '../services/apiclient.coffee': apiClient,
         '../AppDispatcher.coffee': dispatcher,
-        '../../../common/constants/ioConstants.coffee':ioconstants
+        '../../../common/constants/ioConstants.coffee': ioconstants
     });
 
     it('should be able to get user messages', function() {
