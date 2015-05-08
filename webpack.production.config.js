@@ -1,5 +1,7 @@
     var webpack = require('webpack');
     var path = require('path');
+    var HtmlWebpackPlugin = require('html-webpack-plugin');
+    var Clean = require('clean-webpack-plugin');
 
     module.exports = {
         context: __dirname,
@@ -8,10 +10,13 @@
         ],
         output: {
             path: path.join(__dirname, 'client', 'build'),
-            filename: '[name].js',
-            publicPath: '/client/scripts/'
+            filename: 'js/[name][hash].js'
         },
         plugins: [
+            new Clean(['client/build/js']),
+            new HtmlWebpackPlugin({
+                template: 'client/build/template.html'
+            }),
             new webpack.optimize.UglifyJsPlugin({
                 compress: {
                     warnings: false

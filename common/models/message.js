@@ -22,7 +22,6 @@ module.exports = function(Message) {
             messenger.updateUserMessageOnWeb(ctx.instance.userId, ctx.instance);
             console.log('socket io emitted update-message to web: %s#%s', ctx.instance.userId, ctx.instance.body);
         }
-
         next();
     });
 
