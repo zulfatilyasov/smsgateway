@@ -4,8 +4,6 @@ ioConstants = require '../../../common/constants/ioConstants.coffee'
 apiClient = require '../services/apiclient.coffee'
 config = require '../config.coffee'
 
-console.log ioConstants.UPDATE_MESSAGE_STATUS
-
 MessageActions = 
     messagesLoaded : false
 
