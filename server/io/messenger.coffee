@@ -1,6 +1,11 @@
 redis = require 'redis'
-db = redis.createClient('6379', 'redis')
-ioconstants = require './ioConstants.coffee'
+db = null
+if process.env.NODE_ENV == "docker"
+  db = redis.createClient('6379', 'redis')
+else
+  db = redis.createClient()
+
+ioconstants = require '../../common/constants/ioConstants.coffee'
 
 class Messenger
   initialize: (app) ->
@@ -38,8 +43,15 @@ class Messenger
     @getWebClientIdForUser userId, (err, clientId) =>
       @sendMessageToClient clientId, message
 
+  updateUserMessageOnWeb: (userId, message) ->
+    @getWebClientIdForUser userId, (err, clientId) =>
+      @updateMessageOnClient clientId, message
+
   sendMessageToClient: (clientId, message) ->
     @io.to(clientId).emit ioconstants.SEND_MESSAGE, message
+
+  updateMessageOnClient: (clientId, message) ->
+    @io.to(clientId).emit ioconstants.UPDATE_MESSAGE, message
 
   getMobileClientIdForUser: (userId, callback) ->
     db.hget userId, 'mobile', callback
@@ -47,8 +59,6 @@ class Messenger
   getWebClientIdForUser: (userId, callback) ->
     db.hget userId, 'web', callback
 
-  updateMessageStatus: (userId, messageId, status) ->
-    console.log 'update message status'
 
 module.exports = new Messenger()
   

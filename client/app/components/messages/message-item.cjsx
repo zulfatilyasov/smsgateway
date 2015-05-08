@@ -12,15 +12,14 @@ getItemStatusText  = (item) ->
     if item.status is 'failed'
         return 'Failed'
     if item.status is 'sending'
-        return 'Sending'
-
+        return 'Sending...'
 
 MessageItem = React.createClass
   
   menuClicked: (e, key, data) ->
     @toggleZIndex()
     if data.payload is 'star'
-      messageActions.updateMessageStar(@props.id, !@props.starred)
+      messageActions.updateUsersMessageStar(@props.userId, @props.id, !@props.starred)
 
     if data.payload is 'resend'
       messageActions.resend
@@ -59,7 +58,7 @@ MessageItem = React.createClass
         sending: @props.status is 'sending'
         received: @props.incoming is true
 
-    statuText = getItemStatusText(@props)
+    statusText = getItemStatusText(@props)
 
     style = {zIndex:@state.zindex}
 
@@ -69,7 +68,7 @@ MessageItem = React.createClass
       </div>
       <div className="message-inner">
         <div className="address">
-          <span className={statusClass}>{statuText}</span> {@props.address}
+          <span className={statusClass}>{statusText}</span> {@props.address}
         </div>
         <div className="body">
           {@props.body}

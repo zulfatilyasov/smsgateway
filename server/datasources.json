@@ -6,7 +6,6 @@
   "mongodb": {
     "database": "smsgateway",
     "name": "mongodb",
-    "host":"mongodb",
     "connector": "mongodb"
   },
   "mandrill": {

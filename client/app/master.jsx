@@ -13,9 +13,6 @@ var FloatingActionButton = mui.FloatingActionButton;
 var MenuButton = require('./components/menu-button/menu-button.jsx');
 var AppLeftNav = require('./app-left-nav.jsx');
 var messageActions = require('./actions/MessageActions.coffee');
-var jquery = require('jquery');
-
-console.log(jquery);
 
 var getState = function () {
     return {

@@ -4,7 +4,7 @@
   "main": "server/server.js",
   "scripts": {
     "test": "jasmine-node --matchall -m _test\\. --verbose server --coffee --color && karma start --single-run",
-    "start": "PORT=3200 nodemon server/server.js",
+    "start": "NODE_ENV=development PORT=3200 nodemon server/server.js",
     "build": "NODE_ENV=production webpack -p --config webpack.production.config.js --progress",
     "start-client": "NODE_ENV=development node webpack-server.js"
   },

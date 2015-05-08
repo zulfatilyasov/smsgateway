@@ -1,5 +1,5 @@
 describe('Socket io messenger', function() {
-    var ioConstants = require('./ioConstants.coffee');
+    var ioConstants = require('../../common/constants/ioConstants.coffee');
     var messageConsts = require('../../common/models/messageConstants.coffee');
 
     var proxyquire = require('proxyquire');
@@ -13,6 +13,7 @@ describe('Socket io messenger', function() {
         body: 'hello world',
         address: '+79274568767'
     };
+
     var fakeToken = {
         id: fakeAccessTokenId,
         userId: fakeUserId
@@ -123,11 +124,16 @@ describe('Socket io messenger', function() {
     });
 
     it('should update message status', function() {
-        expect(messenger.updateMessageStatus).toBeDefined();
-        var data = {
-            messageId: 321,
-            status: messageConsts.STATUS_SENT
-        }
-        messenger.updateMessageStatus(fakeUserId, data.messageId, data.status);
+        expect(messenger.updateUserMessageOnWeb).toBeDefined();
+
+        spyOn(messenger, 'updateMessageOnClient').andCallThrough();
+        spyOn(messenger, 'getWebClientIdForUser').andCallThrough();
+        messenger.updateUserMessageOnWeb(fakeUserId, message);
+
+        expect(fakeRedisDb.hget).toHaveBeenCalledWith(fakeUserId, 'web', jasmine.any(Function));
+        expect(messenger.getWebClientIdForUser).toHaveBeenCalledWith(fakeUserId, jasmine.any(Function));
+        expect(messenger.updateMessageOnClient).toHaveBeenCalledWith(fakeClientId, message);
+        expect(messenger.io.to).toHaveBeenCalledWith(fakeClientId);
+        expect(fakeEmit).toHaveBeenCalledWith(ioConstants.UPDATE_MESSAGE, message);
     });
 });

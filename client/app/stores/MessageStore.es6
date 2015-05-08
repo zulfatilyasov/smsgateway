@@ -86,21 +86,24 @@ var getMessages = action => {
     storeInstance.emitChange();
 };
 
+var updateMessage = action => {
+    var message = action.message;
+    _messageList = _.map(_messageList, (m) => {
+                        return m.id === message.id ? message : m
+                    });
+    storeInstance.emitChange();
+};
+
 actions[MessageConstants.RECEIVED_ALL_MESSAGES] = receivedMessages;
 actions[MessageConstants.GET_ALL_MESSAGES_FAIL] = getMessagesFail;
 actions[MessageConstants.GET_MESSAGES] = getMessages;
 actions[MessageConstants.RECEIVED_SEARCHED_MESSAGES] = receivedMessages;
 actions[MessageConstants.GET_SEARCHED_MESSAGES_FAIL] = getMessagesFail;
+actions[MessageConstants.UPDATE_MESSAGE] = updateMessage;
+actions[MessageConstants.MESSAGE_STAR_UPDATED] = updateMessage;
+
 actions[MessageConstants.SEARCH_MESSAGES] = action => {
     _messageList = [];
-    storeInstance.emitChange();
-};
-
-actions[MessageConstants.MESSAGE_STAR_UPDATED] = action => {
-    var message = action.message;
-    _messageList = _.map(_messageList, (m) => {
-                        return m.id === message.id ? message : m
-                    });
     storeInstance.emitChange();
 };
 

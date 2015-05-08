@@ -6,14 +6,20 @@ module.exports = function(Message) {
     var msgHelpers = new MessageHelpers(Message);
 
     Message.observe('after save', function(ctx, next) {
-        if (ctx.instance && ctx.isNewInstance && ctx.instance.origin === 'web') {
-            messenger.sendMessageToUserMobile(ctx.instance.userId, ctx.instance);
-            console.log('socket io emitted send-message to mobile: %s#%s', ctx.instance.userId, ctx.instance.body);
-        } 
+        if (ctx.instance && ctx.isNewInstance) {
+            if (ctx.instance.origin === 'web') {
+                messenger.sendMessageToUserMobile(ctx.instance.userId, ctx.instance);
+                console.log('socket io emitted send-message to mobile: %s#%s', ctx.instance.userId, ctx.instance.body);
+            }
 
-        if(ctx.instance && ctx.isNewInstance && ctx.instance.origin === 'mobile'){
-            messenger.sendMessageToUserWeb(ctx.instance.userId, ctx.instance);
-            console.log('socket io emitted send-message to web: %s#%s', ctx.instance.userId, ctx.instance.body);
+            if (ctx.instance.origin === 'mobile') {
+                messenger.sendMessageToUserWeb(ctx.instance.userId, ctx.instance);
+                console.log('socket io emitted send-message to web: %s#%s', ctx.instance.userId, ctx.instance.body);
+            }
+        }
+
+        if (ctx.instance && !ctx.isNewInstance) {
+            messenger.updateUserMessageOnWeb(ctx.instance.userId, ctx.instance);
         }
 
         next();
@@ -21,7 +27,7 @@ module.exports = function(Message) {
 
     Message.beforeRemote('create', function(ctx, message, next) {
         var ObjectId = Message.app.dataSources['Mongodb'].ObjectID;
-        if(ctx.req.accessToken) {
+        if (ctx.req.accessToken) {
             var userId = ctx.req.accessToken.userId;
             ctx.req.body.userId = new ObjectId(userId);
             next();

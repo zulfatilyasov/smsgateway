@@ -60,11 +60,12 @@ class ApiClient
             .send email
             .end()
 
-    updateMessageStar:(messageId, starred) ->
+    updateUsersMessageStar: (userId, messageId, starred) ->
         data =
             starred: starred
         request
-            .put @prefix + '/messages/' + messageId
+            .put @prefix + '/users/' + userId + '/messages/' + messageId
+            .set 'Authorization', @_getToken()
             .send data
             .end()
 

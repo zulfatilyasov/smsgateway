@@ -1,7 +1,10 @@
 AppDispatcher = require '../AppDispatcher.coffee'
 MessageConstants = require '../constants/MessageConstants.js'
+ioConstants = require '../../../common/constants/ioConstants.coffee'
 apiClient = require '../services/apiclient.coffee'
 config = require '../config.coffee'
+
+console.log ioConstants.UPDATE_MESSAGE_STATUS
 
 MessageActions = 
     messagesLoaded : false
@@ -20,8 +23,8 @@ MessageActions =
         AppDispatcher.handleViewAction
             actionType: MessageConstants.CLEARRESEND
 
-    updateMessageStar: (messageId, starred)->
-        apiClient.updateMessageStar(messageId, starred)
+    updateUsersMessageStar: (userId, messageId, starred)->
+        apiClient.updateUsersMessageStar(userId, messageId, starred)
             .then (resp) ->
                     message = resp.body
                     AppDispatcher.handleViewAction
@@ -81,6 +84,11 @@ MessageActions =
         socket.on 'send-message', (message) ->
             AppDispatcher.handleServerAction
                 actionType: MessageConstants.MESSAGE_RECEIVED
+                message: message
+
+        socket.on ioConstants.UPDATE_MESSAGE, (message) ->
+            AppDispatcher.handleServerAction
+                actionType: MessageConstants.UPDATE_MESSAGE
                 message: message
 
     send: (message) ->

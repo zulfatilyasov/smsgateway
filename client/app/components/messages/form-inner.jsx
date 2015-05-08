@@ -62,7 +62,7 @@ class FormInner extends React.Component {
 
         var message = {
             body: this.body,
-            status: 'sent',
+            status: 'sending',
             address: this.address,
             outcoming: true,
             origin: 'web'
