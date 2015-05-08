@@ -1,6 +1,6 @@
 
 describe('Message Actions', function() {
-    var injector = require('inject?-../constants/MessageConstants.js!-../../../common/constants/ioConstants.coffee!./MessageActions.coffee');
+    var injector = require('inject?-../constants/MessageConstants.js-../../../common/constants/ioConstants.coffee!./MessageActions.coffee');
     var MessageContstants = require('../constants/MessageConstants.js');
     var dispatcher = jasmine.createSpyObj('dispatcher', ['handleViewAction']);
     var apiClient = jasmine.createSpyObj('apiClient', ['getUserMessages']);
