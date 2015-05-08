@@ -13,6 +13,7 @@
       "required": true
     },
     "address": {
+      "required": true,
       "type": "string"
     }
   },
