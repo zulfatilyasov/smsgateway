@@ -52,6 +52,7 @@ actions[MessageConstants.SEND_FAIL] = action => {
     _messageList.push({
         id: (new Date()).toUTCString(),
         status: 'failed',
+        new:true,
         outcoming: true,
         address: action.message.address,
         body: action.message.body
