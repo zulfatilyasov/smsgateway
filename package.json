@@ -19,7 +19,7 @@
     "loopback-boot": "^2.7.0",
     "loopback-connector-mongodb": "^1.8.0",
     "loopback-datasource-juggler": "^2.25.1",
-    "material-ui": "^0.7.4",
+    "material-ui": "^0.7.5",
     "morgan": "^1.5.2",
     "react": "^0.13.2",
     "react-tap-event-plugin": "^0.1.6",

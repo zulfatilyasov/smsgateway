@@ -3,6 +3,8 @@ UserContstants = require '../constants/UserConstants.js'
 apiClient  = require '../services/apiclient.coffee'
 messageActions = require './MessageActions.coffee'
 router = require '../router.coffee'
+socketIO = require '../services/socket.coffee'
+ioConstants = require '../../../common/constants/ioConstants.coffee'
 
 loginDelay = 1000;
 UserActions = 
@@ -29,6 +31,21 @@ UserActions =
             actionType: UserContstants.REGISTER
             registrationData: registrationData
 
+    startWatchingDevice:() ->
+        socket = socketIO.getSocket()
+        socket.on ioConstants.PHONE_MODEL, (deviceModel) ->
+            AppDispatcher.handleServerAction
+                actionType:UserContstants.DEVICE_CONNECTED
+                deviceModel:deviceModel
+                
+        socket.on ioConstants.PHONE_DISCONNECTED, (deviceModel) ->
+            AppDispatcher.handleServerAction
+                actionType:UserContstants.DEVICE_DISCONNECTED
+                deviceModel:deviceModel
+
+    stopWatchingDevice:() ->
+        socketIO.getSocket().removeAllListeners ioConstants.PHONE_MODEL
+
     login: (creds) ->
         apiClient.login(creds.email, creds.password)
             .then (resp) ->
@@ -52,6 +69,7 @@ UserActions =
             creds: creds
 
     logout: -> 
+        @stopWatchingDevice()
         router.transitionTo('/login');
         AppDispatcher.handleViewAction
             actionType: UserContstants.LOG_OUT
@@ -77,6 +95,18 @@ UserActions =
         AppDispatcher.handleViewAction
             actionType: UserContstants.RESET_PASSWORD
             email: email
+
+    getUserDevice: ->
+        apiClient.getUserDevice()
+            .then (resp) ->
+                    deviceModel = resp.body.model
+                    if deviceModel
+                        AppDispatcher.handleServerAction
+                            actionType: UserContstants.DEVICE_CONNECTED
+                            deviceModel: deviceModel
+                , (err) ->
+                    console.log err
+
 
     resetPassword: (accessToken, password, confirmation) ->
         apiClient.resetPassword accessToken, password, confirmation

@@ -32,6 +32,12 @@
         "principalId": "$everyone",
         "permission": "ALLOW",
         "property": "requestResetPassword"
+    },{
+        "accessType": "EXECUTE",
+        "principalType": "ROLE",
+        "principalId": "$authenticated",
+        "permission": "ALLOW",
+        "property": "devices"
     }, {
         "accessType": "EXECUTE",
         "principalType": "ROLE",

@@ -52,8 +52,10 @@ Login = React.createClass
         userStore.addChangeListener @_onChange
 
     componentWillUnmount: ->
-        messageActions.startReceiving()
         userStore.removeChangeListener @_onChange
+        messageActions.startReceiving()
+        userActions.startWatchingDevice()
+        userActions.getUserDevice()
 
     _onChange: ->
         console.log 'called on changed login'

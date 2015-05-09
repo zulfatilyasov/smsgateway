@@ -1,5 +1,6 @@
 var path = require('path');
 var loopback = require('loopback');
+var messenger = require('../../server/io/messenger.coffee')
 
 module.exports = function(User) {
     User.afterRemote('create', function(context, user, next) {
@@ -64,6 +65,41 @@ module.exports = function(User) {
             }
         }
     );
+
+    User.devices = function(cb) {
+        var ctx = loopback.getCurrentContext();
+        var token = ctx && ctx.get('accessToken');
+        if (!token || !token.userId) {
+            cb('not authorized');
+            return;
+        }
+
+        messenger.getUserDevice(token.userId, function(err, deviceModel) {
+            if (err) {
+                cb(err);
+                return
+            }
+            if (deviceModel) {
+                cb(null, deviceModel);
+            } else {
+                cb(null, null);
+            }
+        });
+    };
+
+    User.remoteMethod(
+        'devices', {
+            returns: {
+                arg: 'model',
+                type: 'string'
+            },
+            http: {
+                path: '/devices',
+                verb: 'get'
+            }
+        }
+    );
+
 
     User.setPassword = function(accessToken, password, confirmation, cb) {
         console.log(arguments);

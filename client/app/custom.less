@@ -38,9 +38,6 @@ div.logo {
     &.mui-left-nav-menu .mui-paper-container {
       height: 100%;
     }
-    .mui-paper-container {
-      height: auto;
-    }
   }
   .mui-app-bar {
     .logout-icon-button {
@@ -64,11 +61,25 @@ div.logo {
   height: 100%;
   display: inline-block;
   vertical-align: middle;
-  padding-left: 5px;
+}
+.mui-flat-button{
+  .mui-flat-button-label{
+    padding: 0;
+  }
 }
 .mui-raised-button{
+  .mui-raised-button-label{
+    padding: 0
+  }
+
+  .mui-raised-button-container{
+    padding: 0px 15px;
+    text-align: center;
+  }
+
   .icon-button-label{
     padding: 0 5px;
+    padding-right: 0px;
   }
 }
 .mui-menu {

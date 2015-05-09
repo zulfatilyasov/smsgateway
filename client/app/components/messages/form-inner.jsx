@@ -1,8 +1,8 @@
 import React from 'react'
 import messageActions from  '../../actions/MessageActions.coffee';
 import messageStore from '../../stores/MessageStore.es6';
-import Spinner from '../spinner/spinner.cjsx';
-import {TextField,  FontIcon, FlatButton, RaisedButton} from 'material-ui';
+import userStore from '../../stores/UserStore.coffee';
+import {TextField,DropDownMenu, FontIcon, FlatButton, RaisedButton} from 'material-ui';
 
 class FormInner extends React.Component {
     constructor(props) {
@@ -13,22 +13,26 @@ class FormInner extends React.Component {
             addressValue:'',
             addressKey:'address',
             bodyValue:'',
-            bodyKey:'body'
+            bodyKey:'body',
+            deviceModel: userStore.deviceModel()
         }
     }
 
     componentDidMount() {
         this.setState({mounted:true});
         messageStore.addChangeListener(this._onChange.bind(this));
+        userStore.addChangeListener(this._onChange.bind(this));
     }
 
     componentWillUnmount() {
         messageStore.removeChangeListener(this._onChange.bind(this));
+        userStore.removeChangeListener(this._onChange.bind(this));
     }
 
     getState(){
         var state = {
             sending: messageStore.IsSending,
+            deviceModel: userStore.deviceModel()
         };
 
         if (messageStore.MessageToResend){
@@ -59,6 +63,14 @@ class FormInner extends React.Component {
 
     _handleSendMessage(e) {
         e.preventDefault();
+        if (!this.provider){
+            alert('Need a message provider to send sms.');
+            return;
+        }
+        if (this.provider === 'api'){
+            alert('Can\'t use nexmo api yet, please select another provider');
+            return;
+        }
 
         var message = {
             body: this.body,
@@ -71,10 +83,27 @@ class FormInner extends React.Component {
         messageActions.send(message);
     }
 
+    _providerChanged(e, selectedIndex, menuItem){
+        this.provider = menuItem.payload;
+    }
+
     render() {
 
-        var className = this.state.sending ? 'hide' : '';
+        var className = this.state.sending ? 'sending' : '';
         var sendButtonClass = 'sendButton ' + className;
+
+        var menuItems = [
+           { payload: 'phone', text: 'Phone - ' + this.state.deviceModel },
+           { payload: 'api', text: 'Nexmo api' }
+        ];
+
+        var devices = <div className="no-device">No device connected</div>;
+        if (this.state.deviceModel){
+            this.provider = menuItems[0].payload;
+            devices = <DropDownMenu className="handlers" onChange={this._providerChanged.bind(this)} menuItems={menuItems} />;
+        }
+
+        var primaryButtonLabel = this.state.sending ? 'Sending..' : 'Send';
 
         return (
             <div className="pad">
@@ -96,17 +125,27 @@ class FormInner extends React.Component {
                         className="input msgInput"
                         multiLine={true}/>
 
+
+                    <div className="selectMessageHandler">
+                        <div className="handlersLabel">Send message with:</div>
+                        {devices}
+                    </div>
+
                     <div className="button-wrap">
-                        <Spinner width="40px" height="40px" show={this.state.sending}/>
+                        <div className="buttons">
+                            <RaisedButton className={sendButtonClass}
+                                          primary={true}
+                                          disabled={this.state.sending}
+                                          onClick={this._handleSendMessage.bind(this)}
+                                          linkButton={true}>
+                                <FontIcon className="button-icon icon-paperplane"/>
+                                <span className="mui-raised-button-label icon-button-label">{primaryButtonLabel}</span>
+                            </RaisedButton>
 
-                        <RaisedButton className={sendButtonClass} primary={true} onClick={this._handleSendMessage.bind(this)} linkButton={true}>
-                            <FontIcon className="button-icon icon-paperplane"/>
-                            <span className="mui-raised-button-label icon-button-label">Send</span>
-                        </RaisedButton>
-
-                        <RaisedButton className="cancel-button" onClick={this.props.cancelClickHandler} linkButton={true}>
-                            <span className="mui-raised-button-label">Cancel</span>
-                        </RaisedButton>
+                            <RaisedButton className="cancel-button" onClick={this.props.cancelClickHandler} linkButton={true}>
+                                <span className="mui-raised-button-label">Cancel</span>
+                            </RaisedButton>
+                        </div>
                     </div>
                 </div>
             </div>

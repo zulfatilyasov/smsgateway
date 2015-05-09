@@ -3,6 +3,7 @@ MessageConstants = require '../constants/MessageConstants.js'
 ioConstants = require '../../../common/constants/ioConstants.coffee'
 apiClient = require '../services/apiclient.coffee'
 config = require '../config.coffee'
+socketIO = require '../services/socket.coffee'
 
 MessageActions = 
     messagesLoaded : false
@@ -76,10 +77,8 @@ MessageActions =
             actionType: MessageConstants.GET_MESSAGES
 
     startReceiving: ->
-        token = localStorage.getItem 'sg-token'
-        query = "registerToken=#{token}&origin=web";
-        socket = io.connect config.host, query:query
-        socket.on 'send-message', (message) ->
+        socket = socketIO.getSocket()
+        socket.on ioConstants.SEND_MESSAGE, (message) ->
             AppDispatcher.handleServerAction
                 actionType: MessageConstants.MESSAGE_RECEIVED
                 message: message
@@ -90,17 +89,15 @@ MessageActions =
                     actionType: MessageConstants.UPDATE_MESSAGE
                     message: message
 
-            setTimeout notifyUpdate, 2500
+            setTimeout notifyUpdate, 1000
 
     send: (message) ->
-        console.log 'called send message'
         apiClient.sendMessage message
             .then (resp) ->
                 savedMessage = resp.body
                 AppDispatcher.handleViewAction
                     actionType: MessageConstants.SEND_SUCCESS
                     message: savedMessage
-
             , (err) ->
                 AppDispatcher.handleViewAction
                     actionType: MessageConstants.SEND_FAIL

@@ -10,7 +10,7 @@ getItemStatusText  = (item) ->
     if item.status is 'sent'
         return 'Sent to:'
     if item.status is 'failed'
-        return 'Failed'
+        return 'Failed:'
     if item.status is 'sending'
         return 'Sending...'
 
@@ -52,6 +52,7 @@ MessageItem = React.createClass
         'icon-arrow-with-circle-left outcoming': @props.status is 'sent'
         'icon-paper-plane sending': @props.status is 'sending'
         'icon-arrow-with-circle-right incoming': @props.incoming
+        'icon-sms-failed fail': @props.status is 'failed'
 
     statusClass = classBuilder
         success: @props.status is 'sent'

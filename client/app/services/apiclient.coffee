@@ -69,6 +69,12 @@ class ApiClient
             .send data
             .end()
 
+    getUserDevice: ->
+        request
+            .get "#{@prefix}/users/devices"
+            .set 'Authorization', @_getToken()
+            .end()
+
     searchUserMessages: (userId, query) ->
         request
             .get "#{@prefix}/users/#{userId}/messages?filter={\"where\": {\"body\": {\"like\": \"#{query}\"}}}" 

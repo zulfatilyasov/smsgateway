@@ -5,60 +5,93 @@ if process.env.NODE_ENV == "docker"
 else
   db = redis.createClient()
 
-ioconstants = require '../../common/constants/ioConstants.coffee'
+ioConstants = require '../../common/constants/ioConstants.coffee'
 
 class Messenger
   initialize: (app) ->
     @app = app
     @io = app.io
     @io.use (socket, next) =>
-      console.log socket.request._query
-      if socket.request._query?.registerToken
-        accessToken = socket.request._query.registerToken
-        origin = socket.request._query.origin
-        @registerClient(accessToken, origin, socket.id, next)
+      handshakeData = socket.request._query
+      console.log handshakeData
+      if handshakeData?.accessToken
+        @registerClient(handshakeData, socket, next)
 
-    @io.on 'connection', (socket) ->
+    @io.on 'connection', (socket) =>
       console.log 'client connected'
+      if socket.data.origin is 'mobile'
+        @sendPhoneModelToWeb socket.data.userId, socket.data.device
+
+      socket.on 'disconnect', =>
+        console.log socket.data.origin + ' client disconnected'
+        db.del socket.id, =>
+          @notifyWebMobileDisconnected(socket.data.userId, socket.data.device)
 
   on: (messageId, callback) ->
     @io.on messageId, callback
 
-  registerClient: (accessToken, origin, clientId, next) ->
+  removeClientDevice: (clientId) ->
+
+  findUserToken: (accessToken, next, cb) ->
     @app.models.AccessToken.findById accessToken, (err, token) ->
       if err
         next(err)
       if !token
         next(new Error('not authorized'))
       else
-        db.hset token.userId, origin, clientId, ->
-          console.log "registered client #{clientId} userId #{token.userId} from #{origin}"
+        cb(token)
+
+  registerClient: (handshakeData, socket, next) ->
+    @findUserToken handshakeData.accessToken, next, (token) ->
+      socket.data = handshakeData
+      socket.data.userId = token.userId
+      db.hset token.userId, handshakeData.origin, socket.id, ->
+        console.log "registered client #{socket.id} userId #{token.userId} from #{handshakeData.origin}"
+        if handshakeData.origin is 'mobile'
+          db.set socket.id, handshakeData.device, ->
+            next()
+        else 
           next()
+
+  sendPhoneModelToWeb: (userId, model) ->
+    @getWebClientIdForUser userId, (err, clientId) =>
+      return unless not err and clientId
+      @emitMessageToClient clientId, ioConstants.PHONE_MODEL, model
+
+  notifyWebMobileDisconnected:(userId, deviceModel) ->
+    @getWebClientIdForUser userId, (err, clientId) =>
+      return unless not err and clientId
+      @emitMessageToClient clientId, ioConstants.PHONE_DISCONNECTED, deviceModel
 
   sendMessageToUserMobile: (userId, message) ->
     @getMobileClientIdForUser userId, (err, clientId) =>
-      @sendMessageToClient clientId, message
+      return unless not err and clientId
+      @emitMessageToClient clientId, ioConstants.SEND_MESSAGE, message
 
   sendMessageToUserWeb: (userId, message) ->
     @getWebClientIdForUser userId, (err, clientId) =>
-      @sendMessageToClient clientId, message
+      return unless not err and clientId
+      @emitMessageToClient clientId, ioConstants.SEND_MESSAGE, message
 
   updateUserMessageOnWeb: (userId, message) ->
     @getWebClientIdForUser userId, (err, clientId) =>
-      @updateMessageOnClient clientId, message
-
-  sendMessageToClient: (clientId, message) ->
-    @io.to(clientId).emit ioconstants.SEND_MESSAGE, message
-
-  updateMessageOnClient: (clientId, message) ->
-    @io.to(clientId).emit ioconstants.UPDATE_MESSAGE, message
+      return unless not err and clientId
+      @emitMessageToClient clientId, ioConstants.UPDATE_MESSAGE, message
 
   getMobileClientIdForUser: (userId, callback) ->
     db.hget userId, 'mobile', callback
 
+  getUserDevice: (userId, cb) ->
+    @getMobileClientIdForUser userId, (err, clientId) =>
+      db.get clientId, (err, deviceModel) ->
+        cb(err, deviceModel)
+
   getWebClientIdForUser: (userId, callback) ->
     db.hget userId, 'web', callback
 
+  emitMessageToClient: (clientId, messageType, message) ->
+    console.log 'socket.io emitted message ' + messageType + ' ' + message
+    @io.to(clientId).emit messageType, message
 
 module.exports = new Messenger()
   

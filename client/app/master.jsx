@@ -1,22 +1,19 @@
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
-var mui = require('material-ui');
-var AppBar = mui.AppBar;
-var AppCanvas = mui.AppCanvas;
-var FontIcon = mui.FontIcon;
-var Menu = mui.Menu;
-var IconButton = mui.IconButton;
+var mui, {FloatingActionButton, AppBar, AppCanvas, FontIcon, Menu, IconButton, Snackbar } = require('material-ui');
 var LoginPage = require('./components/login/login-page.cjsx');
 var userStore = require('./stores/UserStore.coffee');
-var FloatingActionButton = mui.FloatingActionButton;
 var MenuButton = require('./components/menu-button/menu-button.jsx');
 var AppLeftNav = require('./app-left-nav.jsx');
 var messageActions = require('./actions/MessageActions.coffee');
+var userActions = require('./actions/UserActions.coffee');
 
 var getState = function () {
+    console.log(userStore.snackMessage());
     return {
-        authenticated: userStore.isAuthenticated()
+        authenticated: userStore.isAuthenticated(),
+        snackMessage: userStore.snackMessage()
     };
 };
 
@@ -26,13 +23,16 @@ var Master = React.createClass({
 
     getInitialState(){
         return {
-            authenticated: userStore.isAuthenticated()
+            authenticated: userStore.isAuthenticated(),
+            snackMessage: userStore.snackMessage()
         };
     },
 
     componentDidMount() {
         if(this.state.authenticated){
             messageActions.startReceiving();
+            userActions.startWatchingDevice();
+            userActions.getUserDevice();
         }
 
         this.setState({
@@ -40,6 +40,16 @@ var Master = React.createClass({
         });
         
         userStore.addChangeListener(this._onChange);
+    },
+
+    componentDidUpdate: function(prevProps, prevState) {
+        if(prevState.snackMessage !== this.state.snackMessage){
+            var refs = this.refs;
+            refs.snackbar.show();
+            setTimeout(function () {
+                refs.snackbar.dismiss();
+            }, 5000)
+        }
     },
 
     componentWillUnmount() {
@@ -58,6 +68,10 @@ var Master = React.createClass({
         this.refs.leftNav.toggle();
     },
 
+    _hideSnake(){
+        this.refs.snackbar.dismiss()
+    },
+
     render() {
 
         // var title =
@@ -72,10 +86,13 @@ var Master = React.createClass({
             {route: 'settings', text: 'Settings',iconClassName:'icon icon-settings'}
         ];
 
-
         return (
             <AppCanvas>
-
+                <Snackbar
+                    ref="snackbar"
+                    action="ok"
+                    message={this.state.snackMessage || ''}
+                    onActionTouchTap={this._hideSnake}/>
                 <AppBar
                     className="mui-dark-theme"
                     onMenuIconButtonTouchTap={this._onMenuIconButtonTouchTap}

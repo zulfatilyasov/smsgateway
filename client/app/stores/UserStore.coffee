@@ -5,6 +5,8 @@ _authenticationInProgress = false
 _needVerification = false
 _requestedPasswordReset = false
 _passwordResetSucceeded = false
+_deviceModel = null
+_snackMessage = null
 _authError = 
     hasError: false
     message: ''
@@ -35,6 +37,12 @@ class UserStore extends BaseStore
 
         @userId = ->
             localStorage.getItem 'sg-userId'
+
+        @snackMessage = ->
+            _snackMessage
+
+        @deviceModel = ->
+            _deviceModel
 
 actions = {}
 
@@ -110,6 +118,17 @@ actions[userConstants.SET_PASSWORD_FAIL] = (action) ->
 
 actions[userConstants.LOG_OUT] = ->
     localStorage.removeItem 'sg-token'
+    storeInstance.emitChange()
+
+actions[userConstants.DEVICE_CONNECTED] = (action) ->
+    _deviceModel = action.deviceModel
+    _snackMessage = 'Connected device ' + _deviceModel
+    storeInstance.emitChange()
+
+actions[userConstants.DEVICE_DISCONNECTED] = (action) ->
+    if action.deviceModel is _deviceModel
+        _deviceModel = null
+    _snackMessage = 'Disconnected device ' + action.deviceModel
     storeInstance.emitChange()
 
 storeInstance = new UserStore(actions)
