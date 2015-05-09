@@ -4,11 +4,23 @@ var MessageHelpers = require('./messageHelpers.coffee');
 
 module.exports = function(Message) {
     var msgHelpers = new MessageHelpers(Message);
+    var checkMessageIsSent = function (messageId) {
+        setTimeout(function () {
+            Message.findById(messageId, function (err, message) {
+                if(!err && message){
+                    if(message.status === 'sending') {
+                        message.updateAttribute('status', 'failed');
+                    }
+                }
+            });
+        }, 40 * 1000);
+    };
 
     Message.observe('after save', function(ctx, next) {
         if (ctx.instance && ctx.isNewInstance) {
             if (ctx.instance.origin === 'web') {
                 messenger.sendMessageToUserMobile(ctx.instance.userId, ctx.instance);
+                checkMessageIsSent(ctx.instance.id);
                 console.log('socket io emitted send-message to mobile: %s#%s', ctx.instance.userId, ctx.instance.body);
             }
 
