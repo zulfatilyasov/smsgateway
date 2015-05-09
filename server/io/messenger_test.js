@@ -77,14 +77,21 @@ describe('Socket io messenger', function() {
     it('should save connected clientId to redis', function() {
         var next = jasmine.createSpy('next');
         var origin
-        messenger.registerClient(fakeAccessTokenId, origin, fakeClientId, next);
-
+        var handshakeData = {
+            origin:'web',
+            accessToken:fakeAccessTokenId
+        };
+        socket = {
+            id:fakeClientId
+        };
+        messenger.registerClient(handshakeData, socket, next);
         expect(fakeFindById).toHaveBeenCalledWith(fakeAccessTokenId, jasmine.any(Function));
-        expect(fakeRedisDb.hset).toHaveBeenCalledWith(fakeUserId, origin, fakeClientId, jasmine.any(Function))
+        expect(fakeRedisDb.hset).toHaveBeenCalledWith(fakeUserId, handshakeData.origin, fakeClientId, jasmine.any(Function))
         expect(next).toHaveBeenCalled();
 
-        var wrongToken = 'this token doesnt exist'
-        messenger.registerClient(wrongToken, origin, fakeClientId, next);
+        var wrongToken = 'this token doesnt exist';
+        handshakeData.accessToken = wrongToken;
+        messenger.registerClient(handshakeData, socket, next);
         expect(fakeFindById).toHaveBeenCalledWith(wrongToken, jasmine.any(Function));
         expect(next).toHaveBeenCalledWith(notFoundError);
     });
@@ -92,13 +99,13 @@ describe('Socket io messenger', function() {
     it('should send message', function() {
         expect(messenger.sendMessageToUserMobile).toBeDefined();
 
-        spyOn(messenger, 'sendMessageToClient').andCallThrough();
+        spyOn(messenger, 'emitMessageToClient').andCallThrough();
         spyOn(messenger, 'getMobileClientIdForUser').andCallThrough();
         messenger.sendMessageToUserMobile(fakeUserId, message);
 
         expect(fakeRedisDb.hget).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), jasmine.any(Function));
         expect(messenger.getMobileClientIdForUser).toHaveBeenCalledWith(fakeUserId, jasmine.any(Function));
-        expect(messenger.sendMessageToClient).toHaveBeenCalledWith(fakeClientId, message);
+        expect(messenger.emitMessageToClient).toHaveBeenCalledWith(fakeClientId, ioConstants.SEND_MESSAGE, message);
         expect(messenger.io.to).toHaveBeenCalledWith(fakeClientId);
         expect(fakeEmit).toHaveBeenCalledWith(ioConstants.SEND_MESSAGE, message);
     });
@@ -106,13 +113,13 @@ describe('Socket io messenger', function() {
     it('should send message to web', function() {
         expect(messenger.sendMessageToUserWeb).toBeDefined();
 
-        spyOn(messenger, 'sendMessageToClient').andCallThrough();
+        spyOn(messenger, 'emitMessageToClient').andCallThrough();
         spyOn(messenger, 'getWebClientIdForUser').andCallThrough();
         messenger.sendMessageToUserWeb(fakeUserId, message);
 
         expect(fakeRedisDb.hget).toHaveBeenCalledWith(fakeUserId, 'web', jasmine.any(Function));
         expect(messenger.getWebClientIdForUser).toHaveBeenCalledWith(fakeUserId, jasmine.any(Function));
-        expect(messenger.sendMessageToClient).toHaveBeenCalledWith(fakeClientId, message);
+        expect(messenger.emitMessageToClient).toHaveBeenCalledWith(fakeClientId,ioConstants.SEND_MESSAGE, message);
         expect(messenger.io.to).toHaveBeenCalledWith(fakeClientId);
         expect(fakeEmit).toHaveBeenCalledWith(ioConstants.SEND_MESSAGE, message);
     });
@@ -126,13 +133,13 @@ describe('Socket io messenger', function() {
     it('should update message status', function() {
         expect(messenger.updateUserMessageOnWeb).toBeDefined();
 
-        spyOn(messenger, 'updateMessageOnClient').andCallThrough();
+        spyOn(messenger, 'emitMessageToClient').andCallThrough();
         spyOn(messenger, 'getWebClientIdForUser').andCallThrough();
         messenger.updateUserMessageOnWeb(fakeUserId, message);
 
         expect(fakeRedisDb.hget).toHaveBeenCalledWith(fakeUserId, 'web', jasmine.any(Function));
         expect(messenger.getWebClientIdForUser).toHaveBeenCalledWith(fakeUserId, jasmine.any(Function));
-        expect(messenger.updateMessageOnClient).toHaveBeenCalledWith(fakeClientId, message);
+        expect(messenger.emitMessageToClient).toHaveBeenCalledWith(fakeClientId, ioConstants.UPDATE_MESSAGE, message);
         expect(messenger.io.to).toHaveBeenCalledWith(fakeClientId);
         expect(fakeEmit).toHaveBeenCalledWith(ioConstants.UPDATE_MESSAGE, message);
     });
