@@ -39,6 +39,13 @@ MessageActions =
             actionType: MessageConstants.MESSAGE_STAR
             starred: starred
 
+    deleteMessage: (userId, messageId) ->
+        apiClient.deleteMessage(userId, messageId)
+            .then (resp) ->
+                    AppDispatcher.handleViewAction
+                        actionType: MessageConstants.MESSAGE_DELETED
+                        messageId: messageId
+
     searchUserMessages: (userId, query) ->
         apiClient.searchUserMessages(userId, query) 
             .then (resp) ->

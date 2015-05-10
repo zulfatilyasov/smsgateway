@@ -108,6 +108,11 @@ actions[MessageConstants.SEARCH_MESSAGES] = action => {
     storeInstance.emitChange();
 };
 
+actions[MessageConstants.MESSAGE_DELETED] = action => {
+    _.remove(_messageList, { id : action.messageId });
+    storeInstance.emitChange();
+};
+
 actions[MessageConstants.CLEAN] = action => {
     _messageList = [];
 };

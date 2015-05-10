@@ -21,6 +21,9 @@ MessageItem = React.createClass
     if data.payload is 'star'
       messageActions.updateUsersMessageStar(@props.userId, @props.id, !@props.starred)
 
+    if data.payload is 'delete'
+      messageActions.deleteMessage(@props.userId, @props.id)
+
     if data.payload is 'resend'
       messageActions.resend
         address:@props.address

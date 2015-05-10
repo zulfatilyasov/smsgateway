@@ -47,6 +47,12 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
+    deleteMessage: (userId, messageId) ->
+        request
+            .del "#{@prefix}/users/#{userId}/messages/#{messageId}" 
+            .set 'Authorization', @_getToken()
+            .end()
+
     sendMessage: (message) ->
         request
             .post @prefix + '/messages'
