@@ -3,31 +3,28 @@ MessageItem = require './message-item.cjsx'
 $ = require '../../services/zepto.js'
 
 animateItems = ->
-    delay = 50
+    delay = 20
     $('.animated').each (i, el) ->
         $(@)
-            .css("-webkit-animation-delay", i*delay+'ms')
-            .css("-o-animation-delay", i*delay+'ms')
-            .css("animation-delay", i*delay+'ms')
+            .css("-webkit-transition-delay", i*delay+'ms')
+            .css("-o-transition-delay", i*delay+'ms')
+            .css("transition-delay", i*delay+'ms')
             .addClass('active')
 
 MessageList = React.createClass
-    render: ->
-            <div>
-                {
-                    if @props.messages.length 
-                        for msg in @props.messages by -1
-                            msg.key = msg.id
-                            <MessageItem {...msg} />
-                    else
-                        if @state.loading
-                            <div className="no-messages"></div>
-                        else 
-                            <div></div>
-                }
-            </div>
-
     componentDidMount: ->
         animateItems()
+
+    render: ->
+        console.log 'loading lists' + @props.loading
+        <div>
+            {
+                for msg in @props.messages by -1
+                    msg.key = msg.id
+                    <MessageItem {...msg} />
+            }
+        </div>
+
+    
 
 module.exports = MessageList

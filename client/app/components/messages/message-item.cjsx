@@ -46,6 +46,7 @@ MessageItem = React.createClass
     iconMenuItems = [
       { payload: 'star', text: starText}
       { payload: 'resend', text: 'Resend'}
+      { payload: 'delete', text: 'Delete'}
     ]
 
     iconClassName = classBuilder

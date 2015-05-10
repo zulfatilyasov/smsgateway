@@ -10,6 +10,8 @@ var React = require('react'),
   messageStore = require('../../stores/MessageStore.es6'),
   messageActions = require('../../actions/MessageActions.coffee'),
   SearchBar = require('../../components/search/searchbar.cjsx'),
+  PageHeader = require('./pageHeader.cjsx'),
+  ReactCSSTransitionGroupAppear = require('../../react-helpers/ReactCSSTransitionAppear.jsx'),
   Menu = mui.Menu;
 
 
@@ -80,9 +82,7 @@ var PageWithNav = React.createClass({
         <div style={contentStyle} className="secondary-content">
           <div className="toolbar">
             <div className="toolbar-content">
-              <div className="header">
-               {this.state.header} 
-              </div>
+              <PageHeader key={this.state.header} header={this.state.header}/>
               <div className="actions">
                 <div className="buttons">
                   <RaisedButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" primary={true} />

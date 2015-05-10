@@ -5,6 +5,7 @@ messageActions = require('../../actions/MessageActions.coffee')
 userStore = require('../../stores/UserStore.coffee')
 Spinner = require('../spinner/spinner.cjsx')
 classBuilder = require('classnames')
+ReactCSSTransitionGroupAppear = require '../../react-helpers/ReactCSSTransitionAppear.jsx'
 style = require('./login.styl')
 
 Login = React.createClass
@@ -249,7 +250,6 @@ Login = React.createClass
             {
                 if @state.name or @state.info then <h4 className="login-subheader">{greeting}</h4> else ''
             }
-
             <form className="login-form" onSubmit={@_handleLogin}>
                 <Paper zDepth={1}>
                     <div className="padded">

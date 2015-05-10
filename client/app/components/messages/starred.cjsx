@@ -10,6 +10,7 @@ section = 'starred'
 
 getState = ->
     messages: messageStore.MessageList
+    loading: messageStore.InProgress
 
 Starred = React.createClass
     componentDidMount: ->
@@ -26,6 +27,7 @@ Starred = React.createClass
 
     getInitialState: ->
         messages: messageStore.MessageList
+        loading: messageStore.InProgress
 
     onChange: ->
         @setState getState()
@@ -36,7 +38,10 @@ Starred = React.createClass
             if @state.messages.length
                 <MessageList messages={@state.messages} />
             else
-                <div className="no-messages">No messages</div>
+                if @state.loading
+                    <div className="no-messages">Loading...</div>
+                else 
+                    <div className="no-messages">No messages</div>
 
         }
         </div>
