@@ -71,12 +71,10 @@ MessageActions =
         apiClient.getUserMessages userId, section
             .then (resp) ->
                     messages = resp.body
-                    setTimeout ->
-                        AppDispatcher.handleViewAction
-                            actionType: MessageConstants.RECEIVED_ALL_MESSAGES
-                            messages: messages
-                        @messagesLoaded = true
-                    , 100
+                    AppDispatcher.handleViewAction
+                        actionType: MessageConstants.RECEIVED_ALL_MESSAGES
+                        messages: messages
+                    @messagesLoaded = true
                 , (err) ->
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.GET_ALL_MESSAGES_FAIL
