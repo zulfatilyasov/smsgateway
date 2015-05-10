@@ -22,7 +22,8 @@ MessageItem = React.createClass
       messageActions.updateUsersMessageStar(@props.userId, @props.id, !@props.starred)
 
     if data.payload is 'delete'
-      messageActions.deleteMessage(@props.userId, @props.id)
+      if confirm "Delete this message permanently?"
+        messageActions.deleteMessage(@props.userId, @props.id)
 
     if data.payload is 'resend'
       messageActions.resend
