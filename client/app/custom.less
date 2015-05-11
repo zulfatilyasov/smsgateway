@@ -1,11 +1,11 @@
 @import "../../node_modules/material-ui/src/less/scaffolding.less";
 @import "../../node_modules/material-ui/src/less/components.less";
 a {
-  color: @accent-1-color;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
+    color: @accent-1-color;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 @app-bar-height: 165px;
@@ -13,145 +13,157 @@ a {
 @easing-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 @navwidth: 140px;
 @left-nav-width: 250px;
-
 @primary-1-color: #009688;
 @flat-button-secondary-hover-color: #B2DFDB;
 @raised-button-primary-hover-color: #00796B;
 @raised-button-primary-color: #009688;
-
 div.logo {
-  background-color: #00796b;
-  line-height: 85px;
-  padding-top: 80px;
+    background-color: #00796b;
+    line-height: 85px;
+    padding-top: 80px;
 }
 
-
 .mui-app-canvas {
-  .mui-app-content-canvas {
-    margin-top: -116px;
-  }
-  .mui-left-nav-menu {
-    z-index: 300;
-  }
-  .mui-paper {
-    &.mui-raised-button .mui-paper-container,
-    &.mui-left-nav-menu .mui-paper-container {
-      height: 100%;
+    .mui-app-content-canvas {
+        margin-top: -116px;
     }
-  }
-  .mui-app-bar {
-    .logout-icon-button {
-      font-size: 18px;
-      .mui-tooltip {
-        left: -5px;
-        top: -25px;
-        padding: 2px 7px;
-        .mui-tooltip-label {
-          font-size: 14px;
+    .mui-left-nav-menu {
+        z-index: 300;
+    }
+    .mui-paper {
+        &.mui-raised-button .mui-paper-container, &.mui-left-nav-menu .mui-paper-container {
+            height: 100%;
         }
-      }
-      float: right;
-      margin-right: -14px;
     }
-  }
+    .mui-app-bar {
+        .logout-icon-button {
+            font-size: 18px;
+            .mui-tooltip {
+                left: -5px;
+                top: -25px;
+                padding: 2px 7px;
+                .mui-tooltip-label {
+                    font-size: 14px;
+                }
+            }
+            float: right;
+            margin-right: -14px;
+        }
+    }
 }
 
 .button-icon {
-  color: #fff;
-  height: 100%;
-  display: inline-block;
-  vertical-align: middle;
+    color: #fff;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
 }
-.mui-flat-button{
-  .mui-flat-button-label{
-    padding: 0;
-  }
-}
-.mui-raised-button{
-  .mui-raised-button-label{
-    padding: 0
-  }
 
-  .mui-raised-button-container{
-    padding: 0px 15px;
-    text-align: center;
-  }
-
-  .icon-button-label{
-    padding: 0 5px;
-    padding-right: 0px;
-  }
+.mui-flat-button {
+    &.mui-is-secondary {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-left: 10px;
+    }
+    .mui-flat-button-label {
+        padding: 0;
+    }
 }
+
+.mui-checkbox {
+    width: auto;
+    .mui-checkbox-icon {
+        .mui-checkbox-box * {
+          fill: #ddd
+        }
+    }
+}
+.mui-raised-button {
+    min-width: 0;
+    .mui-raised-button-label {
+        padding: 0
+    }
+    .mui-raised-button-container {
+        padding: 0px 15px;
+        text-align: center;
+    }
+    .icon-button-label {
+        padding: 0 5px;
+        padding-right: 0px;
+    }
+}
+
 .mui-menu {
-  background-color: rgba(255, 255, 255, 0);
-  .mui-menu-item {
-    color: #727272;
-    &.mui-is-selected {
-      color: #212121;
+    background-color: rgba(255, 255, 255, 0);
+    .mui-menu-item {
+        color: #727272;
+        &.mui-is-selected {
+            color: #212121;
+        }
+        font-size: 1.1em;
+        .icon {
+            color: rgba(0, 0, 0, 0.54);
+            opacity: 1;
+        }
     }
-    font-size: 1.1em;
-    .icon {
-      color: rgba(0, 0, 0, 0.54);
-      opacity: 1;
-    }
-  }
 }
 
 .mui-menu * {
-  transition: none;
+    transition: none;
 }
 
 .mui-is-selected {
-  .icon {
-    color: #ff4081;
-  }
+    .icon {
+        color: #ff4081;
+    }
 }
 
 .mui-predefined-layout-1 {
-  .mui-app-bar {
-    position: static;
-  }
+    .mui-app-bar {
+        position: static;
+    }
 }
 
 .mui-app-bar {
-  height: @app-bar-height;
-  background-color: @teal-700;
-  .mui-app-bar-title {
-    font-size: 20px;
-    display: none;
-  }
-  .mui-app-bar-navigation-icon-button {
-  }
+    height: @app-bar-height;
+    background-color: @teal-700;
+    .mui-app-bar-title {
+        font-size: 20px;
+        display: none;
+    }
+    .mui-app-bar-navigation-icon-button {}
 }
 
 .padded {
-  padding: @desktop-gutter;
+    padding: @desktop-gutter;
 }
 
 .center-both {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
 }
 
 .mui-font-icon {
-  color: rgba(255, 255, 255, 0.87);
-  &:hover {
-    color: #fff;
-  }
+    color: rgba(255, 255, 255, 0.87);
+    &:hover {
+        color: #fff;
+    }
 }
-.mui-overlay{
-  z-index: 105;
+
+.mui-overlay {
+    z-index: 105;
 }
+
 .logo {
-  cursor: pointer;
-  .mui-font-style-headline;
-  .mui-text-full-white;
-  line-height: @app-bar-height;
-  .mui-font-weight-light;
-  background-color: @primary-1-color;
-  padding-left: @desktop-gutter;
-  padding-top: 0;
-  margin-bottom: @desktop-gutter-mini;
+    cursor: pointer;
+    .mui-font-style-headline;
+    .mui-text-full-white;
+    line-height: @app-bar-height;
+    .mui-font-weight-light;
+    background-color: @primary-1-color;
+    padding-left: @desktop-gutter;
+    padding-top: 0;
+    margin-bottom: @desktop-gutter-mini;
 }

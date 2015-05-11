@@ -21,14 +21,41 @@
     .secondary-nav
       col(0.2, gutter:0)
     .secondary-content
-      col(0.8, gutter:0) 
+      col(0.8, gutter:0)
+      
 .toolbar
   padding 15px 10px
   padding-right 20px
+  padding-bottom 3px
   border-bottom 1px solid #eee
   position relative
   background #f4f4f4
+  .secondary-actions
+    display inlin-block
     
+  .mui-icon-button
+    margin-top -3px
+    float right
+    padding 0px 12px
+
+  .mui-checkbox
+    margin-left 15px
+    margin-top 6px
+    .mui-checkbox-icon
+        .mui-checkbox-box *
+          fill: #727272
+
+  .mui-tooltip
+    font-size 14px
+    padding-top 2px
+    padding-bottom 2px
+
+  .mui-font-icon
+    color: #727272
+    font-size 24px
+    &:hover
+      color: #000
+
   .form, .searchForm
     position absolute
     top 0
@@ -70,8 +97,6 @@
         col(3/10)
         .buttons
           float right
-          
-
     &.open
       transform: translate(0px, 0px);
       .form-content
@@ -86,18 +111,23 @@
   .toolbar-content
     cf()
     .header
-      col(1/2)
+      col(1/5)
       font-size 22px
       line-height 100%
       padding-top 7px
       padding-left 17px
       color #727272
     .actions
-      col(1/2)
+      col(4/5)
       .buttons
         float right
         .search
           margin-left 10px
+        .create-message
+          margin-right 5px
+          background #f4f4f4
+          &:hover
+            background #eee
 
 // .mui-menu-item.mui-is-selected
 //   .mui-menu-item-icon, span

@@ -5,6 +5,8 @@ var React = require('react'),
   classBuilder = require('classnames'),
   RaisedButton = mui.RaisedButton,
   FlatButton = mui.FlatButton,
+  IconButton = mui.IconButton,
+  Checkbox = mui.Checkbox,
   headerEvents = require('../../headerEvents.coffee'),
   NewMessageForm = require('../messages/form-inner.jsx'),
   messageStore = require('../../stores/MessageStore.es6'),
@@ -84,10 +86,15 @@ var PageWithNav = React.createClass({
             <div className="toolbar-content">
               <PageHeader key={this.state.header} header={this.state.header}/>
               <div className="actions">
+                <Checkbox ref="checkbox" onCheck={this.handleSelectAll} value="1"/>
+                <IconButton tooltip="Resend" iconClassName="icon-repeat" />
+                <IconButton tooltip="Delete" iconClassName="icon-delete" />
+                <IconButton tooltip="Cancel" iconClassName="icon-close" />
+                <IconButton onClick={this.handleSearchClick} tooltip="Search" iconClassName="icon-search" />
                 <div className="buttons">
-                  <RaisedButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" primary={true} />
-                  <FlatButton onClick={this.handleSearchClick} className="search" label="Search" secondary={true} />
+                  <FlatButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" secondary={true} />
                 </div>
+
               </div>
             </div>
             <div className={formClasses}>
@@ -117,6 +124,11 @@ var PageWithNav = React.createClass({
 
   handleSearchClick: function () {
     this.setState({showSearchForm:true});
+  },
+
+  handleSelectAll:function () {
+    var isChecked = this.refs.checkbox.isChecked()
+    messageActions.selectAllItems(isChecked);
   },
 
   handleCreateMessageClick: function () {

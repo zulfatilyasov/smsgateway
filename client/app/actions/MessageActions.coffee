@@ -22,6 +22,17 @@ MessageActions =
         AppDispatcher.handleViewAction
             actionType: MessageConstants.CLEARRESEND
 
+    selectAllItems: (value) ->
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.SELECT_ALL
+            value: value
+
+
+    selectSingle: (messageId) ->
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.SELECT
+            messageId: messageId
+
     updateUsersMessageStar: (userId, messageId, starred)->
         apiClient.updateUsersMessageStar(userId, messageId, starred)
             .then (resp) ->

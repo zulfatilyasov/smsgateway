@@ -47,6 +47,21 @@ actions[MessageConstants.SEND_SUCCESS] = action => {
     storeInstance.emitChange();
 };
 
+actions[MessageConstants.SELECT_ALL] = action => {
+    for(let message of _messageList){
+        message.checked = action.value;
+    }
+    storeInstance.emitChange();
+}
+
+actions[MessageConstants.SELECT] = action => {
+    for(let message of _messageList){
+        if(message.id === action.messageId){
+            message.checked = !message.checked;
+        }
+    }
+}
+
 actions[MessageConstants.SEND_FAIL] = action => {
     _sendInProgress = false;
     _messageList.push({

@@ -155,6 +155,14 @@ Login = React.createClass
 
     _handleEmailChange: (e) ->
         @email = e.target.value
+        @emailErrorMessage = ''
+        if !@email?.length
+            @emailErrorMessage = 'email is required'
+        else if validateEmail(@email) == false
+            @emailErrorMessage = 'email is not valid'
+
+        @setState
+            formValid: @email.length && @state.passwordValid
 
     _handlePasswordChange: (e) ->
         @password = e.target.value
@@ -201,6 +209,12 @@ Login = React.createClass
     
     _loginClickHandler: (e) ->
         e.preventDefault()
+
+        if @emailErrorMessage
+            @setState
+                emailErrorText: emailErrorMessage
+                emailValid: false
+            return
 
         formData =
             email: @email

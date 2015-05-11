@@ -2,7 +2,7 @@ React = require('react')
 classBuilder = require('classnames')
 messageActions = require '../../actions/MessageActions.coffee'
 $ = require '../../services/zepto.js'
-{DropDownIcon, FontIcon} = require('material-ui')
+{Checkbox, DropDownIcon, FontIcon} = require('material-ui')
 
 getItemStatusText  = (item) ->
     if item.incoming
@@ -39,18 +39,22 @@ MessageItem = React.createClass
     else
       @setState({zindex:98})
 
+  handleSelected: ()->
+    messageActions.selectSingle(@props.id)
+
+  componentDidUpdate: (prevProps, prevState) ->
+    @refs.checkbox.setChecked(@props.checked)
+
   componentDidMount: ->
     if @props.new
       $(this.getDOMNode()).addClass('active')
-      
-    $(this.getDOMNode()).find('.mui-menu-control')[0].onclick = @toggleZIndex
 
   render: ->
     starText = if @props.starred then 'Unstar' else 'Star'
     iconMenuItems = [
-      { payload: 'star', text: starText}
-      { payload: 'resend', text: 'Resend'}
-      { payload: 'delete', text: 'Delete'}
+      { payload: 'star', className:'menu-star', text: starText}
+      { payload: 'resend',className:'menu-resend', text: 'Resend'}
+      { payload: 'delete', className:'menu-delete', text: 'Delete'}
     ]
 
     iconClassName = classBuilder
@@ -75,7 +79,10 @@ MessageItem = React.createClass
       </div>
       <div className="message-inner">
         <div className="address">
-          <span className={statusClass}>{statusText}</span> {@props.address}
+          <span className={statusClass}>{statusText}</span>
+          <span className="message-address">
+           {@props.address}
+          </span>
         </div>
         <div className="body">
           {@props.body}
@@ -88,7 +95,7 @@ MessageItem = React.createClass
               <FontIcon className="icon icon-star" />
             </div>
         }
-        <DropDownIcon className="menu-icon" onChange={@menuClicked} onClick={@toggleZIndex} iconClassName="icon icon-dots-three-vertical" menuItems={iconMenuItems} />
+        <Checkbox ref="checkbox" defaultSwitched={false} onCheck={@handleSelected} value={false}/>
       </div>
     </div>
 

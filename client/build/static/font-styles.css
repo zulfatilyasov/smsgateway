@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-t31a7w');
-	src:url('fonts/icomoon.eot?#iefix-t31a7w') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-t31a7w') format('woff'),
-		url('fonts/icomoon.ttf?-t31a7w') format('truetype'),
-		url('fonts/icomoon.svg?-t31a7w#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-3cjuat');
+	src:url('fonts/icomoon.eot?#iefix-3cjuat') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-3cjuat') format('woff'),
+		url('fonts/icomoon.ttf?-3cjuat') format('truetype'),
+		url('fonts/icomoon.svg?-3cjuat#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -41,6 +41,26 @@
 
 .icon-exit-to-app:before {
 	content: "\e604";
+}
+
+.icon-delete:before {
+	content: "\e610";
+}
+
+.icon-search:before {
+	content: "\e611";
+}
+
+.icon-loop:before {
+	content: "\e612";
+}
+
+.icon-repeat:before {
+	content: "\e613";
+}
+
+.icon-close:before {
+	content: "\e614";
 }
 
 .icon-sms-failed:before {

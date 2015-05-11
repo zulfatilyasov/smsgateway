@@ -47,23 +47,4 @@ module.exports = function(Message) {
             next(new Error('must be logged in to save message'))
         }
     });
-
-    // messenger.on(consts.MESSAGE_RECEIVED, msgHelpers.saveReceivedMessage);
-    // messenger.on(consts.UPDATE_MESSAGE_STATUS, msgHelpers.updateMessageStatus);
-
-    //
-    //Message.observe('before save', function(ctx, next) {
-    //    if (ctx.instance) {
-    //        var accessToken = ctx.get('accessToken');
-    //        console.log(accessToken);
-    //        var userId = accessToken.userId;
-    //        ctx.instance.userId = userId;
-    //        console.log('Saved %s#%s', ctx.Model.modelName, ctx.instance.id);
-    //    } else {
-    //        console.log('Updated %s matching %j',
-    //            ctx.Model.pluralModelName,
-    //            ctx.where);
-    //    }
-    //    next();
-    //});
 };

@@ -18,5 +18,7 @@ module.exports = keyMirror({
     MESSAGE_STAR:null,
     RESEND:null,
     CLEARRESEND:null,
-    UPDATE_MESSAGE:null
+    UPDATE_MESSAGE:null,
+    SELECT:null,
+    SELECT_ALL:null
 });

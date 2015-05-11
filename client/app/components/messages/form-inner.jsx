@@ -137,9 +137,8 @@ class FormInner extends React.Component {
                                           primary={true}
                                           disabled={this.state.sending}
                                           onClick={this._handleSendMessage.bind(this)}
-                                          linkButton={true}>
-                                <FontIcon className="button-icon icon-paperplane"/>
-                                <span className="mui-raised-button-label icon-button-label">{primaryButtonLabel}</span>
+                                          linkButton={true}
+                                          label={primaryButtonLabel} >
                             </RaisedButton>
 
                             <RaisedButton className="cancel-button" onClick={this.props.cancelClickHandler} linkButton={true}>
