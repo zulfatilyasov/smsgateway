@@ -35,7 +35,8 @@ namespace :pm2 do
 
   def start_app
     within current_path do
-      execute "cd #{current_path} && NODE_ENV=staging pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
+      env = fetch(:default_env)['NODE_ENV']
+      execute "cd #{current_path} && NODE_ENV=#{env} pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
     end
   end
 

@@ -7,7 +7,7 @@
 server '104.155.84.116', user: 'zulfat', roles: %w{app web}, other_property: :other_value
 set :deploy_to, '/home/zulfat/sms-gateway'
 set :default_env, {
-    'NODE_ENV' =>'staging'
+    'NODE_ENV' =>'production'
 }
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 

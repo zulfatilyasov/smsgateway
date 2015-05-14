@@ -1,0 +1,30 @@
+{
+  "restApiRoot": "/api",
+  "domain": "104.155.84.116",
+  "domainPort": 3200,
+  "emailFrom": "mail@zulfat.net",
+  "host": "0.0.0.0",
+  "port": 3200,
+  "remoting": {
+    "context": {
+      "enableHttpContext": false
+    },
+    "rest": {
+      "normalizeHttpPath": false,
+      "xml": false
+    },
+    "json": {
+      "strict": false,
+      "limit": "500kb"
+    },
+    "urlencoded": {
+      "extended": true,
+      "limit": "1000kb"
+    },
+    "cors": false,
+    "errorHandler": {
+      "disableStackTrace": false
+    }
+  },
+  "legacyExplorer": false
+}
