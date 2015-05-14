@@ -17,7 +17,6 @@ getItemStatusText  = (item) ->
         return 'Cancelled: '
 
 MessageItem = React.createClass
-  
   menuClicked: (e, key, data) ->
     @toggleZIndex()
     if data.payload is 'star'
