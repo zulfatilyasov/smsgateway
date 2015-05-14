@@ -126,6 +126,7 @@ actions[userConstants.DEVICE_CONNECTED] = (action) ->
     storeInstance.emitChange()
 
 actions[userConstants.DEVICE_DISCONNECTED] = (action) ->
+    console.log 'device diconnected'
     if action.deviceModel is _deviceModel
         _deviceModel = null
     _snackMessage = 'Disconnected device ' + action.deviceModel

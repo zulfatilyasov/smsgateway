@@ -30,6 +30,10 @@ class MessageStore extends BaseStore {
     get MessageToResend(){
         return _messageToResend
     }
+
+    selectedMessageIds(){
+        return _.pluck(_.filter(_messageList, {'checked': true}), 'id')
+    }
 }
 
 var actions = {};
@@ -51,6 +55,14 @@ actions[MessageConstants.SELECT_ALL] = action => {
     for(let message of _messageList){
         message.checked = action.value;
     }
+    storeInstance.emitChange();
+}
+
+actions[MessageConstants.DELETED_MESSAGES] = action => {
+    var deletedIds = action.messageIds;
+    _messageList = _.reject(_messageList,  function(m) {
+        return _.includes(deletedIds, m.id);
+    });
     storeInstance.emitChange();
 }
 
@@ -125,6 +137,23 @@ actions[MessageConstants.SEARCH_MESSAGES] = action => {
 
 actions[MessageConstants.MESSAGE_DELETED] = action => {
     _.remove(_messageList, { id : action.messageId });
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.RESEND_MESSAGES_SUCCESS] = action => {
+    for (let message of action.messages){
+        message.new = true;
+        _messageList.push(message);
+    }
+    storeInstance.emitChange();
+};
+
+actions[MessageConstants.MESSAGES_CANCEL_SUCCESS] = action => {
+    for (let message of _messageList){
+        if(_.includes(action.messageIds, message.id) && message.status === 'queued'){
+            message.status = 'cancelled';
+        }
+    }
     storeInstance.emitChange();
 };
 

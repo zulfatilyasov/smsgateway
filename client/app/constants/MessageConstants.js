@@ -9,6 +9,7 @@ module.exports = keyMirror({
     GET_ALL_MESSAGES_FAIL:null,
     GET_MESSAGES:null,
     MESSAGE_DELETED: null,
+    DELETED_MESSAGES: null,
     CLEAN:null,
     SEARCH_MESSAGES:null,
     GET_SEARCHED_MESSAGES_FAIL:null,
@@ -16,9 +17,14 @@ module.exports = keyMirror({
     MESSAGE_STAR_UPDATED:null,
     MESSAGE_STAR_FAILED:null,
     MESSAGE_STAR:null,
+    RESEND_MESSAGES:null,
+    RESEND_MESSAGES_FAILED:null,
+    RESEND_MESSAGES_SUCCESS:null,
     RESEND:null,
     CLEARRESEND:null,
     UPDATE_MESSAGE:null,
     SELECT:null,
-    SELECT_ALL:null
+    SELECT_ALL:null,
+    MESSAGES_CANCEL_SUCCESS: null,
+    MESSAGES_CANCEL_FAILED: null
 });

@@ -16,5 +16,6 @@ module.exports = keyMirror({
     SET_PASSWORD_SUCCESS: null,
     SET_PASSWORD_FAIL: null,
     SET_PASSWORD: null,
-    DEVICE_CONNECTED: null
+    DEVICE_CONNECTED: null,
+    DEVICE_DISCONNECTED: null
 });

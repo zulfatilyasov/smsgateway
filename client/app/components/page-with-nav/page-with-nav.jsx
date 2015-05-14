@@ -8,8 +8,10 @@ var React = require('react'),
   IconButton = mui.IconButton,
   Checkbox = mui.Checkbox,
   headerEvents = require('../../headerEvents.coffee'),
+  uiEvents = require('../../uiEvents.coffee'),
   NewMessageForm = require('../messages/form-inner.jsx'),
   messageStore = require('../../stores/MessageStore.es6'),
+  userStore = require('../../stores/UserStore.coffee'),
   messageActions = require('../../actions/MessageActions.coffee'),
   SearchBar = require('../../components/search/searchbar.cjsx'),
   PageHeader = require('./pageHeader.cjsx'),
@@ -54,6 +56,53 @@ var PageWithNav = React.createClass({
     }
   },
 
+  _getConfirmationActions(submitClickHandler){
+    return {
+        submit:function () {
+            uiEvents.closeDialog();
+            submitClickHandler(); 
+        },
+        cancel:function () {
+            uiEvents.closeDialog();
+        }
+    };
+  },
+
+  _confirmDeletion(submitAction){
+    var actions = this._getConfirmationActions(submitAction);
+    uiEvents.showDialog({
+      title:"Confirm Delete",
+      text: "Delete selected messages permanently?",
+      submitHandler:actions.submit,
+      cancelHandler:actions.cancel
+    });
+  },
+
+  _confirmResend(submitAction){
+    var actions = this._getConfirmationActions(submitAction);
+    uiEvents.showDialog({
+      title:"Confirm Resend",
+      text: "Resend selected messages?",
+      submitHandler:actions.submit,
+      cancelHandler:actions.cancel
+    });
+  },
+
+  handleDelete:function (e) {
+    e.preventDefault();
+    var selectedIds = messageStore.selectedMessageIds();
+    this._confirmDeletion(function () {
+      messageActions.deleteMany(selectedIds);
+    });
+  },
+
+  handleCancelMessages: function (e) {
+    e.preventDefault();
+    var userId = userStore.userId();
+    var selectedIds = messageStore.selectedMessageIds();
+    messageActions.cancelMessages(selectedIds, userId);
+  },
+
   onHeaderChange:function(header){
     this.setState({header:header}) 
   },
@@ -79,6 +128,7 @@ var PageWithNav = React.createClass({
             autoWidth={false}
             menuItems={this.props.menuItems} 
             selectedIndex={this._getSelectedIndex()} 
+            onItemTap={null}
             onItemClick={this._onMenuItemClick} />
         </div>
         <div style={contentStyle} className="secondary-content">
@@ -87,9 +137,9 @@ var PageWithNav = React.createClass({
               <PageHeader key={this.state.header} header={this.state.header}/>
               <div className="actions">
                 <Checkbox ref="checkbox" onCheck={this.handleSelectAll} value="1"/>
-                <IconButton tooltip="Resend" iconClassName="icon-repeat" />
-                <IconButton tooltip="Delete" iconClassName="icon-delete" />
-                <IconButton tooltip="Cancel" iconClassName="icon-close" />
+                <IconButton tooltip="Resend" onClick={this.handleResendClick} iconClassName="icon-repeat" />
+                <IconButton tooltip="Delete" onClick={this.handleDelete} iconClassName="icon-delete" />
+                <IconButton tooltip="Cancel" onClick={this.handleCancelMessages} iconClassName="icon-close" />
                 <IconButton onClick={this.handleSearchClick} tooltip="Search" iconClassName="icon-search" />
                 <div className="buttons">
                   <FlatButton onClick={this.handleCreateMessageClick} className="create-message" label="Create message" secondary={true} />
@@ -131,6 +181,14 @@ var PageWithNav = React.createClass({
     messageActions.selectAllItems(isChecked);
   },
 
+  handleResendClick:function (e) {
+    e.preventDefault();
+    var selectedIds = messageStore.selectedMessageIds();
+    this._confirmResend(function () {
+      messageActions.resend(selectedIds);
+    });
+  },
+
   handleCreateMessageClick: function () {
     this.setState({showForm:true});
   },
@@ -155,7 +213,13 @@ var PageWithNav = React.createClass({
   },
 
   _onMenuItemClick: function(e, index, item) {
-    this.context.router.transitionTo(item.route);
+    e.preventDefault();
+    if(item.route){
+      this.context.router.transitionTo(item.route);
+    }
+    else{
+      this.props.onMenuItemClick(item);
+    }
   }
   
 });

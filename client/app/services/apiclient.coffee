@@ -19,6 +19,14 @@ class ApiClient
             return '?filter[where][incoming]=true'
         if section is 'starred'
             return '?filter[where][starred]=true'
+        if section is 'sent'
+            return '?filter[where][status]=sent'
+        if section is 'failed'
+            return '?filter[where][status]=failed'
+        if section is 'queued'
+            return '?filter[where][status]=queued'
+        if section is 'cancelled'
+            return '?filter[where][status]=cancelled'
 
     _abortRequest: (key) ->
         if @_pendingRequests[key]
@@ -32,6 +40,29 @@ class ApiClient
             .send 
                 email: email
                 password: password
+            .end()
+            
+    deleteMany: (messageIds) ->
+        request
+            .post @prefix + '/messages/delete_many'
+            .send ids:messageIds
+            .set 'Authorization', @_getToken()
+            .end()
+
+    cancelMessages:(messageIds, userId) ->
+        messageIds = JSON.stringify(messageIds)
+        request
+            .post @prefix + '/messages/cancel'
+            .send
+                ids:messageIds
+            .set 'Authorization', @_getToken()
+            .end()
+
+    resend: (messageIds) ->
+        request
+            .post @prefix + '/messages/resend'
+            .send ids:messageIds
+            .set 'Authorization', @_getToken()
             .end()
 
     register: (registrationData) ->

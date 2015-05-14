@@ -4,6 +4,8 @@ EventEmitter = require('events').EventEmitter
 assign = require('object-assign')
 CHANGE_EVENT = 'change-header'
 CLICK_CREATE_MESSAGE_EVENT = 'create-message'
+SHOW_DIALOG = 'show-dialog'
+CLOSE_DIALOG = 'close-dialog'
 
 class HeaderEvents 
     constructor: ->
@@ -25,6 +27,24 @@ class HeaderEvents
 
     removeCreateMessageClickListener: (callback) ->
         @removeListener CLICK_CREATE_MESSAGE_EVENT, callback
+
+    showDialog:(dialogContent) ->
+        @emit SHOW_DIALOG, dialogContent
+
+    addShowDialogListener:(callback) ->
+        @on SHOW_DIALOG, callback 
+
+    removeShowDialogListener:(callback)->
+        @removeListener SHOW_DIALOG, callback
+
+    closeDialog: ->
+        @emit CLOSE_DIALOG
+
+    addCloseDialogListener:(callback) ->
+        @on CLOSE_DIALOG, callback 
+
+    removeCloseDialogListener:(callback)->
+        @removeListener CLOSE_DIALOG, callback
         
 assign(HeaderEvents.prototype, EventEmitter.prototype)
 

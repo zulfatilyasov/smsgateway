@@ -27,6 +27,46 @@ MessageActions =
             actionType: MessageConstants.SELECT_ALL
             value: value
 
+    cancelMessages: (messageIds, userId) ->
+        apiClient.cancelMessages messageIds, userId
+            .then ->
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.MESSAGES_CANCEL_SUCCESS
+                    messageIds: messageIds
+                    
+            , (error) ->
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.MESSAGES_CANCEL_FAILED
+                    error: error
+
+    deleteMany: (messageIds) ->
+        apiClient.deleteMany messageIds
+            .then ->
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.DELETED_MESSAGES
+                    messageIds: messageIds
+                    
+            , (error) ->
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.DELETE_MESSAGES_FAILED
+                    error: error
+
+    resend: (messageIds) ->
+        apiClient.resend messageIds
+            .then (resp) ->
+                messages = resp.body.messages
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.RESEND_MESSAGES_SUCCESS
+                    messages: messages
+                    
+            , (error) ->
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.RESEND_MESSAGES_FAILED
+                    error: error
+
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.RESEND_MESSAGES
+            messageIds: messageIds
 
     selectSingle: (messageId) ->
         AppDispatcher.handleViewAction
@@ -53,9 +93,9 @@ MessageActions =
     deleteMessage: (userId, messageId) ->
         apiClient.deleteMessage(userId, messageId)
             .then (resp) ->
-                    AppDispatcher.handleViewAction
-                        actionType: MessageConstants.MESSAGE_DELETED
-                        messageId: messageId
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.MESSAGE_DELETED
+                    messageId: messageId
 
     searchUserMessages: (userId, query) ->
         apiClient.searchUserMessages(userId, query) 

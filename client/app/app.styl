@@ -65,3 +65,37 @@ body
     // border-bottom: 1px solid #eee
     .mui-menu-item-icon
         margin-right 10px
+
+.mui-nested-menu-item
+    position relative
+    .mui-menu-item
+      padding-left: 59px
+    .mui-menu-hideable
+        .mui-menu-item
+          padding-left: 24px
+        
+    // &:after
+    //     content ''
+    //     background #727272
+    //     border-radius: 50%
+    //     left 30px
+    //     top 18px
+    //     position absolute
+    //     height: 13px 
+    //     width: 13px
+    &:before
+        content ''
+        width: 0
+        height: 0
+        position absolute
+        right 20px
+        top 20px
+        border-style: solid
+        border-width: 7px 0 7px 5px
+        border-color: transparent transparent transparent #ddd
+        transition border-color 0.5s
+
+.mui-nested-menu-item.mui-open
+    &:before
+        border-color: transparent transparent transparent #727272
+

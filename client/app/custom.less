@@ -35,6 +35,12 @@ div.logo {
             height: 100%;
         }
     }
+    .mui-dialog-window{
+      z-index: 200;
+      .mui-dialog-window-contents{
+        z-index: 201;
+      }
+    }
     .mui-app-bar {
         .logout-icon-button {
             font-size: 18px;
@@ -106,10 +112,6 @@ div.logo {
             opacity: 1;
         }
     }
-}
-
-.mui-menu * {
-    transition: none;
 }
 
 .mui-is-selected {

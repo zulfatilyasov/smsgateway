@@ -6,13 +6,17 @@ $ = require '../../services/zepto.js'
 
 getItemStatusText  = (item) ->
     if item.incoming
-        return 'Received from:'
+        return 'Received from: '
     if item.status is 'sent'
-        return 'Sent to:'
+        return 'Sent: '
     if item.status is 'failed'
-        return 'Failed:'
+        return 'Failed: '
     if item.status is 'sending'
-        return 'Sending...'
+        return 'Sending... '
+    if item.status is 'queued'
+        return 'Queued: '
+    if item.status is 'cancelled'
+        return 'Cancelled: '
 
 MessageItem = React.createClass
   
@@ -58,15 +62,16 @@ MessageItem = React.createClass
     ]
 
     iconClassName = classBuilder
-        'icon-arrow-with-circle-left outcoming': @props.status is 'sent'
-        'icon-paper-plane sending': @props.status is 'sending'
-        'icon-arrow-with-circle-right incoming': @props.incoming
+        'icon-arrow-up-left2 outcoming': @props.status is 'sent'
+        'icon-paper-plane sending queued': @props.status is 'sending' or @props.status is 'queued'
+        'icon-arrow-down-right2 incoming': @props.incoming
         'icon-sms-failed fail': @props.status is 'failed'
+        'icon-close cancelled': @props.status is 'cancelled'
 
     statusClass = classBuilder
         success: @props.status is 'sent'
         fail: @props.status is 'failed'
-        sending: @props.status is 'sending'
+        sending: @props.status is 'sending' or @props.status is 'queued'
         received: @props.incoming is true
 
     statusText = getItemStatusText(@props)
@@ -95,7 +100,7 @@ MessageItem = React.createClass
               <FontIcon className="icon icon-star" />
             </div>
         }
-        <Checkbox ref="checkbox" defaultSwitched={false} onCheck={@handleSelected} value={false}/>
+        <Checkbox ref="checkbox" defaultSwitched={false} onCheck={@handleSelected} value="false"/>
       </div>
     </div>
 

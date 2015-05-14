@@ -1,13 +1,15 @@
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
-var mui, {FloatingActionButton, AppBar, AppCanvas, FontIcon, Menu, IconButton, Snackbar } = require('material-ui');
+var mui, { FlatButton, Dialog, FloatingActionButton, AppBar, AppCanvas, FontIcon, Menu, IconButton, Snackbar } = require('material-ui');
 var LoginPage = require('./components/login/login-page.cjsx');
 var userStore = require('./stores/UserStore.coffee');
 var MenuButton = require('./components/menu-button/menu-button.jsx');
 var AppLeftNav = require('./app-left-nav.jsx');
 var messageActions = require('./actions/MessageActions.coffee');
 var userActions = require('./actions/UserActions.coffee');
+var uiEvents = require('./uiEvents.coffee');
+
 
 var getState = function () {
     console.log(userStore.snackMessage());
@@ -39,6 +41,8 @@ var Master = React.createClass({
             authenticated: userStore.isAuthenticated()
         });
         
+        uiEvents.addShowDialogListener(this._composeDialog);
+        uiEvents.addCloseDialogListener(this._closeDialog);
         userStore.addChangeListener(this._onChange);
     },
 
@@ -54,6 +58,8 @@ var Master = React.createClass({
 
     componentWillUnmount() {
         console.log('masterjsx will unmounted')
+        uiEvents.removeShowDialogListener(this._composeDialog);
+        uiEvents.removeCloseDialogListener(this._closeDialog);
         userStore.removeChangeListener(this._onChange);
     },
 
@@ -62,6 +68,20 @@ var Master = React.createClass({
             console.log('called on changed master')
             this.setState(getState());
         }
+    },
+
+    _composeDialog(dialogContent){
+        this.setState({
+            dialogTitle: dialogContent.title,
+            dialogText: dialogContent.text,
+            dialogCancelHandler: dialogContent.cancelHandler,
+            dialogSubmitHandler: dialogContent.submitHandler
+        });
+        this.refs.dialog.show();
+    },
+
+    _closeDialog(){
+        this.refs.dialog.dismiss();
     },
 
     _onMenuIconButtonTouchTap() {
@@ -73,18 +93,22 @@ var Master = React.createClass({
     },
 
     render() {
-
-        // var title =
-        //   this.context.router.isActive('get-started') ? 'Get Started' :
-        //   this.context.router.isActive('css-framework') ? 'Css Framework' :
-        //   this.context.router.isActive('components') ? 'Components' : '';
-
-        var menuItems = [
-            {route: 'dashboard', text: 'Dashboard', iconClassName:'icon icon-dashboard'},
-            {route: 'messages', text: 'Messages',iconClassName:'icon icon-chat'},
-            {route: 'contacts', text: 'Contacts',iconClassName:'icon icon-users'},
-            {route: 'settings', text: 'Settings',iconClassName:'icon icon-settings'}
+        var dialogActions = [
+          <FlatButton
+            label="Ok"
+            key="ok"
+            primary={true}
+            onTouchTap={this.state.dialogSubmitHandler} />
         ];
+
+        if(this.state.dialogCancelHandler){
+            var cancelButton = <FlatButton
+                                label="Cancel"
+                                secondary={true}
+                                key="cancel"
+                                onTouchTap={this.state.dialogCancelHandler} />
+            dialogActions.push(cancelButton);
+        }
 
         return (
             <AppCanvas>
@@ -93,6 +117,7 @@ var Master = React.createClass({
                     action="ok"
                     message={this.state.snackMessage || ''}
                     onActionTouchTap={this._hideSnake}/>
+
                 <AppBar
                     className="mui-dark-theme"
                     onMenuIconButtonTouchTap={this._onMenuIconButtonTouchTap}
@@ -106,6 +131,15 @@ var Master = React.createClass({
                 <div className="mui-app-content-canvas">
                     <RouteHandler />
                 </div>
+
+
+                <Dialog
+                  title={this.state.dialogTitle}
+                  ref="dialog"
+                  modal={true}
+                  actions={dialogActions}>
+                  {this.state.dialogText}
+                </Dialog>
             </AppCanvas>
         );
     }

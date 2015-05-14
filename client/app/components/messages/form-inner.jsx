@@ -2,6 +2,7 @@ import React from 'react'
 import messageActions from  '../../actions/MessageActions.coffee';
 import messageStore from '../../stores/MessageStore.es6';
 import userStore from '../../stores/UserStore.coffee';
+import uiEvents from '../../uiEvents.coffee';
 import {TextField,DropDownMenu, FontIcon, FlatButton, RaisedButton} from 'material-ui';
 
 class FormInner extends React.Component {
@@ -15,7 +16,7 @@ class FormInner extends React.Component {
             bodyValue:'',
             bodyKey:'body',
             deviceModel: userStore.deviceModel()
-        }
+        };
     }
 
     componentDidMount() {
@@ -61,26 +62,81 @@ class FormInner extends React.Component {
         this.body = e.target.value;
     }
 
+    _getConfirmationActions(submitClickHandler){
+        return {
+            submit:function () {
+                uiEvents.closeDialog();
+                submitClickHandler(); 
+            },
+            cancel:function () {
+                uiEvents.closeDialog();
+            }
+        };
+    }
+
+    _confirmContinueWithoutDevice(submitAction){
+        var actions = this._getConfirmationActions(submitAction);
+        uiEvents.showDialog({
+            title:"No device found",
+            text: "No device was connected to send message. Click Ok to continue.",
+            submitHandler:actions.submit,
+            cancelHandler:actions.cancel
+        });
+    }
+
+    _confirmWrongPhone(submitAction){
+        var actions = this._getConfirmationActions(submitAction);
+        uiEvents.showDialog({
+            title:"Phone validation warning.",
+            text: "Not a valid phone number.\nContinue?",
+            submitHandler:actions.submit,
+            cancelHandler:actions.cancel
+        });
+    }
+
+    _alertCantUseNexmo(){
+        uiEvents.showDialog({
+            title:"Nexmo not available yet",
+            text: "Can\'t use nexmo api yet, please select another provider",
+            submitHandler:function () {
+                uiEvents.closeDialog();
+            }
+        });
+    }
+
     _handleSendMessage(e) {
         e.preventDefault();
-        if (!this.provider){
-            alert('Need a message provider to send sms.');
-            return;
-        }
-        if (this.provider === 'api'){
-            alert('Can\'t use nexmo api yet, please select another provider');
-            return;
-        }
-
         var message = {
             body: this.body,
-            status: 'sending',
+            status: 'queued',
             address: this.address,
             outcoming: true,
+            handler: this.provider,
             origin: 'web'
         };
-       
-        messageActions.send(message);
+
+        var self = this;
+        var sendMessage = function () {
+            if (message.handler === 'api'){
+                self._alertCantUseNexmo();
+                return;
+            }
+            var address = message.address.replace(/[^0-9]/g, '');
+            if(address.length < 10 || address.length > 11) { 
+                self._confirmWrongPhone(function () {
+                    messageActions.send(message);
+                });
+            }
+            else{
+                messageActions.send(message);
+            }
+        };
+
+        if (!message.handler){
+            self._confirmContinueWithoutDevice(sendMessage);
+        } else {
+            sendMessage();
+        }
     }
 
     _providerChanged(e, selectedIndex, menuItem){
@@ -101,6 +157,8 @@ class FormInner extends React.Component {
         if (this.state.deviceModel){
             this.provider = menuItems[0].payload;
             devices = <DropDownMenu className="handlers" onChange={this._providerChanged.bind(this)} menuItems={menuItems} />;
+        } else{
+            this.provider = null
         }
 
         var primaryButtonLabel = this.state.sending ? 'Sending..' : 'Send';

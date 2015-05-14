@@ -39,9 +39,10 @@ UserActions =
                 deviceModel:deviceModel
                 
         socket.on ioConstants.PHONE_DISCONNECTED, (deviceModel) ->
-            AppDispatcher.handleServerAction
-                actionType:UserContstants.DEVICE_DISCONNECTED
-                deviceModel:deviceModel
+            if deviceModel
+                AppDispatcher.handleServerAction
+                    actionType:UserContstants.DEVICE_DISCONNECTED
+                    deviceModel:deviceModel
 
     stopWatchingDevice:() ->
         socketIO.getSocket().removeAllListeners ioConstants.PHONE_MODEL

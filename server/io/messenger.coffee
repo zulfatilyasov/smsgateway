@@ -18,14 +18,16 @@ class Messenger
         @registerClient(handshakeData, socket, next)
 
     @io.on 'connection', (socket) =>
-      console.log 'client connected'
+      console.log socket.data.origin + ' client connected'
       if socket.data.origin is 'mobile'
         @sendPhoneModelToWeb socket.data.userId, socket.data.device
+        @app.models.Message.sendQueued(socket.data.userId)
 
       socket.on 'disconnect', =>
         console.log socket.data.origin + ' client disconnected'
-        db.del socket.id, =>
-          @notifyWebMobileDisconnected(socket.data.userId, socket.data.device)
+        if socket.data.origin is 'mobile'
+          db.hdel socket.data.userId, 'deviceModel', =>
+            @notifyWebMobileDisconnected(socket.data.userId, socket.data.device)
 
   on: (messageId, callback) ->
     @io.on messageId, callback
@@ -48,7 +50,7 @@ class Messenger
       db.hset token.userId, handshakeData.origin, socket.id, ->
         console.log "registered client #{socket.id} userId #{token.userId} from #{handshakeData.origin}"
         if handshakeData.origin is 'mobile'
-          db.set socket.id, handshakeData.device, ->
+          db.hset token.userId, 'deviceModel', handshakeData.device, ->
             next()
         else 
           next()
@@ -82,9 +84,10 @@ class Messenger
     db.hget userId, 'mobile', callback
 
   getUserDevice: (userId, cb) ->
-    @getMobileClientIdForUser userId, (err, clientId) =>
-      db.get clientId, (err, deviceModel) ->
-        cb(err, deviceModel)
+    console.log userId
+    db.hget userId, 'deviceModel', (err, deviceModel) ->
+      console.log err
+      cb(err, deviceModel)
 
   getWebClientIdForUser: (userId, callback) ->
     db.hget userId, 'web', callback
