@@ -37,11 +37,11 @@ namespace :pm2 do
     within current_path do
       env = fetch(:default_env)['NODE_ENV']
       port = fetch(:port)
-      
+
       if env == 'staging'
-        execute "cd #{current_path} && NODE_ENV=#{env} PORT=#{port} sudo pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
-      else
         execute "cd #{current_path} && NODE_ENV=#{env} PORT=#{port} pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
+      else
+        execute "sudo su - root && cd #{current_path} && NODE_ENV=#{env} PORT=#{port} pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
       end
     end
   end
