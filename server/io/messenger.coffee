@@ -26,8 +26,9 @@ class Messenger
       socket.on 'disconnect', =>
         console.log socket.data.origin + ' client disconnected'
         if socket.data.origin is 'mobile'
-          db.hdel socket.data.userId, 'deviceModel', =>
-            @notifyWebMobileDisconnected(socket.data.userId, socket.data.device)
+          db.hdel socket.data.userId, 'mobile', =>
+            db.hdel socket.data.userId, 'deviceModel', =>
+              @notifyWebMobileDisconnected(socket.data.userId, socket.data.device)
 
   on: (messageId, callback) ->
     @io.on messageId, callback
