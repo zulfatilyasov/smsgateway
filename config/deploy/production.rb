@@ -6,6 +6,7 @@
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 server '104.155.84.116', user: 'zulfat', roles: %w{app web}, other_property: :other_value
 set :deploy_to, '/home/zulfat/sms-gateway'
+set :port, 80
 set :default_env, {
     'NODE_ENV' =>'production'
 }

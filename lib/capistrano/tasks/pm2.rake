@@ -36,7 +36,8 @@ namespace :pm2 do
   def start_app
     within current_path do
       env = fetch(:default_env)['NODE_ENV']
-      execute "cd #{current_path} && NODE_ENV=#{env} pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
+      port = fetch(:port)
+      execute "cd #{current_path} && NODE_ENV=#{env} PORT=#{port} sudo pm2 start #{fetch(:app_command)} --name #{fetch(:pm2_name)}"
     end
   end
 
