@@ -47,15 +47,9 @@ namespace :pm2 do
       when nil
         info 'App is not registerd'
         start_app
-      when 'stopped'
-        info 'App is stopped'
+      else 
+        delete_current
         start_app
-      when 'errored'
-        info 'App has errored'
-        restart_app
-      when 'online'
-        info 'App is online'
-        restart_app
       end
     end
   end
