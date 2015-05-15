@@ -1,6 +1,6 @@
 {
   "restApiRoot": "/api",
-  "domain": "104.155.84.116",
+  "domain": "104.199.203.155",
   "domainPort": 3200,
   "emailFrom": "mail@zulfat.net",
   "host": "0.0.0.0",

@@ -4,9 +4,9 @@
 # You can define all roles on a single server, or split them:
 
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
-server '104.155.84.116', user: 'zulfat', roles: %w{app web}, other_property: :other_value
+server '104.199.203.155', user: 'zulfat', roles: %w{app web}, other_property: :other_value
 set :deploy_to, '/home/zulfat/sms-gateway'
-set :port, 80
+set :app_command, '/home/zulfat/sms-gateway/current/server/server.js'
 set :default_env, {
     'NODE_ENV' =>'production'
 }
