@@ -1,61 +1,80 @@
 {
-    "name": "user",
-    "base": "User",
-    "idInjection": true,
-    "emailVerificationRequired": true,
-    "properties": {},
-    "validations": [],
-    "relations": {
-        "messages": {
-            "type": "hasMany",
-            "model": "Message",
-            "foreignKey": "userId"
-        }
+  "name": "user",
+  "base": "User",
+  "idInjection": true,
+  "emailVerificationRequired": true,
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "messages": {
+      "type": "hasMany",
+      "model": "Message",
+      "foreignKey": "userId"
     },
-    "acls": [{
-        "principalType": "ROLE",
-        "principalId": "$owner",
-        "permission": "ALLOW",
-        "property": "findById"
-    }, {
-        "principalType": "ROLE",
-        "principalId": "$owner",
-        "permission": "ALLOW"
-    }, {
-        "accessType": "*",
-        "principalType": "ROLE",
-        "principalId": "admin",
-        "permission": "ALLOW"
-    }, {
-        "accessType": "EXECUTE",
-        "principalType": "ROLE",
-        "principalId": "$everyone",
-        "permission": "ALLOW",
-        "property": "requestResetPassword"
-    },{
-        "accessType": "EXECUTE",
-        "principalType": "ROLE",
-        "principalId": "$authenticated",
-        "permission": "ALLOW",
-        "property": "devices"
-    }, {
-        "accessType": "EXECUTE",
-        "principalType": "ROLE",
-        "principalId": "$everyone",
-        "permission": "ALLOW",
-        "property": "confirmResetPassword"
-    }, {
-        "accessType": "EXECUTE",
-        "principalType": "ROLE",
-        "principalId": "$everyone",
-        "permission": "ALLOW",
-        "property": "setPassword"
-    }, {
-        "accessType": "EXECUTE",
-        "principalType": "ROLE",
-        "principalId": "$unauthenticated",
-        "permission": "DENY",
-        "property": "setPassword"
-    }],
-    "methods": []
+    "contacts": {
+      "type": "hasMany",
+      "model": "Contact",
+      "foreignKey": "userId"
+    },
+    "groups": {
+      "type": "hasMany",
+      "model": "Group",
+      "foreignKey": "userId"
+    }
+  },
+  "acls": [
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "findById"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "requestResetPassword"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "devices"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "confirmResetPassword"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "setPassword"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY",
+      "property": "setPassword"
+    }
+  ],
+  "methods": []
 }

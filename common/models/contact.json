@@ -1,6 +1,6 @@
 {
-  "name": "Message",
-  "plural": "messages",
+  "name": "Contact",
+  "plural": "contacts",
   "base": "PersistedModel",
   "idInjection": true,
   "properties": {
@@ -8,13 +8,20 @@
       "type": "object",
       "required": true
     },
-    "body": {
+    "name": {
       "type": "string",
       "required": true
     },
-    "address": {
-      "type": "string",
-      "required": true
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "groups": {
+      "type": [
+        "any"
+      ]
     }
   },
   "validations": [],
@@ -25,13 +32,6 @@
       "foreignKey": "userId"
     }
   },
-  "acls": [
-    {
-      "accessType": "READ",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW"
-    }
-  ],
+  "acls": [],
   "methods": []
 }

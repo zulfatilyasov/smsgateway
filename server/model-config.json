@@ -38,5 +38,13 @@
   "Email": {
     "dataSource": "mandrill",
     "public": "false"
+  },
+  "Contact": {
+    "dataSource": "mongodb",
+    "public": true
+  },
+  "Group": {
+    "dataSource": "mongodb",
+    "public": true
   }
 }
