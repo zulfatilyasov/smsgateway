@@ -130,5 +130,42 @@ class ApiClient
             .set 'Authorization', accessToken
             .end()
 
+    getUserGroups: (userId) ->
+        request
+            .get @prefix + '/users/' + userId + '/groups'
+            .set 'Authorization', @_getToken()
+            .end()
+
+    deleteGroup: (userId, groupId) ->
+        request
+            .del "#{@prefix}/users/#{userId}/groups/#{groupId}" 
+            .set 'Authorization', @_getToken()
+            .end()
+
+    createUserGroups:(userId, groups) ->
+        request
+            .post @prefix + '/users/' + userId + '/groups'
+            .send groups
+            .set 'Authorization', @_getToken()
+            .end()
+
+    createContact:(userId, contact) ->
+        request
+            .post @prefix + '/users/' + userId + '/contacts'
+            .send contact
+            .set 'Authorization', @_getToken()
+            .end()
+
+    getUserContacts: (userId, groupId) ->
+        if groupId
+            request
+                .get @prefix + '/groups/' + groupId + '/contacts'
+                .set 'Authorization', @_getToken()
+                .end()
+        else
+            request
+                .get @prefix + '/users/' + userId + '/contacts'
+                .set 'Authorization', @_getToken()
+                .end()
 
 module.exports = new ApiClient config.host, '/api'

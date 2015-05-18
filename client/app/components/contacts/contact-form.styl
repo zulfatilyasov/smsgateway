@@ -1,0 +1,41 @@
+.contact-form
+  .inputs
+    cf()
+    .input, .group
+      col(1/2, cycle:2)
+    .group
+      padding-top 26px
+      .Select
+        &.has-value
+          .Select-control
+            .Select-input
+              margin-left 2px
+          
+      .Select-control
+        background #f4f4f4
+        border none
+        outline none
+        .Select-input
+          margin-left -3px
+        .Select-placeholder
+            font-size: 16px
+            padding-left 0px
+        .Select-item
+          color: #212121;
+          border: 1px solid #b2dfdb
+          background-color: #b2dfdb
+          .Select-item-icon
+            &:hover
+              background-color transparent
+              color #727272
+            border-right 1px solid rgba(114, 114, 114, 0.13)
+
+      .Select-menu-outer
+        .Select-option
+          &.is-focused
+            background-color #eee
+  .button-wrap
+    col(1)
+
+  .saveButton
+    margin-right 10px

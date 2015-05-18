@@ -3,6 +3,10 @@
 @import './components/page-with-nav'
 @import './components/messages/message-item'
 @import './components/search/searchbar.styl'
+@import './components/contacts/contact-form.styl'
+@import './components/contacts/contacts.styl'
+@import './components/contacts/group-form.styl'
+@import './components/contacts/contact-item.styl'
 @import './animations'
 
 body-bg = #F4F4F4
@@ -22,14 +26,14 @@ body
 .hidden
     display: none
 
-.message-item .message-actions .mui-drop-down-icon .mui-menu
+.list-item .list-item-actions .mui-drop-down-icon .mui-menu
     height auto !important
     transform scale(0.7)
     // transition transform 0.3s, opacity 0.3s, visibility: 0.3s
     transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1) 0ms;
     transform-origin: 100% 0
 
-.message-item .message-actions .mui-drop-down-icon.mui-open .mui-menu
+.list-item .list-item-actions .mui-drop-down-icon.mui-open .mui-menu
     transform scale(1)
     transition-duration 400ms
 

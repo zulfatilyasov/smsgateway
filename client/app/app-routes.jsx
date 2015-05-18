@@ -8,6 +8,7 @@ import Incoming from './components/messages/incoming.cjsx';
 import Starred from './components/messages/starred.cjsx';
 import Settings  from './components/settings/settings.cjsx';
 import Contacts  from './components/contacts/contacts.cjsx';
+import ContactsList from './components/contacts/contacts-list.cjsx';
 import Dashboard  from './components/dashboard/dashboard.cjsx';
 import Login from './components/login/login-page.cjsx'
 
@@ -21,12 +22,16 @@ var AppRoutes = (
           <Route name="starred" path="/messages/starred" handler={Starred}/> 
           <DefaultRoute handler={AllMessages}/>
         </Route>
+        <Route name="contacts" path="/contacts" handler={Contacts}>
+          <Route name="allContacts" path="/contacts/all" handler={ContactsList}/> 
+          <Route name="groupContacts" path="/groups/:groupId/contacts" handler={ContactsList}/> 
+        </Route>
         <Route name="settings" handler={Settings}/>
-        <Route name="contacts" handler={Contacts}/>
         <Route name="login" path="/login" handler={Login}/>
         <Route name="logout" Handler={Login}/>
         <DefaultRoute handler={Messages}/>
         <Redirect from="/" to="allmessages" />
+        <Redirect from="/contacts" to="allContacts" />
     </Route>
 );
 

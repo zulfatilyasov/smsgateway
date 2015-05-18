@@ -17,20 +17,6 @@ getItemStatusText  = (item) ->
         return 'Cancelled: '
 
 MessageItem = React.createClass
-  menuClicked: (e, key, data) ->
-    @toggleZIndex()
-    if data.payload is 'star'
-      messageActions.updateUsersMessageStar(@props.userId, @props.id, !@props.starred)
-
-    if data.payload is 'delete'
-      if confirm "Delete this message permanently?"
-        messageActions.deleteMessage(@props.userId, @props.id)
-
-    if data.payload is 'resend'
-      messageActions.resend
-        address:@props.address
-        body:@props.body 
-
   getInitialState: ->
     {zindex: 'auto'}
 
@@ -48,16 +34,10 @@ MessageItem = React.createClass
 
   componentDidMount: ->
     if @props.new
-      $(this.getDOMNode()).addClass('active')
+      $(@getDOMNode()).addClass('active')
 
   render: ->
     starText = if @props.starred then 'Unstar' else 'Star'
-    iconMenuItems = [
-      { payload: 'star', className:'menu-star', text: starText}
-      { payload: 'resend',className:'menu-resend', text: 'Resend'}
-      { payload: 'delete', className:'menu-delete', text: 'Delete'}
-    ]
-
     iconClassName = classBuilder
         'icon-arrow-up-left2 outcoming': @props.status is 'sent'
         'icon-paper-plane sending queued': @props.status is 'sending' or @props.status is 'queued'
@@ -75,11 +55,11 @@ MessageItem = React.createClass
 
     style = {zIndex:@state.zindex}
 
-    <div style={style} className="message-item animated">
-      <div className="message-icon">
+    <div style={style} className="list-item animated">
+      <div className="list-item-icon">
         <FontIcon className={iconClassName} />
       </div>
-      <div className="message-inner">
+      <div className="list-item-inner">
         <div className="address">
           <span className={statusClass}>{statusText}</span>
           <span className="message-address">
@@ -90,7 +70,7 @@ MessageItem = React.createClass
           {@props.body}
         </div>
       </div>
-      <div className="message-actions">
+      <div className="list-item-actions">
         {
           if @props.starred
             <div className="star">

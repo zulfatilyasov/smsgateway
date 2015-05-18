@@ -9,7 +9,8 @@ var AppLeftNav = require('./app-left-nav.jsx');
 var messageActions = require('./actions/MessageActions.coffee');
 var userActions = require('./actions/UserActions.coffee');
 var uiEvents = require('./uiEvents.coffee');
-
+var _ = require('lodash');
+_.mixin(require("lodash-deep"));
 
 var getState = function () {
     console.log(userStore.snackMessage());

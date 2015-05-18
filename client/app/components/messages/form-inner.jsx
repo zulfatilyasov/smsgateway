@@ -164,7 +164,7 @@ class FormInner extends React.Component {
         var primaryButtonLabel = this.state.sending ? 'Sending..' : 'Send';
 
         return (
-            <div className="pad">
+            <div className="message-form pad">
                 <div className="formInner">
                     <TextField
                         key={this.state.addressKey}
@@ -182,7 +182,6 @@ class FormInner extends React.Component {
                         onChange={this._handleTextChange.bind(this)}
                         className="input msgInput"
                         multiLine={true}/>
-
 
                     <div className="selectMessageHandler">
                         <div className="handlersLabel">Send message with:</div>

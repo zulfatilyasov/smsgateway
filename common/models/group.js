@@ -28,11 +28,44 @@ module.exports = function(Group) {
         });
     });
 
+    Group.observe('before delete', function(ctx, next) {
+        var group = ctx.instance;
+
+        var db = Group.dataSource.connector.db;
+        var ContactCollection = db.collection("Contact");
+        
+        ContactCollection.update({
+            "groups.id": group.id.toString()
+        }, {
+            "$pull": {
+                "groups":{
+                   id:group.id.toString() 
+                } 
+            }
+        }, {
+            multi: true
+        }, function(err, info) {
+            if (err) {
+                next(err);
+            } else {
+                next(null);
+            }
+        });
+    });
+
+
     Group.contacts = function(id, cb) {
         Group.findById(id, function(err, group) {
             if (err) {
                 cb(err);
                 return
+            }
+
+            if(!group) {
+                var err = new Error('group not found')
+                err.statusCode = 404;
+                cb(err)
+                return;
             }
 
             var Contact = Group.app.models.Contact;
@@ -44,7 +77,6 @@ module.exports = function(Group) {
                     }
                 }
             }, function(err, contacts) {
-                console.log(contacts);
                 if (err) {
                     cb(err);
                     return;
