@@ -34,6 +34,7 @@ ContactList = React.createClass
         groupId = @props.params.groupId;
         if userStore.isAuthenticated()
             contactActions.getUserContacts(userId, groupId)
+            contactActions.getUserGroups(userId);
         else
             userActions.logout()
         animateItems()
