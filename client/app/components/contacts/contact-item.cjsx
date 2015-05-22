@@ -5,7 +5,7 @@ $ = require '../../services/zepto.js'
 {Checkbox, FontIcon} = require 'material-ui'
 
 ContactItem = React.createClass
-  handleSelected: ()->
+  handleSelected: (e)->
     contactActions.selectSingle(@props.id)
 
   componentDidUpdate: (prevProps, prevState) ->
@@ -15,12 +15,15 @@ ContactItem = React.createClass
     if @props.new
       $(@getDOMNode()).addClass('active')
 
+  handleClick:(e) ->
+    contactActions.editContact(@props)
+
   render: ->
     <div className="list-item animated">
-      <div className="list-item-icon">
+      <div onClick={@handleClick} className="list-item-icon">
         <FontIcon className="icon icon-person-outline" />
       </div>
-      <div className="list-item-inner">
+      <div onClick={@handleClick} className="list-item-inner">
         <div className="address">
           <span className="contact-name">{@props.name}</span>
         </div>
@@ -29,11 +32,11 @@ ContactItem = React.createClass
             {@props.phone}
           </div>
           {
-            if @props.groups.length
+            if @props.groups?.length
               <div className="groups">
                   {
                     for group, i in @props.groups
-                      <span>
+                      <span key={group.id}>
                         <span>{group.name}</span>
                         {
                           if i < @props.groups.length - 1
@@ -46,7 +49,7 @@ ContactItem = React.createClass
         </div>
       </div>
       <div className="list-item-actions">
-        <Checkbox ref="checkbox" defaultSwitched={false} onCheck={@handleSelected} value="false"/>
+        <Checkbox ref="checkbox" className="contact-checkbox" defaultSwitched={false} onCheck={@handleSelected} value="false"/>
       </div>
     </div>
 

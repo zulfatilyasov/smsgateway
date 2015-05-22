@@ -51,6 +51,16 @@ actions[MessageConstants.SEND_SUCCESS] = action => {
     storeInstance.emitChange();
 };
 
+actions[MessageConstants.SEND_MULTIPLE_SUCCESS] = action => {
+    _sendInProgress = false;
+    for (var i = action.messages.length - 1; i >= 0; i--) {
+        action.messages[i].new = true;
+    };
+    _messageList = _messageList.concat(action.messages);
+    _messageToResend = null;
+    storeInstance.emitChange();
+};
+
 actions[MessageConstants.SELECT_ALL] = action => {
     for(let message of _messageList){
         message.checked = action.value;
@@ -87,6 +97,13 @@ actions[MessageConstants.SEND_FAIL] = action => {
     _error = action.error;
     storeInstance.emitChange();
 };
+
+actions[MessageConstants.SEND_MULTIPLE_FAIL] = action => {
+    _sendInProgress = false;
+    _error = action.error;
+    storeInstance.emitChange();
+};
+
 
 actions[MessageConstants.MESSAGE_RECEIVED] = action => {
     var message = action.message;

@@ -25,6 +25,10 @@ ContactActions =
         AppDispatcher.handleViewAction
             actionType: GroupConstants.GET_GROUPS
 
+    aggregateGroups:()->
+        AppDispatcher.handleViewAction
+            actionType: ContactConstants.AGGREGATE_GROUPS
+
     replaceGroups:(targetGroups, sourceGroups) ->
       _.map targetGroups, (group) ->
         if group.id is null
@@ -33,32 +37,67 @@ ContactActions =
         id:group.id
         name:group.name
 
+    selectSingle: (id) ->
+      AppDispatcher.handleViewAction
+        actionType: ContactConstants.SELECT_CONTACT
+        id: id
+
+    selectAllItems: (value) ->
+      AppDispatcher.handleViewAction
+          actionType: ContactConstants.SELECT_ALL_CONTACTS
+          value: value
+
+    deleteContacts: (contactIds)->
+      apiClient.deleteContacts contactIds
+        .then (resp) ->
+                AppDispatcher.handleViewAction
+                    actionType: ContactConstants.DELETED_CONTACTS
+                    contactIds: contactIds
+            , (err) ->
+                AppDispatcher.handleViewAction
+                    actionType: ContactConstants.DELETE_CONTACTS_FAIL
+                    contactIds: contactIds
+
+    clearEdit:() ->
+      AppDispatcher.handleViewAction
+          actionType: ContactConstants.CLEAR_EDITED_CONTACT
+
+    editContact: (contact) ->
+      AppDispatcher.handleViewAction
+          actionType: ContactConstants.EDIT_CONTACT
+          contact: contact
+
+    createMultipleGroups: (userId, groups, cb)->
+      apiClient.createUserGroups userId, groups
+        .then (resp) ->
+          createdGroups = resp.body
+          AppDispatcher.handleViewAction
+            actionType: GroupConstants.SAVE_GROUP_SUCCESS
+            groups: createdGroups
+          cb createdGroups
+
     saveContact: (contact) ->
       newGroups = _.filter contact.groups, id:null
       if newGroups.length
-        apiClient.createUserGroups contact.userId, newGroups
-          .then (resp) ->
-            createdGroups = resp.body
-            contact.groups = ContactActions.replaceGroups contact.groups, createdGroups
-            ContactActions.createContact contact
-            AppDispatcher.handleViewAction
-              actionType: GroupConstants.SAVE_GROUP_SUCCESS
-              groups: createdGroups
+        @createMultipleGroups contact.userId, newGroups, (createdGroups) ->
+          contact.groups = ContactActions.replaceGroups contact.groups, createdGroups
+          ContactActions.createContact contact
       else
-            contact.groups = ContactActions.replaceGroups contact.groups
-            ContactActions.createContact contact
+        contact.groups = ContactActions.replaceGroups contact.groups
+        ContactActions.createContact contact
 
       AppDispatcher.handleViewAction
         actionType: ContactConstants.SAVE
         contact: contact
 
     createContact: (contact) ->
-      apiClient.createContact(contact.userId, contact)
+      apiClient.saveContact(contact.userId, contact)
         .then (resp) ->
-          newContact = resp.body
+          savedContact = resp.body
+          savedContact.new = if contact.id then false else true
           AppDispatcher.handleViewAction
             actionType: ContactConstants.SAVE_SUCCESS
-            contact: newContact
+            contact: savedContact
         , (err) ->
           AppDispatcher.handleViewAction
             actionType: ContactConstants.SAVE_FAIL
@@ -90,6 +129,47 @@ ContactActions =
                     actionType: GroupConstants.GROUP_DELETE_FAILED
                     error: err
 
+    updateContactGroups: (contacts, selectedGroups, aggregatedGroups) ->
+      _.forEach selectedGroups, (group) ->
+        _.forEach contacts, (contact) ->
+          if not _.any(contact.groups, id:group.id)
+            contact.groups.push
+              name:group.name
+              id:group.id
+      _.forEach aggregatedGroups, (group) ->
+        if not _.any(selectedGroups, id:group.id)
+          for contact in contacts
+            _.remove(contact.groups, id:group.id)
+      @submitContacts contacts
+
+    submitGroups:(groups) ->
+      apiClient.updateMultipleGroups groups
+        .then (resp) ->
+          AppDispatcher.handleViewAction
+            actionType: GroupConstants.UPDATED_GROUPS
+            groups: groups
+        , (err) ->
+          console.log err
+
+
+    submitContacts: (contacts) ->
+      contacts = _.map contacts, (c) -> _.omit c, ['checked', 'key', 'new']
+      apiClient.updateMultipleContacts contacts
+        .then (resp) ->
+          AppDispatcher.handleViewAction
+            actionType: ContactConstants.UPDATED_CONTACTS
+            contacts: contacts
+        , (err) ->
+          console.log err
+
+    checkNewGroupsAndUpdateContacts:(userId, contacts, selectedGroups, newGroups, aggregatedGroups) ->
+      if newGroups.length
+        @createMultipleGroups userId, newGroups, (createdGroups) =>
+          selectedGroups = selectedGroups.concat createdGroups
+          @updateContactGroups contacts, selectedGroups, aggregatedGroups
+      else
+        @updateContactGroups contacts, selectedGroups, aggregatedGroups
+
     getUserContacts: (userId, groupId) ->
         if @contactsLoaded
             console.log 'contacts already loaded'
@@ -101,6 +181,7 @@ ContactActions =
                     AppDispatcher.handleViewAction
                         actionType: ContactConstants.RECEIVED_ALL_CONTACTS
                         contacts: contacts
+                        isGroupContacts: if groupId then true else false
                     @contactsLoaded = true
                 , (err) ->
                     AppDispatcher.handleViewAction

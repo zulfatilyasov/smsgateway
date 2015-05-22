@@ -4,6 +4,8 @@ module.exports = keyMirror({
     SEND: null,
     SEND_SUCCESS: null,
     SEND_FAIL: null,
+    SEND_MULTIPLE_SUCCESS:null,
+    SEND_MULTIPLE_FAIL:null,
     RECEIVED_ALL_MESSAGES: null,
     MESSAGE_RECEIVED:null,
     GET_ALL_MESSAGES_FAIL:null,

@@ -12,8 +12,9 @@ SearchBar = require '../search/searchbar.cjsx'
 PageWithNav = require '../page-with-nav/page-with-nav.jsx'
 headerEvents = require('../../headerEvents.coffee')
 PageHeader = require('../page-with-nav/pageHeader.cjsx')
-GroupForm = require '../contacts/group-form.cjsx'
+Groups = require '../groups/groups.cjsx'
 classBuilder = require 'classnames'
+ramjet = require 'ramjet'
 
 Contacts = React.createClass
     mixins: [Router.State]
@@ -68,10 +69,6 @@ Contacts = React.createClass
         headerEvents.addChangeListener @onHeaderChange
         contactStore.addChangeListener @onChange
 
-        if userStore.isAuthenticated()
-            userId = userStore.userId()
-            contactActions.getUserGroups(userId)
-
     componentWillUnmount: ->
         headerEvents.removeChangeListener @onHeaderChange
         contactStore.removeChangeListener @onChange
@@ -79,6 +76,9 @@ Contacts = React.createClass
     onChange: ->
         state = 
             menuItems: contactStore.groupRouteList()
+
+        if contactStore.editedContact() and not @state.showForm
+            state.showForm = true
 
         if contactStore.isSaving()
             state.readyToClose = true
@@ -92,13 +92,6 @@ Contacts = React.createClass
     onHeaderChange: (header) ->
         @setState header:header
     
-    handleResendClick:(e) ->
-        e.preventDefault()
-        selectedIds = contactStore.selectedContactIds()
-        @_confirmResend ->
-          contactActions.resend selectedIds
-        return
-
     handleCreateContactClick: ->
         @setState showForm:true
 
@@ -110,26 +103,19 @@ Contacts = React.createClass
             uiEvents.closeDialog()
 
     _confirmDeletion: (submitAction) ->
-        actions = @_getConfirmationActions(submitAction)
-        uiEvents.showDialog
-          title: "Confirm Delete"
-          text: "Delete selected messages permanently?"
-          submitHandler:actions.submit
-          cancelHandler:actions.cancel
-
-    _confirmResend: (submitAction) ->
-        actions = @_getConfirmationActions(submitAction)
-        uiEvents.showDialog
-          title:"Confirm Resend"
-          text: "Resend selected messages?"
-          submitHandler:actions.submit
-          cancelHandler:actions.cancel
+        if contactStore.selectedContacts().length
+            actions = @_getConfirmationActions(submitAction)
+            uiEvents.showDialog
+              title: "Confirm Delete"
+              text: "Delete selected contacts permanently?"
+              submitHandler:actions.submit
+              cancelHandler:actions.cancel
 
     handleDelete: (e) ->
         e.preventDefault()
         selectedIds = contactStore.selectedContactIds()
         @_confirmDeletion ->
-          contactActions.deleteMany selectedIds
+          contactActions.deleteContacts selectedIds
         return
 
     handleCancelContacts: (e) ->
@@ -143,9 +129,16 @@ Contacts = React.createClass
         @setState
             showForm:false
             showSearchForm:false
+            showGroupForm:false
+        contactActions.clearEdit()
 
     handleSearchClick: ->
         @setState showSearchForm:true
+
+    handleAddToGroup: ->
+        if contactStore.selectedContacts().length
+            @setState showGroupForm:true
+            contactActions.aggregateGroups()
 
     handleSelectAll: ->
         isChecked = @refs.checkbox.isChecked()
@@ -164,16 +157,21 @@ Contacts = React.createClass
             searchForm:true
             open:@state.showSearchForm
 
+        groupsFormCasses = classBuilder
+            groupsForm:true
+            open:@state.showGroupForm
+
         toolbar = <div className="toolbar">
                     <div className="toolbar-content">
                       <PageHeader key={@state.header} header={@state.header}/>
                       <div className="actions">
                         <Checkbox ref="checkbox" onCheck={@handleSelectAll} value="1"/>
-                        <IconButton tooltip="Add to Group" onClick={@handleResendClick} iconClassName="icon-person-add" />
-                        <IconButton tooltip="import" onClick={@handleResendClick} iconClassName="icon-cloud-upload" />
+                        <IconButton tooltip="Add to Group" onClick={@handleAddToGroup} iconClassName="icon-person-add" />
+                        <IconButton tooltip="import" onClick={@handleImport} iconClassName="icon-cloud-upload" />
                         <IconButton tooltip="Delete" onClick={@handleDelete} iconClassName="icon-delete" />
                         <IconButton onClick={@handleSearchClick} tooltip="Search" iconClassName="icon-search" />
                         <div className="buttons">
+                          <div className="ramjetA"></div>
                           <FlatButton onClick={@handleCreateContactClick} className="create" label="Create Contact" secondary={true} />
                         </div>
                       </div>
@@ -181,6 +179,11 @@ Contacts = React.createClass
                     <div className={formClasses}>
                       <div className="form-content">
                         <ContactForm cancelClickHandler={@cancelClickHandler}/>
+                      </div>
+                    </div>
+                    <div className={groupsFormCasses}>
+                      <div className="form-content">
+                        <Groups closeClickHandler={@cancelClickHandler} />
                       </div>
                     </div>
                     <div className={searchFormClasses}>

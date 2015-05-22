@@ -25,6 +25,7 @@
     "mongodb": "^2.0.31",
     "morgan": "^1.5.2",
     "q": "^1.4.0",
+    "ramjet": "^0.4.5",
     "react": "^0.13.2",
     "react-select": "^0.4.9",
     "react-tap-event-plugin": "^0.1.6",

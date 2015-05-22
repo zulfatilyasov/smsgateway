@@ -17,15 +17,6 @@ getItemStatusText  = (item) ->
         return 'Cancelled: '
 
 MessageItem = React.createClass
-  getInitialState: ->
-    {zindex: 'auto'}
-
-  toggleZIndex:()->
-    if @state.zindex > 10
-      @setState({zindex:'auto'})
-    else
-      @setState({zindex:98})
-
   handleSelected: ()->
     messageActions.selectSingle(@props.id)
 
@@ -53,9 +44,8 @@ MessageItem = React.createClass
 
     statusText = getItemStatusText(@props)
 
-    style = {zIndex:@state.zindex}
 
-    <div style={style} className="list-item animated">
+    <div className="list-item animated">
       <div className="list-item-icon">
         <FontIcon className={iconClassName} />
       </div>

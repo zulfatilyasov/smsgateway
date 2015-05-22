@@ -28,12 +28,10 @@ module.exports = function(Message) {
             var userId = ctx.instance.userId;
             if (ctx.instance.origin === 'web') {
                 messenger.sendMessageToUserMobile(userId, ctx.instance);
-                console.log('socket io emitted send-message to mobile: %s#%s', userId, ctx.instance.body);
             }
 
             if (ctx.instance.origin === 'mobile') {
                 messenger.sendMessageToUserWeb(userId, ctx.instance);
-                console.log('socket io emitted send-message to web: %s#%s', userId, ctx.instance.body);
             }
         }
 

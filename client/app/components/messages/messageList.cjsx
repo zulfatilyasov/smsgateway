@@ -4,7 +4,6 @@ $ = require '../../services/zepto.js'
 
 animateItems = ->
     delay = 20
-    console.log 'animating items'
     $('.animated').each (i, el) ->
         unless $(@).is('.active')
             $(@)
@@ -21,7 +20,6 @@ MessageList = React.createClass
         animateItems()
 
     render: ->
-        console.log 'rendering messages lists'
         <div>
             {
                 for msg in @props.messages by -1

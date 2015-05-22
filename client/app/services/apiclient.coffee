@@ -1,5 +1,6 @@
 request = require 'superagent-promise'
 config = require '../config.coffee'
+_ = require 'lodash'
 
 class ApiClient 
     constructor: (host = '', baseUrl = '') ->
@@ -49,7 +50,7 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
-    cancelMessages:(messageIds, userId) ->
+    cancelMessages: (messageIds, userId) ->
         messageIds = JSON.stringify(messageIds)
         request
             .post @prefix + '/messages/cancel'
@@ -58,10 +59,31 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
+    deleteContacts: (contactIds)->
+        request
+            .post @prefix + '/contacts/deleteMany'
+            .send ids:contactIds
+            .set 'Authorization', @_getToken()
+            .end()
+
     resend: (messageIds) ->
         request
             .post @prefix + '/messages/resend'
             .send ids:messageIds
+            .set 'Authorization', @_getToken()
+            .end()
+
+    updateMultipleContacts: (contacts) ->
+        request
+            .post @prefix + '/contacts/updateMany'
+            .send contacts:contacts
+            .set 'Authorization', @_getToken()
+            .end()
+
+    updateMultipleGroups: (groups) ->
+        request
+            .post @prefix + '/groups/updateMany'
+            .send groups:groups
             .set 'Authorization', @_getToken()
             .end()
 
@@ -149,12 +171,20 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
-    createContact:(userId, contact) ->
-        request
-            .post @prefix + '/users/' + userId + '/contacts'
-            .send contact
-            .set 'Authorization', @_getToken()
-            .end()
+    saveContact:(userId, contact) ->
+        if not _.isArray(contact) and contact.id
+            request
+                .put @prefix + '/users/' + userId + '/contacts/' + contact.id
+                .send contact
+                .set 'Authorization', @_getToken()
+                .end()
+        else
+            request
+                .post @prefix + '/users/' + userId + '/contacts'
+                .send contact
+                .set 'Authorization', @_getToken()
+                .end()
+
 
     getUserContacts: (userId, groupId) ->
         if groupId

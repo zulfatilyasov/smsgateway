@@ -1,38 +1,46 @@
 import React from 'react'
 import messageActions from  '../../actions/MessageActions.coffee';
 import messageStore from '../../stores/MessageStore.es6';
+import contactStore from '../../stores/ContactStore.coffee';
 import userStore from '../../stores/UserStore.coffee';
 import uiEvents from '../../uiEvents.coffee';
 import {TextField,DropDownMenu, FontIcon, FlatButton, RaisedButton} from 'material-ui';
+import Select from 'react-select'
+import _ from 'lodash'
 
 class FormInner extends React.Component {
     constructor(props) {
         super(props);
+        this.mounted = false;
         this.state = {
             sending: false,
-            mounted:false,
             addressValue:'',
             addressKey:'address',
             bodyValue:'',
             bodyKey:'body',
+            addressList:contactStore.addressList(),
             deviceModel: userStore.deviceModel()
         };
     }
 
     componentDidMount() {
-        this.setState({mounted:true});
+        this.mounted = true;
         messageStore.addChangeListener(this._onChange.bind(this));
+        contactStore.addChangeListener(this._onChange.bind(this));
         userStore.addChangeListener(this._onChange.bind(this));
     }
 
     componentWillUnmount() {
+        this.mounted = false;
         messageStore.removeChangeListener(this._onChange.bind(this));
+        contactStore.removeChangeListener(this._onChange.bind(this));
         userStore.removeChangeListener(this._onChange.bind(this));
     }
 
     getState(){
         var state = {
             sending: messageStore.IsSending,
+            addressList:contactStore.addressList(),
             deviceModel: userStore.deviceModel()
         };
 
@@ -49,13 +57,13 @@ class FormInner extends React.Component {
     }
 
     _onChange() {
-        if(this.state.mounted){
+        if(this.mounted){
             this.setState(this.getState());
         }
     }
 
-    _handlePhoneChange(e) {
-        this.address = e.target.value;
+    _addressChanged(val, values){
+        this.selectedAddresses = values;
     }
 
     _handleTextChange(e) {
@@ -106,36 +114,49 @@ class FormInner extends React.Component {
 
     _handleSendMessage(e) {
         e.preventDefault();
-        var message = {
-            body: this.body,
-            status: 'queued',
-            address: this.address,
-            outcoming: true,
-            handler: this.provider,
-            origin: 'web'
-        };
-
         var self = this;
-        var sendMessage = function () {
-            if (message.handler === 'api'){
-                self._alertCantUseNexmo();
-                return;
-            }
+        var userId = userStore.userId();
+        var contacts = contactStore.stripContacts(this.selectedAddresses);
+        var messages = _.map(contacts.recipients, function (address) {
+            return {
+                body: self.body,
+                userId: userId,
+                status: 'queued',
+                address: address,
+                outcoming: true,
+                handler: self.provider,
+                origin: 'web'
+            };
+        });
+
+        var checkAddressAndSend = function (message) {
             var address = message.address.replace(/[^0-9]/g, '');
             if(address.length < 10 || address.length > 11) { 
                 self._confirmWrongPhone(function () {
-                    messageActions.send(message);
+                    messageActions.saveMessagesAndNewContacts(userId, message, contacts.newContacts);
                 });
             }
             else{
-                messageActions.send(message);
+                messageActions.saveMessagesAndNewContacts(userId, message, contacts.newContacts);
+            }            
+        };
+
+        var send = function () {
+            if (self.handler === 'api'){
+                self._alertCantUseNexmo();
+                return;
+            }
+            if(messages.length === 1){
+                checkAddressAndSend(messages[0]);
+            } else {
+                messageActions.saveMessagesAndNewContacts(userId, messages, contacts.newContacts);
             }
         };
 
-        if (!message.handler){
-            self._confirmContinueWithoutDevice(sendMessage);
+        if (!self.provider){
+            self._confirmContinueWithoutDevice(send);
         } else {
-            sendMessage();
+            send();
         }
     }
 
@@ -166,13 +187,13 @@ class FormInner extends React.Component {
         return (
             <div className="message-form pad">
                 <div className="formInner">
-                    <TextField
-                        key={this.state.addressKey}
-                        hintText="Enter message address"
-                        defaultValue={this.state.addressValue}
+                    <Select
+                        multi={true}
+                        options={this.state.addressList}
+                        allowCreate={true}
+                        placeholder="Address"
                         className="input phoneInput"
-                        onChange={this._handlePhoneChange.bind(this)}
-                        floatingLabelText="Address"/>
+                        onChange={this._addressChanged.bind(this)} />
 
                     <TextField
                         hintText="Enter message body"

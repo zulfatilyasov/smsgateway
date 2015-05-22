@@ -16,6 +16,7 @@ module.exports = keyMirror({
     RECEIVED_SEARCHED_GROUPS:null,
     CLEARRESEND:null,
     UPDATE_GROUP:null,
+    UPDATED_GROUPS:null,
     SELECT:null,
     SELECT_ALL:null
 });

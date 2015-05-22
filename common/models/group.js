@@ -1,4 +1,11 @@
 var q = require('Q');
+var loopback = require('loopback');
+
+function notAutorizedError () {
+    var err = new Error('not authenticated');
+    err.statusCode = 401;
+    return err;
+}
 
 module.exports = function(Group) {
     Group.observe('after save', function(ctx, next) {
@@ -26,6 +33,56 @@ module.exports = function(Group) {
                 next(null);
             }
         });
+    });
+
+    Group.beforeRemote('create', function(ctx, message, next) {
+        var ObjectId = Group.app.dataSources['Mongodb'].ObjectID;
+        if (ctx.req.accessToken) {
+            var userId = ctx.req.accessToken.userId;
+            ctx.req.body.userId = new ObjectId(userId);
+            next();
+        } else {
+            next(notAutorizedError());
+        }
+    });
+
+    Group.updateMany = function (groups, cb) {
+        var ctx = loopback.getCurrentContext();
+        var token = ctx && ctx.get('accessToken');
+        if(!token || !token.userId) {
+            cb(notAutorizedError());
+            return;
+        }
+
+        var updatedCount = 0;
+        for (var i = groups.length - 1; i >= 0; i--) {
+            if(!token.userId === groups[i].userId) {
+                cb(notAutorizedError());
+                return;
+            }
+            Group.upsert(groups[i], function (err, info) {
+                if(err){
+                    cb(err);
+                    return;
+                } else {
+                    updatedCount++;
+                    if(updatedCount === groups.length) {
+                        cb(null);
+                    }
+                }
+            });
+        };
+    }
+
+    Group.remoteMethod('updateMany', {
+        accepts: {
+            arg: 'groups',
+            type: 'array'
+        },
+        http: {
+            path: '/updateMany',
+            verb: 'post'
+        }
     });
 
     Group.observe('before delete', function(ctx, next) {
@@ -69,7 +126,6 @@ module.exports = function(Group) {
             }
 
             var Contact = Group.app.models.Contact;
-            console.log(group.contacts);
             Contact.find({
                 where: {
                     id: {

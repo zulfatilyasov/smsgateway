@@ -4,6 +4,7 @@ var RouteHandler = Router.RouteHandler;
 var mui, { FlatButton, Dialog, FloatingActionButton, AppBar, AppCanvas, FontIcon, Menu, IconButton, Snackbar } = require('material-ui');
 var LoginPage = require('./components/login/login-page.cjsx');
 var userStore = require('./stores/UserStore.coffee');
+var contactActions = require('./actions/ContactActions.coffee');
 var MenuButton = require('./components/menu-button/menu-button.jsx');
 var AppLeftNav = require('./app-left-nav.jsx');
 var messageActions = require('./actions/MessageActions.coffee');
@@ -33,9 +34,12 @@ var Master = React.createClass({
 
     componentDidMount() {
         if(this.state.authenticated){
+            var userId  = userStore.userId();
             messageActions.startReceiving();
             userActions.startWatchingDevice();
             userActions.getUserDevice();
+            contactActions.getUserGroups(userId);
+            contactActions.getUserContacts(userId);
         }
 
         this.setState({

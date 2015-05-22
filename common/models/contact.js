@@ -1,10 +1,17 @@
 var _ = require('lodash');
 var ObjectId = require('mongodb').ObjectId;
+var loopback = require('loopback');
 
-module.exports = function(Contact) {
-    Contact.observe('after save', function(ctx, next) {
+function notAutorizedError() {
+    var err = new Error('not authenticated');
+    err.statusCode = 401;
+    return err;
+}
+
+module.exports = function (Contact) {
+    Contact.observe('after save', function (ctx, next) {
         var contact = ctx.instance;
-        if (!contact || !contact.groups || !contact.groups.length) {
+        if (!contact) {
             next()
             return;
         }
@@ -12,82 +19,164 @@ module.exports = function(Contact) {
         var userId = contact.userId;
         var groups = contact.groups;
         var groupIds = _.pluck(groups, 'id');
-        var groupObjectIds = _.map(groupIds, function(stringId) {
+        var groupObjectIds = _.map(groupIds, function (stringId) {
             return new ObjectId(stringId);
         });
-        if (!groupIds || !groupIds.length) {
-            var err = new Error("Contact groups should have group ids");
-            err.statusCode = 422;
-            next(err);
-            return;
-        }
-        var db = Contact.dataSource.connector.db;
-        var GroupCollection = db.collection("Group");
+        var GroupCollection = Contact.dataSource.connector.db.collection("Group");
+
         GroupCollection.update({
+            _id: {
+                "$in": groupObjectIds
+            }
+        }, {
+            "$addToSet": {
+                "contacts": contact.id
+            }
+        }, {
+            multi: true
+        }, function (err, info) {
+            if (err) {
+                next(err);
+                return;
+            }
+
+            GroupCollection.find({
+                "contacts": contact.id,
                 _id: {
-                    "$in": groupObjectIds
+                    "$nin": groupObjectIds
                 }
-            }, {
-                "$addToSet": {
-                    "contacts": contact.id
-                }
-            }, {
-                multi: true
-            },
-            function(err, info) {
+            }).toArray(function (err, groups) {
+                console.log(groups);
                 if (err) {
                     next(err);
-                } else {
-                    next(null);
+                    return;
                 }
-            }
-        );
+
+                var ids = _.pluck(groups, '_id');
+                if(!ids.length){
+                    next(null);
+                    return;
+                }
+                
+                GroupCollection.update({
+                    _id: {
+                        "$in": ids
+                    }
+                }, {
+                    "$pull": {
+                        "contacts": contact.id
+                    }
+                }, {
+                    multi: true
+                }, function (err, info) {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+
+                    next(null);
+                });
+            });
+        });
     });
 
-    Contact.deleteMany = function(ids, cb) {
+    Contact.updateMany = function (contacts, cb) {
+        var ctx = loopback.getCurrentContext();
+        var token = ctx && ctx.get('accessToken');
+        if (!token || !token.userId) {
+            cb(notAutorizedError());
+            return;
+        }
+
+        var updatedCount = 0;
+        for (var i = contacts.length - 1; i >= 0; i--) {
+            if (!token.userId === contacts[i].userId) {
+                cb(notAutorizedError());
+                return;
+            }
+            Contact.upsert(contacts[i], function (err, info) {
+                if (err) {
+                    cb(err);
+                    return;
+                } else {
+                    updatedCount++;
+                    if (updatedCount === contacts.length) {
+                        cb(null);
+                    }
+                }
+            });
+        }
+        ;
+    }
+
+    Contact.remoteMethod('updateMany', {
+        accepts: {
+            arg: 'contacts',
+            type: 'array'
+        },
+        http: {
+            path: '/updateMany',
+            verb: 'post'
+        }
+    });
+
+
+    Contact.deleteMany = function (ids, cb) {
+        var ctx = loopback.getCurrentContext();
+        var token = ctx && ctx.get('accessToken');
+        if (!token || !token.userId) {
+            cb(notAutorizedError())
+            return;
+        }
+        var userId = token.userId;
+
         Contact.find({
             where: {
                 id: {
                     inq: ids
-                }
+                },
+                userId: userId
             }
-        }, function(err, contacts) {
+        }, function (err, contacts) {
             if (err) {
                 cb(err);
-            } else {
-                cb(null);
+                return;
+            }
+            if (!contacts || !contacts.length) {
+                var err = new Error('contacts not found');
+                err.statusCode = 404;
+                cb(err);
+                return;
             }
             var contactIds = _.pluck(contacts, 'id');
             var groupIds = [];
             for (var i = contacts.length - 1; i >= 0; i--) {
                 groupIds = groupIds.concat(_.pluck(contacts[i].groups, 'id'));
             }
-            var groupObjectIds = _.map(groupIds, function(stringId) {
+            var groupObjectIds = _.map(groupIds, function (stringId) {
                 return new ObjectId(stringId);
             });
-            var db = Contact.dataSource.connector.db;
-            var GroupCollection = db.collection('Group');
+            var GroupCollection = Contact.dataSource.connector.db.collection('Group');
             Contact.destroyAll({
-                where: {
-                    id: {
-                        inq: ids
-                    }
-                }
-            }, function(err, info) {
+                id: {
+                    inq: ids
+                },
+                userId: userId
+            }, function (err, info) {
                 if (err) {
                     cb(err);
-                } else {
-                    cb(null);
+                    return;
                 }
                 GroupCollection.update({
                     _id: {
                         "$in": groupObjectIds
-                    }
+                    },
+                    userId: userId
                 }, {
                     "$pullAll": {
                         "contacts": contactIds
                     }
-                }, function(err, info) {
+                }, function (err, info) {
                     if (err) {
                         cb(err);
                     } else {
@@ -109,14 +198,14 @@ module.exports = function(Contact) {
         }
     });
 
-    Contact.observe('before delete', function(ctx, next) {
+    Contact.observe('before delete', function (ctx, next) {
         if (!ctx.instance) {
             next();
             return
         }
         var contactId = contactId;
         var groupIds = _.pluck(ctx.instance.groups, 'id');
-        var groupObjectIds = _.map(groupIds, function(stringId) {
+        var groupObjectIds = _.map(groupIds, function (stringId) {
             return new ObjectId(stringId);
         });
         var db = Contact.dataSource.connector.db;
@@ -132,7 +221,7 @@ module.exports = function(Contact) {
             }, {
                 multi: true
             },
-            function(err, info) {
+            function (err, info) {
                 if (err) {
                     next(err);
                 } else {

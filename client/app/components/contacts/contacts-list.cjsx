@@ -9,7 +9,6 @@ State = require('react-router').state
 
 animateItems = ->
     delay = 20
-    console.log 'aniating items'
     $('.animated').each (i, el) ->
         unless $(@).is('.active')
             $(@)
@@ -37,7 +36,6 @@ ContactList = React.createClass
             contactActions.getUserContacts(userId, groupId)
         else
             userActions.logout()
-
         animateItems()
 
     componentWillUnmount: ->
@@ -51,7 +49,6 @@ ContactList = React.createClass
         animateItems()
 
     render: ->
-        console.log 'rendering list'
         ContactList = <div>
                         {
                             for contact in @state.contacts by -1
@@ -62,7 +59,9 @@ ContactList = React.createClass
         <div>
             {
                 if @state.contacts.length
-                    {ContactList}
+                    <div>
+                        {ContactList}
+                    </div>
                 else
                     if @state.loading
                         <div className="no-messages">Loading...</div>
