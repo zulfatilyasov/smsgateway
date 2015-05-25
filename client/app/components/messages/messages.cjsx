@@ -30,6 +30,9 @@ Messages = React.createClass
         headerEvents.addChangeListener @onHeaderChange
         messageStore.addChangeListener @onChange
 
+    componentDidUpdate: (prevProps, prevState) ->
+        @formHeight = -1 * $('.form').height()
+    
     componentWillUnmount: ->
         headerEvents.removeChangeListener @onHeaderChange
         messageStore.removeChangeListener @onChange
@@ -133,6 +136,9 @@ Messages = React.createClass
             form:true
             open:@state.showForm
 
+        formStyles =
+            transform: if @state.showForm then "translate(0px, 0px)" else "translate(0px, #{@formHeight}px)"
+
         searchFormClasses = classBuilder
             searchForm:true
             open:@state.showSearchForm
@@ -151,7 +157,7 @@ Messages = React.createClass
                         </div>
                       </div>
                     </div>
-                    <div className={formClasses}>
+                    <div style={formStyles} className={formClasses}>
                       <div className="form-content">
                         <NewMessageForm cancelClickHandler={@cancelClickHandler}/>
                       </div>

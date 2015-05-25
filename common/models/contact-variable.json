@@ -1,6 +1,6 @@
 {
-  "name": "Contact",
-  "plural": "contacts",
+  "name": "ContactVariable",
+  "plural": "contactVariables",
   "base": "PersistedModel",
   "idInjection": true,
   "properties": {
@@ -12,21 +12,13 @@
       "type": "string",
       "required": true
     },
-    "phone": {
-      "type": "string"
+    "type": {
+      "type": "string",
+      "required": true
     },
-    "email": {
-      "type": "string"
-    },
-    "groups": {
-      "type": [
-        "object"
-      ]
-    },
-    "vars": {
-      "type": [
-        "object"
-      ]
+    "code": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],

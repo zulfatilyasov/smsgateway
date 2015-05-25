@@ -53,9 +53,12 @@ Contacts = React.createClass
             userId = userStore.userId()
             contactActions.deleteGroup userId, groupId
 
+    handleContactFormChange:(e)->
+        @formHeight = -1 * $('.form').height()
 
     componentDidUpdate: (prevProps, prevState) ->
         self = @
+        @formHeight = -1 * $('.form').height()
         $('.contacts .secondary-nav .mui-menu-item .mui-menu-item-icon')
             .each ->
                 if not $(@).is('.listening') and $(@).length
@@ -153,6 +156,9 @@ Contacts = React.createClass
             form:true
             open:@state.showForm
 
+        formStyles =
+            transform: if @state.showForm then "translate(0px, 0px)" else "translate(0px, #{@formHeight}px)"
+
         searchFormClasses = classBuilder
             searchForm:true
             open:@state.showSearchForm
@@ -176,9 +182,9 @@ Contacts = React.createClass
                         </div>
                       </div>
                     </div>
-                    <div className={formClasses}>
+                    <div style={formStyles} className={formClasses}>
                       <div className="form-content">
-                        <ContactForm cancelClickHandler={@cancelClickHandler}/>
+                        <ContactForm onChange={@handleContactFormChange} cancelClickHandler={@cancelClickHandler}/>
                       </div>
                     </div>
                     <div className={groupsFormCasses}>

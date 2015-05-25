@@ -43,6 +43,12 @@ class ApiClient
                 password: password
             .end()
             
+    getUserVariables:(userId) ->
+        request
+            .get @prefix + '/users/' + userId + '/contactVariables'
+            .set 'Authorization',  @_getToken()
+            .end()
+
     deleteMany: (messageIds) ->
         request
             .post @prefix + '/messages/delete_many'
@@ -80,6 +86,13 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
+    createContactVariable: (variable)->
+        request
+            .post @prefix + '/contactVariables'
+            .send variable
+            .set 'Authorization', @_getToken()
+            .end()
+            
     updateMultipleGroups: (groups) ->
         request
             .post @prefix + '/groups/updateMany'

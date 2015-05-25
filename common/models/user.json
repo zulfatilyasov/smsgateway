@@ -20,6 +20,11 @@
       "type": "hasMany",
       "model": "Group",
       "foreignKey": "userId"
+    },
+    "contactVariables": {
+      "type": "hasMany",
+      "model": "ContactVariable",
+      "foreignKey": "userId"
     }
   },
   "acls": [

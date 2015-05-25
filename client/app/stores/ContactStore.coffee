@@ -1,6 +1,7 @@
 BaseStore = require './BaseStore.coffee'
 contactConstants = require '../constants/ContactConstants.coffee'
 groupConstants = require '../constants/GroupConstants.coffee'
+_ = require 'lodash'
 
 _inProgress = false
 _saving = false
@@ -17,6 +18,7 @@ _groupRouteList = _defaultGroupRouteList
 _groupOptions = []
 _loadingGroups = false
 _addressList = []
+_variables = []
 
 isPhone = (value) ->
     digits = value.match(/\d/g).length
@@ -32,6 +34,11 @@ class ContactStore extends BaseStore
 
     ContactList: ->
         _contactsList
+
+    variables: ->
+        _.map _variables, (v) ->
+            text:v.name
+            payload:v
 
     InProgress: ->
         _inProgress
@@ -125,6 +132,7 @@ actions[contactConstants.GET_CONTACTS] = (action) ->
 
 actions[contactConstants.CLEAR_EDITED_CONTACT] = (action) ->
     _editedContact = null
+    storeInstance.emitChange()
 
 actions[contactConstants.EDIT_CONTACT] = (action) ->
     _editedContact = action.contact
@@ -170,6 +178,10 @@ actions[contactConstants.SAVE_SUCCESS] = (action) ->
 
     storeInstance.emitChange()
 
+actions[contactConstants.CREATE_VARIABLE_SUCCESS] = (action) ->
+    _variables.push action.variable
+    storeInstance.emitChange()
+
 actions[contactConstants.SAVE_MULTIPLE_CONTACTS_SUCCESS] = (action) ->
     _saving = false
     if _.isArray(action.contacts)
@@ -198,6 +210,13 @@ actions[contactConstants.RECEIVED_ALL_CONTACTS] = (action) ->
 actions[groupConstants.GET_GROUPS] = (action) ->
     _loadingGroups = true
     storeInstance.emitChange()
+
+actions[contactConstants.GET_VARIABLES_SUCCESS] = (action) ->
+    _variables = action.variables
+    storeInstance.emitChange()
+
+actions[groupConstants.GET_VARIABLES_FAIL] = (action) ->
+    _getVarsError = action.error
 
 actions[groupConstants.GROUP_DELETED] = (action) ->
     _.remove _groupRouteList, data:action.groupId

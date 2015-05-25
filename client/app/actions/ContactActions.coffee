@@ -29,6 +29,31 @@ ContactActions =
         AppDispatcher.handleViewAction
             actionType: ContactConstants.AGGREGATE_GROUPS
 
+    getUserVariables:(userId) ->
+      apiClient.getUserVariables(userId)
+        .then (resp) ->
+          variables = resp.body
+          AppDispatcher.handleViewAction
+              actionType: ContactConstants.GET_VARIABLES_SUCCESS
+              variables: variables
+
+        , (err) ->
+          AppDispatcher.handleViewAction
+              actionType: ContactConstants.GET_VARIABLES_FAIL
+              error: err
+
+    createContactVariable:(variable) ->
+      apiClient.createContactVariable(variable)
+        .then (resp)->
+          savedVariable = resp.body
+          AppDispatcher.handleViewAction
+              actionType: ContactConstants.CREATE_VARIABLE_SUCCESS
+              variable: savedVariable
+        , (err) ->
+          AppDispatcher.handleViewAction
+              actionType: ContactConstants.CREATE_VARIABLE_FAIL
+              error: err
+
     replaceGroups:(targetGroups, sourceGroups) ->
       _.map targetGroups, (group) ->
         if group.id is null

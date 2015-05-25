@@ -1,12 +1,46 @@
 .contact-form
   .inputs
     cf()
-    .input, .group
+    .input, .mui-checkbox, .mui-date-picker, .group
       col(1/2, cycle:2)
-    .group
+    .group,.mui-date-picker
       padding-top 26px
+    .mui-checkbox
+      margin-top 36px
+      
   .button-wrap
     col(1)
+    margin-top: 20px
+  .mui-text-field
+    width 100%
+  .mui-date-picker
+    .mui-text-field
+      width 100%
 
+  .mui-flat-button.mui-is-secondary
+    &:hover
+      background-color: #FAFAFA
+  .mui-drop-down-menu
+    width 217px !important
+  .mui-drop-down-menu.mui-open .mui-menu
+    background-color #fff
+  .mui-dialog-window .mui-dialog-window-contents
+      max-width: 358px
+  .field-type
+    cf()
+    margin-top 20px
+    .field-type-label
+      float left
+      height 56px
+      line-height 56px
+      display inline-block
+      font-size 16px
+      color rgba(0, 0, 0, 0.3)
+    
+
+  .add-field-button
+    float left
+    margin-right 10px
+    background: #f4f4f4
   .saveButton
     margin-right 10px
