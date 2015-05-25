@@ -46,6 +46,7 @@ ContactActions =
       apiClient.createContactVariable(variable)
         .then (resp)->
           savedVariable = resp.body
+          debugger
           AppDispatcher.handleViewAction
               actionType: ContactConstants.CREATE_VARIABLE_SUCCESS
               variable: savedVariable

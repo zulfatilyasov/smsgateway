@@ -10,7 +10,6 @@ ContactForm = React.createClass
   
   getInitialState: ->
     variables = contactStore.variables()
-    @vars=[]
     saving: contactStore.isSaving()
     groups: contactStore.groupOptions()
     nameKey: 'name'
@@ -49,9 +48,10 @@ ContactForm = React.createClass
       phone:@phone
       userId:userId
       email:@email
-      vars:@vars
+      vars:@state.vars
       groups:contactGroups
 
+    @creatingContact = false
     contactActions.saveContact(contact)
 
   handleNameChange: (e) ->
@@ -79,7 +79,7 @@ ContactForm = React.createClass
     @newFieldType = item.payload
 
   handleCustomFieldChange:(e) ->
-    customField = _.first _.filter(@vars, name:e.target.name)
+    customField = _.first _.filter(@state.vars, name:e.target.name)
     if e.target.type is 'checkbox'
       customField.value = e.target.checked
     if e.target.type is 'text'
@@ -92,6 +92,7 @@ ContactForm = React.createClass
     @selectedVariable = item.payload
 
   dialogSubmitHandler:(e)->
+    vars = @state.vars
     if @state.createVariable
       if not @newFieldName
         @setState fieldNameError:'field name is required'
@@ -106,13 +107,14 @@ ContactForm = React.createClass
         type:@newFieldType || @state.fieldTypes[0].payload
         code:@state.newFieldCode
 
-      @vars.push(newVariable)
+      vars.push(newVariable)
       contactActions.createContactVariable newVariable
     else
-      @vars.push(@selectedVariable || @state.variables[0].payload)
+      selectedVar = if @selectedVariable then _.cloneDeep(@selectedVariable) else _.cloneDeep(@state.variables[0].payload)
+      vars.push(selectedVar)
 
     @setState
-      vars:@vars
+      vars:vars
 
     @refs.dialog.dismiss()
 
@@ -123,11 +125,17 @@ ContactForm = React.createClass
     @refs.dialog.dismiss()
 
   handleDateFieldChange:(e, value)->
-    customField = _.first _.filter(@vars, name:@activeDateFieldName)
+    customField = _.first _.filter(@state.vars, name:@activeDateFieldName)
     customField.value = value;
 
   handleAddField:(e) ->
     @refs.dialog.show()
+
+  handleFormCancel:(e) ->
+    if @creatingContact
+      @setState
+        vars:[]
+    @props.cancelClickHandler()
 
   dialogCreateNewHandler:(e) ->
     @selectedVariable = null
@@ -152,12 +160,11 @@ ContactForm = React.createClass
       state.emailKey = editedContact.email + 'EMAIL'
       state.emailValue = editedContact.email
       state.groupValue = editedContact.groups
-      state.vars = editedContact.vars
+      state.vars = if editedContact.vars then _.cloneDeep(editedContact.vars) else []
       @id = editedContact.id
-      @name = editedContact.name
+      @name = editedContact.nameKey
       @phone = editedContact.phone
       @groups = editedContact.groups
-      @vars = editedContact.vars || []
       @creatingContact = false
 
     if editedContact is null and not @creatingContact
@@ -169,7 +176,6 @@ ContactForm = React.createClass
       state.emailValue = ''
       state.groupValue = null
       state.vars = []
-      @vars = []
       @creatingContact = true
       @id = null
       @name = ''
@@ -247,7 +253,7 @@ ContactForm = React.createClass
           </div>
           {
             if @state.vars?.length
-              _.map @state.vars, (customField) =>
+              _.map @state.vars, (customField, n) =>
                 if customField.type is 'date'
                   date = if customField.value then new Date(customField.value) else null
                   return <DatePicker
@@ -255,7 +261,7 @@ ContactForm = React.createClass
                     defaultDate={date}
                     onClick={@handleDateFieldClick}
                     onChange={@handleDateFieldChange}
-                    key={customField.code}
+                    key={customField.code + n}
                     hintText={customField.name} />
 
                 if customField.type is 'boolean'
@@ -264,14 +270,14 @@ ContactForm = React.createClass
                     defaultSwitched={customField.value}
                     type='checkbox'
                     label={customField.name}
-                    key={customField.code}
+                    key={customField.code + n}
                     onCheck={@handleCustomFieldChange} />
 
                 if customField.type is 'text'
                   return <TextField
                     name={customField.name}
                     type='text'
-                    key={customField.code}
+                    key={customField.code + n}
                     defaultValue={customField.value}
                     floatingLabelText={customField.name}
                     onChange={@handleCustomFieldChange}
@@ -300,7 +306,7 @@ ContactForm = React.createClass
 
               <RaisedButton
                 className="button cancel-button"
-                onClick={@props.cancelClickHandler}
+                onClick={@handleFormCancel}
                 linkButton={true}>
                   <span className="mui-raised-button-label">Cancel</span>
               </RaisedButton>
