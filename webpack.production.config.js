@@ -2,7 +2,6 @@
     var path = require('path');
     var HtmlWebpackPlugin = require('html-webpack-plugin');
     var Clean = require('clean-webpack-plugin');
-
     module.exports = {
         context: __dirname,
         entry: [

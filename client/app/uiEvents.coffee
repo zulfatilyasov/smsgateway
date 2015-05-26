@@ -6,6 +6,8 @@ CHANGE_EVENT = 'change-header'
 CLICK_CREATE_MESSAGE_EVENT = 'create-message'
 SHOW_DIALOG = 'show-dialog'
 CLOSE_DIALOG = 'close-dialog'
+SHOW_IMPORT_TOOLBAR = 'show-import-toolbar'
+SHOW_CONTACTS_TOOLBAR = 'show-contacts-toolbar'
 
 class HeaderEvents 
     constructor: ->
@@ -45,6 +47,24 @@ class HeaderEvents
 
     removeCloseDialogListener:(callback)->
         @removeListener CLOSE_DIALOG, callback
+
+    showImportToolbar: ->
+        @emit SHOW_IMPORT_TOOLBAR
+
+    addShowImportToolbarListener:(callback) ->
+        @on SHOW_IMPORT_TOOLBAR, callback 
+
+    removeShowImportToolbarListener:(callback)->
+        @removeListener SHOW_IMPORT_TOOLBAR, callback
+
+    showContactsToolbar: ->
+        @emit SHOW_CONTACTS_TOOLBAR
+
+    addShowContactsToolbarListener:(callback) ->
+        @on SHOW_CONTACTS_TOOLBAR, callback 
+
+    removeShowContactsToolbarListener:(callback)->
+        @removeListener SHOW_CONTACTS_TOOLBAR, callback
         
 assign(HeaderEvents.prototype, EventEmitter.prototype)
 

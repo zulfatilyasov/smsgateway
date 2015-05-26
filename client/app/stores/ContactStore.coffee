@@ -35,6 +35,12 @@ class ContactStore extends BaseStore
     ContactList: ->
         _contactsList
 
+    variableNames:()->
+        names = _.map _variables, (v) ->
+            v.name
+            
+        ['name','phone', 'email'].concat names
+
     variables: ->
         _.map _variables, (v) ->
             text:v.name
@@ -148,6 +154,9 @@ actions[contactConstants.SAVE] = (action) ->
 actions[contactConstants.SELECT_ALL_CONTACTS] = (action) ->
     for contact in _contactsList
         contact.checked = action.value
+    storeInstance.emitChange()
+
+actions[contactConstants.TRIGGER_CHANGE] = (action) ->
     storeInstance.emitChange()
 
 actions[contactConstants.UPDATED_CONTACTS] = (action) ->

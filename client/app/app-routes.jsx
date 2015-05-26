@@ -11,6 +11,7 @@ import Contacts  from './components/contacts/contacts.cjsx';
 import ContactsList from './components/contacts/contacts-list.cjsx';
 import Dashboard  from './components/dashboard/dashboard.cjsx';
 import Login from './components/login/login-page.cjsx'
+import ImportContacts from './components/contacts/import.cjsx'
 
 var AppRoutes = (
     <Route name="root" path="/" handler={Master}>
@@ -25,6 +26,7 @@ var AppRoutes = (
         <Route name="contacts" path="/contacts" handler={Contacts}>
           <Route name="allContacts" path="/contacts/all" handler={ContactsList}/> 
           <Route name="groupContacts" path="/groups/:groupId/contacts" handler={ContactsList}/> 
+          <Route name="importContacts" path="/contacts/import" handler={ImportContacts}/> 
         </Route>
         <Route name="settings" handler={Settings}/>
         <Route name="login" path="/login" handler={Login}/>

@@ -5,7 +5,7 @@ contactStore = require '../../stores/ContactStore.coffee'
 contactActions = require '../../actions/ContactActions.coffee'
 userStore = require '../../stores/UserStore.coffee'
 uiEvents = require '../../uiEvents.coffee'
-{Paper, MenuItem, Checkbox, IconButton, FlatButton} = mui
+{Dialog, Paper, MenuItem, Checkbox, IconButton, FlatButton} = mui
 ReactCSSTransitionGroupAppear = require '../../react-helpers/ReactCSSTransitionAppear.jsx'
 ContactForm = require './contact-form.cjsx'
 SearchBar = require '../search/searchbar.cjsx'
@@ -13,8 +13,8 @@ PageWithNav = require '../page-with-nav/page-with-nav.jsx'
 headerEvents = require('../../headerEvents.coffee')
 PageHeader = require('../page-with-nav/pageHeader.cjsx')
 Groups = require '../groups/groups.cjsx'
+ContactVariableForm = require './contact-variable-form.cjsx'
 classBuilder = require 'classnames'
-ramjet = require 'ramjet'
 
 Contacts = React.createClass
     mixins: [Router.State]
@@ -29,8 +29,10 @@ Contacts = React.createClass
             contactActions.getUserContacts(userId)
 
     getInitialState: ->
-        header: 'Contacts'
+        isImport = _.includes @context.router.getCurrentPath(), 'contacts/import'
+        header: if isImport then 'Import Contacts' else 'Contacts'
         showForm: false
+        showImportActions:isImport
         menuItems: contactStore.groupRouteList()
 
     _getConfirmationActions: (submitClickHandler) ->
@@ -39,6 +41,10 @@ Contacts = React.createClass
             submitClickHandler();
         cancel: ->
             uiEvents.closeDialog()
+
+    handleCreateField:(e)->
+        @refs.dialog.show()
+        window.sources.push 'hello'
 
     _confirmGroupDeletion: (submitAction) ->
         actions = @_getConfirmationActions(submitAction)
@@ -71,14 +77,23 @@ Contacts = React.createClass
     componentDidMount: ->
         headerEvents.addChangeListener @onHeaderChange
         contactStore.addChangeListener @onChange
+        userId = userStore.userId();
+        if userStore.isAuthenticated()
+            contactActions.getUserVariables(userId);
+        else
+            userActions.logout()
 
     componentWillUnmount: ->
         headerEvents.removeChangeListener @onHeaderChange
         contactStore.removeChangeListener @onChange
 
     onChange: ->
+        isImport = _.includes @context.router.getCurrentPath(), 'contacts/import'
         state = 
             menuItems: contactStore.groupRouteList()
+            showImportActions:isImport
+        if isImport
+            state.header = 'Import Contacts' 
 
         if contactStore.editedContact() and not @state.showForm
             state.showForm = true
@@ -121,6 +136,9 @@ Contacts = React.createClass
           contactActions.deleteContacts selectedIds
         return
 
+    handleImport:(e)->
+       @context.router.transitionTo('importContacts')
+
     handleCancelContacts: (e) ->
         e.preventDefault()
         userId = userStore.userId()
@@ -147,6 +165,40 @@ Contacts = React.createClass
         isChecked = @refs.checkbox.isChecked()
         contactActions.selectAllItems isChecked
 
+    handleImportContacts:(e) ->
+        data = window.hot.getData()
+        console.log data
+        headers = data[0]
+        headers = _.map headers, (h) -> return h.toLowerCase()
+        nameIndex = _.indexOf headers, 'name'
+        phoneIndex = _.indexOf headers, 'phone'
+        emailIndex = _.indexOf headers, 'email'
+        contacts =[]
+        userId = userStore.userId()
+
+        for row, index in data
+            if index isnt 0 and index isnt data.length - 1
+                contact = {}
+                if nameIndex >= 0
+                    contact.name = row[nameIndex]
+                if phoneIndex >= 0
+                    contact.phone = row[phoneIndex]
+                if emailIndex >= 0
+                    contact.email = row[emailIndex]
+                contact.userId = userId
+                contacts.push contact
+
+        console.log contacts
+
+    dialogCancelHandler:(e) ->
+        @refs.dialog.dismiss()
+
+    dialogSubmitHandler:(e)->
+        newVariable = @refs.form.getNewVariable()
+        return unless newVariable
+        contactActions.createContactVariable newVariable
+        @refs.dialog.dismiss()
+
     getSelecetedIndex: () ->
         currentParams = @context.router.getCurrentParams()
         return i for menuItem, i in @state.menuItems when currentParams.groupId is menuItem.params?.groupId
@@ -167,20 +219,51 @@ Contacts = React.createClass
             groupsForm:true
             open:@state.showGroupForm
 
+        dialogActions = [
+          <FlatButton
+            label="Add"
+            key="ok"
+            primary={true}
+            onTouchTap={@dialogSubmitHandler} />,
+
+          <FlatButton
+            label="Cancel"
+            secondary={true}
+            key="cancel"
+            onTouchTap={@dialogCancelHandler} />
+        ]
+
+
         toolbar = <div className="toolbar">
                     <div className="toolbar-content">
                       <PageHeader key={@state.header} header={@state.header}/>
-                      <div className="actions">
-                        <Checkbox ref="checkbox" onCheck={@handleSelectAll} value="1"/>
-                        <IconButton tooltip="Add to Group" onClick={@handleAddToGroup} iconClassName="icon-person-add" />
-                        <IconButton tooltip="import" onClick={@handleImport} iconClassName="icon-cloud-upload" />
-                        <IconButton tooltip="Delete" onClick={@handleDelete} iconClassName="icon-delete" />
-                        <IconButton onClick={@handleSearchClick} tooltip="Search" iconClassName="icon-search" />
-                        <div className="buttons">
-                          <div className="ramjetA"></div>
-                          <FlatButton onClick={@handleCreateContactClick} className="create" label="Create Contact" secondary={true} />
-                        </div>
-                      </div>
+                      {
+                        if @state.showImportActions
+                            <div className="import-actions actions">
+                                <div className="buttons">
+                                    <FlatButton onClick={@handleImportContacts} className="create" label="Save Contacts" secondary={true} />
+                                    <FlatButton className="create upload" secondary={true}>
+                                        <span className="mui-flat-button-label upload-label">Upload csv</span>
+                                        <input
+                                            type="file"
+                                            className="file-input"
+                                            id="imageButton"/>
+                                    </FlatButton>
+                                    <FlatButton onClick={@handleCreateField} className="create" label="Create field" secondary={true} />
+                                </div>
+                            </div>
+                        else
+                          <div className="actions">
+                            <Checkbox ref="checkbox" onCheck={@handleSelectAll} value="1"/>
+                            <IconButton tooltip="Add to Group" onClick={@handleAddToGroup} iconClassName="icon-person-add" />
+                            <IconButton tooltip="import" onClick={@handleImport} iconClassName="icon-cloud-upload" />
+                            <IconButton tooltip="Delete" onClick={@handleDelete} iconClassName="icon-delete" />
+                            <IconButton onClick={@handleSearchClick} tooltip="Search" iconClassName="icon-search" />
+                            <div className="buttons">
+                              <FlatButton onClick={@handleCreateContactClick} className="create" label="Create Contact" secondary={true} />
+                            </div>
+                          </div>
+                      }
                     </div>
                     <div style={formStyles} className={formClasses}>
                       <div className="form-content">
@@ -199,21 +282,31 @@ Contacts = React.createClass
                     </div>
                   </div>
 
-        <Paper zDepth={1}>
-            <div className="section contacts">
-                <div className="section-header">
-                    <ReactCSSTransitionGroupAppear transitionName="fadeDown">
-                       <h2>Contacts</h2>  
-                    </ReactCSSTransitionGroupAppear>
-                    <ReactCSSTransitionGroupAppear transitionName="fadeDown2">
-                       <h4>Manage contacts and groups</h4>
-                    </ReactCSSTransitionGroupAppear>
-                </div>
+        <div className="contacts">
+            <Dialog
+                title="Add Custom Field"
+                className="custom-field-dialog"
+                ref="dialog"
+                actions={dialogActions}>
+                    <ContactVariableForm ref="form"/>
+            </Dialog>
 
-                <div className="section-body">
-                    <PageWithNav toolbar={toolbar} selectedIndex={@getSelecetedIndex} onMenuItemClick={@onItemClick} menuItems={@state.menuItems}/>
+            <Paper zDepth={1}>
+                <div className="section">
+                    <div className="section-header">
+                        <ReactCSSTransitionGroupAppear transitionName="fadeDown">
+                           <h2>Contacts</h2>  
+                        </ReactCSSTransitionGroupAppear>
+                        <ReactCSSTransitionGroupAppear transitionName="fadeDown2">
+                           <h4>Manage contacts and groups</h4>
+                        </ReactCSSTransitionGroupAppear>
+                    </div>
+
+                    <div className="section-body">
+                        <PageWithNav toolbar={toolbar} selectedIndex={@getSelecetedIndex} onMenuItemClick={@onItemClick} menuItems={@state.menuItems}/>
+                    </div>
                 </div>
-            </div>
-        </Paper>
+            </Paper>
+        </div>
 
 module.exports = Contacts

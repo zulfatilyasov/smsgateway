@@ -29,6 +29,10 @@ ContactActions =
         AppDispatcher.handleViewAction
             actionType: ContactConstants.AGGREGATE_GROUPS
 
+    triggerChange:()->
+        AppDispatcher.handleViewAction
+            actionType: ContactConstants.TRIGGER_CHANGE
+
     getUserVariables:(userId) ->
       apiClient.getUserVariables(userId)
         .then (resp) ->

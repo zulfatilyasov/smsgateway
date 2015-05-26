@@ -16,6 +16,7 @@ module.exports = keyMirror({
     CREATE_VARIABLE_SUCCESS:null,
     CREATE_VARIABLE_FAIL:null,
     SELECT_CONTACT:null,
+    TRIGGER_CHANGE:null,
     CLEAN:null,
     SEARCH_CONTACTS:null,
     GET_SEARCHED_CONTACTS_FAIL:null,

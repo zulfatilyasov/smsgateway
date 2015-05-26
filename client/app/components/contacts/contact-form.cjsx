@@ -4,6 +4,7 @@ contactActions = require '../../actions/ContactActions.coffee'
 userStore = require '../../stores/UserStore.coffee'
 {DropDownMenu, Dialog, Checkbox, DatePicker, RaisedButton, FlatButton, TextField} = require 'material-ui'
 Select = require('react-select')
+ContactVariableForm = require './contact-variable-form.cjsx'
 _ = require 'lodash'
 
 ContactForm = React.createClass
@@ -94,19 +95,8 @@ ContactForm = React.createClass
   dialogSubmitHandler:(e)->
     vars = @state.vars
     if @state.createVariable
-      if not @newFieldName
-        @setState fieldNameError:'field name is required'
-        return 
-      if not @state.newFieldCode
-        @setState fieldCodeError:'field code is required'
-        return 
-
-      newVariable =
-        name:@newFieldName
-        userId:userStore.userId()
-        type:@newFieldType || @state.fieldTypes[0].payload
-        code:@state.newFieldCode
-
+      newVariable = @refs.form.getNewVariable()
+      return unless newVariable
       vars.push(newVariable)
       contactActions.createContactVariable newVariable
     else
@@ -314,27 +304,12 @@ ContactForm = React.createClass
         </div>
         <Dialog
           title="Add Custom Field"
+          className="custom-field-dialog"
           ref="dialog"
           actions={dialogActions}>
           {
             if @state.createVariable
-              <div>
-                <TextField
-                  onChange={@handleFieldNameChange}
-                  errorText={@state.fieldNameError}
-                  floatingLabelText="Field Name"/>
-
-                <TextField
-                  onChange={@handleFieldCodeChange}
-                  errorText={@state.fieldCodeError}
-                  value={@state.newFieldCode}
-                  floatingLabelText="Field Code"/>
-
-                <div className="field-type">
-                  <label className="field-type-label">Field Type:</label>
-                  <DropDownMenu onChange={@handleFieldTypeChange} menuItems={@state.fieldTypes} />
-                </div>
-              </div>
+              <ContactVariableForm ref="form"/>
             else
                 <div>
                   <div>
@@ -344,9 +319,7 @@ ContactForm = React.createClass
                 </div>
 
           }
-
         </Dialog>
-
       </div>
     </div>
 
