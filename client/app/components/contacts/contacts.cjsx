@@ -44,13 +44,12 @@ Contacts = React.createClass
 
     handleCreateField:(e)->
         @refs.dialog.show()
-        window.sources.push 'hello'
 
     _confirmGroupDeletion: (submitAction) ->
         actions = @_getConfirmationActions(submitAction)
         uiEvents.showDialog
           title:"Confirm Delete"
-          text: "Delete group permanently?"
+          text:"Delete group permanently?"
           submitHandler:actions.submit
           cancelHandler:actions.cancel
 
@@ -184,7 +183,7 @@ Contacts = React.createClass
                 if phoneIndex >= 0
                     contact.phone = row[phoneIndex]
                 if emailIndex >= 0
-                    contact.email = row[emailIndex]
+                    contact.email = row[emailIndex] 
                 contact.userId = userId
                 contacts.push contact
 

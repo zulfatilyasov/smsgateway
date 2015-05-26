@@ -36,7 +36,7 @@ ImportContacts = React.createClass
     self = @
     loadScript 'https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.14.1/handsontable.full.min.js', ->
       data = [
-        ["name", "phone"],
+        ["Name", "Phone"],
         ["Zulfat", '+7123456789'],
         ["Example", '+1998877665'],
       ]
@@ -51,7 +51,6 @@ ImportContacts = React.createClass
 
         minSpareRows: 1
         fixedRowsTop:1
-        contextMenu: true
         rowHeaders: true
         cells: (row, col, prop) ->
           cellProperties = {}
