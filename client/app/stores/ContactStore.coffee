@@ -38,8 +38,8 @@ class ContactStore extends BaseStore
     variableNames:()->
         names = _.map _variables, (v) ->
             v.name
-            
-        ['name','phone', 'email'].concat names
+
+        ['Name','Phone', 'Email'].concat names
 
     variables: ->
         _.map _variables, (v) ->

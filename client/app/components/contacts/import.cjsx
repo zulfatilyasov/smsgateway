@@ -44,7 +44,13 @@ ImportContacts = React.createClass
       window.hot = new Handsontable container,
         data: data
         colWidths:'100%'
+        height:->
+          pageHeaderHeight = 165
+          viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+          return viewportHeight - pageHeaderHeight - 60
+
         minSpareRows: 1
+        fixedRowsTop:1
         contextMenu: true
         rowHeaders: true
         cells: (row, col, prop) ->

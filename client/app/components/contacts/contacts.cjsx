@@ -249,7 +249,7 @@ Contacts = React.createClass
                                             className="file-input"
                                             id="imageButton"/>
                                     </FlatButton>
-                                    <FlatButton onClick={@handleCreateField} className="create" label="Create field" secondary={true} />
+                                    <FlatButton onClick={@handleCreateField} className="create" label="Create header" secondary={true} />
                                 </div>
                             </div>
                         else
