@@ -274,7 +274,7 @@ Contacts = React.createClass
     getVariableByName:(varName, colIndex) ->
         variable = _.first(_.filter(@state.variables, (v) ->  return v.name.toLowerCase() is varName))
         if not variable
-            @setState dialogMessage:"Unrecognised Column Header. Create new header by clicking \"Create Header\" button. \n Check column: #{colIndex}"
+            @setState dialogMessage:"Unrecognised Column Header. Create new header by clicking \"Create Header\" button. \n Check column: #{colIndex + 1}"
             @refs.errorDialog.show()
         return variable
 

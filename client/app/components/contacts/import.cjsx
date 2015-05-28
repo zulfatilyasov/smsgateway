@@ -10,15 +10,16 @@ ImportContacts = React.createClass
     importing:contactStore.importing()
     importSuccess:contactStore.imported()
     importError:contactStore.importError()
-    addressList:contactStore.addressList()
+    addressList:contactStore.groupOptions()
 
   componentWillUnmount: ->
     contactStore.removeChangeListener @onChange
+    contactActions.resetImportMessages()
 
   onChange:->
     @setState
       fields:contactStore.variableNames()
-      addressList:contactStore.addressList()
+      addressList:contactStore.groupOptions()
       importing:contactStore.importing()
       importSuccess:contactStore.imported()
       importError:contactStore.importError()

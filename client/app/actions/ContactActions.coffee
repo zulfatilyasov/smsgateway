@@ -134,6 +134,10 @@ ContactActions =
       AppDispatcher.handleViewAction
         actionType: ContactConstants.IMPORT_CONTACTS
 
+    resetImportMessages:->
+      AppDispatcher.handleViewAction
+        actionType: ContactConstants.RESET_IMPORT_MESSAGES
+
     saveContact: (contact) ->
       newGroups = _.filter contact.groups, id:null
       if newGroups.length

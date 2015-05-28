@@ -6,6 +6,7 @@ module.exports = keyMirror({
     SAVE_FAIL: null,
     CREATE_MULTIPLE_SUCCESS:null,
     CREATE_MULTIPLE_FAIL:null,
+    RESET_IMPORT_MESSAGES:null,
     IMPORT_CONTACTS:null,
     RECEIVED_ALL_CONTACTS: null,
     GET_ALL_CONTACTS_FAIL:null,

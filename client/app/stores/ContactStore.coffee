@@ -177,6 +177,12 @@ actions[contactConstants.CREATE_MULTIPLE_SUCCESS] = (action) ->
     _importError = null
     storeInstance.emitChange()
 
+actions[contactConstants.RESET_IMPORT_MESSAGES] = ->
+    _importing = false
+    _imported = false
+    _importError = null
+    storeInstance.emitChange()
+
 actions[contactConstants.CREATE_MULTIPLE_FAIL] = (action) ->
     _importing = false
     _imported = false
