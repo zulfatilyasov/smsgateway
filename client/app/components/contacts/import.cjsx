@@ -31,7 +31,6 @@ ImportContacts = React.createClass
     contactStore.addChangeListener @onChange
     contactActions.triggerChange()
     scripts.loadCss('handsontableCss', scripts.handsOnTableCss)
-    scripts.loadJs scripts.papaParse
     scripts.loadJs scripts.handsOnTableJs, ->
       data = [
         ["Name", "Phone"],
