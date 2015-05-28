@@ -183,6 +183,7 @@ ContactForm = React.createClass
     primaryButtonLabel = if @state.saving then 'Saving..' else 'Save'
     className = if @state.saving then 'saving' else ''
     saveButtonClass = 'button saveButton ' + className
+      
     dialogActions = [
       <FlatButton
         label="Add"

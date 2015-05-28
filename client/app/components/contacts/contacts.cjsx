@@ -15,6 +15,7 @@ PageHeader = require('../page-with-nav/pageHeader.cjsx')
 Groups = require '../groups/groups.cjsx'
 ContactVariableForm = require './contact-variable-form.cjsx'
 classBuilder = require 'classnames'
+check = require '../../services/validators.coffee'
 
 Contacts = React.createClass
     mixins: [Router.State]
@@ -34,6 +35,7 @@ Contacts = React.createClass
         showForm: false
         showImportActions:isImport
         menuItems: contactStore.groupRouteList()
+        variables:contactStore.origVariables()
 
     _getConfirmationActions: (submitClickHandler) ->
         submit: ->
@@ -91,6 +93,8 @@ Contacts = React.createClass
         state = 
             menuItems: contactStore.groupRouteList()
             showImportActions:isImport
+            variables:contactStore.origVariables()
+
         if isImport
             state.header = 'Import Contacts' 
 
@@ -164,30 +168,123 @@ Contacts = React.createClass
         isChecked = @refs.checkbox.isChecked()
         contactActions.selectAllItems isChecked
 
+    closeErrorDialog:->
+        @refs.errorDialog.dismiss()
+
+    isValidPhone:(phone, rowIndex) ->
+        if not check.isValidPhone(phone)
+            @setState dialogMessage:"Phone is not valid. Aborting import.\nCheck row: #{rowIndex}"
+            @refs.errorDialog.show()
+            return false
+        else 
+            return true
+
+    hasEmailOrPhone: (contact, rowIndex)->
+        if not contact.phone and not contact.email
+            @setState dialogMessage:"Contact should have Phone or Email. Aborting import. \n check row: #{rowIndex}"
+            @refs.errorDialog.show()
+            return false
+        else 
+            return true
+
+    isValidEmail:(email, rowIndex) ->
+        if not check.isValidEmail(email)
+            @setState dialogMessage:"Email is not valid. Aborting import.\nCheck row: #{rowIndex}"
+            @refs.errorDialog.show()
+            return false
+        else 
+            return true
+
+    valueMatchesType:(value, type, rowIndex) ->
+        if type is 'date' and value and not check.isValidDate(value)
+            @setState dialogMessage:"Invalid date. Aborting import.\nCheck row: #{rowIndex}"
+            @refs.errorDialog.show()
+            return false
+        return true
+
+    parseValue:(value, type)->
+        if type is 'date'
+            return null unless value
+            return new Date(value)
+        if type is 'boolean'
+            if not value or value is 'false' or value is '0' or value is ''
+                return false
+            else
+                return Boolean(value)
+        return value
+
     handleImportContacts:(e) ->
         data = window.hot.getData()
-        console.log data
         headers = data[0]
-        headers = _.map headers, (h) -> return h.toLowerCase()
-        nameIndex = _.indexOf headers, 'name'
-        phoneIndex = _.indexOf headers, 'phone'
-        emailIndex = _.indexOf headers, 'email'
         contacts =[]
         userId = userStore.userId()
 
         for row, index in data
             if index isnt 0 and index isnt data.length - 1
-                contact = {}
-                if nameIndex >= 0
-                    contact.name = row[nameIndex]
-                if phoneIndex >= 0
-                    contact.phone = row[phoneIndex]
-                if emailIndex >= 0
-                    contact.email = row[emailIndex] 
-                contact.userId = userId
+                contact = 
+                    userId:userId
+                    vars:[]
+
+                for cellValue, j in row
+                    header = headers[j]
+                    continue unless header
+                    lowerHeader = header.toLowerCase()
+
+                    if lowerHeader is 'name'
+                        contact.name = cellValue
+                        continue
+                    if lowerHeader is 'phone'
+                        if cellValue and not @isValidPhone(cellValue, index)
+                            return
+                        contact.phone = cellValue
+                        continue
+                    if lowerHeader is 'email'
+                        if cellValue and not @isValidEmail(cellValue, index)
+                            return
+                        contact.email = cellValue 
+                        continue
+
+                    v = @getVariableByName(lowerHeader, j)
+                    return unless v
+                    if not @valueMatchesType(cellValue, v.type, index)
+                        return
+                    contact.vars.push
+                        name:v.name
+                        type:v.type
+                        code:v.code
+                        value:@parseValue(cellValue, v.type)
+
+                if not @hasEmailOrPhone(contact, index)
+                    return
+
+                if not contact.name
+                    contact.name = if contact.phone then contact.phone else contact.email
+
                 contacts.push contact
 
-        console.log contacts
+        if contacts and contacts.length
+            contactGroups = _.map window.groups, (g) ->
+                name: g.label
+                userId: userId
+                id: if g.value is g.label then null else g.value
+            @setState
+                infoMessage: 'Saving contacts...'
+            contactActions.importContacts(contacts, contactGroups, userId)
+
+    getVariableByName:(varName, colIndex) ->
+        variable = _.first(_.filter(@state.variables, (v) ->  return v.name.toLowerCase() is varName))
+        if not variable
+            @setState dialogMessage:"Unrecognised Column Header. Create new header by clicking \"Create Header\" button. \n Check column: #{colIndex}"
+            @refs.errorDialog.show()
+        return variable
+
+    handleFileInputChange:(e)->
+        files = $('input#csvFile')[0].files
+        return unless files?.length
+        Papa.parse files[0],
+            error: (err, file, inputElem, reason) ->
+            complete: (result) ->
+                window.hot.loadData(result.data)
 
     dialogCancelHandler:(e) ->
         @refs.dialog.dismiss()
@@ -221,7 +318,7 @@ Contacts = React.createClass
         dialogActions = [
           <FlatButton
             label="Add"
-            key="ok"
+            key="add"
             primary={true}
             onTouchTap={@dialogSubmitHandler} />,
 
@@ -230,6 +327,14 @@ Contacts = React.createClass
             secondary={true}
             key="cancel"
             onTouchTap={@dialogCancelHandler} />
+        ]
+
+        ok = [
+          <FlatButton
+            label="Ok"
+            key="ok"
+            primary={true}
+            onTouchTap={@closeErrorDialog} />
         ]
 
 
@@ -244,9 +349,10 @@ Contacts = React.createClass
                                     <FlatButton className="create upload" secondary={true}>
                                         <span className="mui-flat-button-label upload-label">Upload csv</span>
                                         <input
+                                            onChange={@handleFileInputChange}
                                             type="file"
                                             className="file-input"
-                                            id="imageButton"/>
+                                            id="csvFile"/>
                                     </FlatButton>
                                     <FlatButton onClick={@handleCreateField} className="create" label="Create header" secondary={true} />
                                 </div>
@@ -289,6 +395,14 @@ Contacts = React.createClass
                 actions={dialogActions}>
                     <ContactVariableForm ref="form"/>
             </Dialog>
+            <Dialog
+                title="Validation Error"
+                ref="errorDialog"
+                actions={ok}>
+                {@state.dialogMessage}
+            </Dialog>
+
+
 
             <Paper zDepth={1}>
                 <div className="section">

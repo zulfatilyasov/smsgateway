@@ -131,7 +131,7 @@ class FormInner extends React.Component {
 
         var checkAddressAndSend = function (message) {
             var address = message.address.replace(/[^0-9]/g, '');
-            if(address.length < 10 || address.length > 11) { 
+            if(address.length < 8 || address.length > 12) { 
                 self._confirmWrongPhone(function () {
                     messageActions.saveMessagesAndNewContacts(userId, message, contacts.newContacts);
                 });

@@ -106,6 +106,34 @@ ContactActions =
             groups: createdGroups
           cb createdGroups
 
+    createMultipleContacts: (contacts, groups, userId) ->
+      contacts = _.map contacts,  (c) ->
+        c.groups = groups
+        return c
+
+      apiClient.saveContact(userId, contacts)
+        .then (resp) ->
+          savedContacts = resp.body
+          AppDispatcher.handleViewAction
+            actionType: ContactConstants.CREATE_MULTIPLE_SUCCESS
+            contacts: savedContacts
+        , (err) ->
+          AppDispatcher.handleViewAction
+            actionType: ContactConstants.CREATE_MULTIPLE_FAIL
+            error: err
+
+    importContacts: (contacts, groups, userId) ->
+      newGroups = _.filter groups, id:null
+      if newGroups.length
+        @createMultipleGroups userId, newGroups, (createdGroups) ->
+          groups = ContactActions.replaceGroups groups, createdGroups
+          ContactActions.createMultipleContacts(contacts, groups, userId)
+      else
+          ContactActions.createMultipleContacts(contacts, groups, userId)
+
+      AppDispatcher.handleViewAction
+        actionType: ContactConstants.IMPORT_CONTACTS
+
     saveContact: (contact) ->
       newGroups = _.filter contact.groups, id:null
       if newGroups.length

@@ -1,25 +1,16 @@
 React = require('react')
-loadScript = require 'load-script'
 contactActions = require '../../actions/ContactActions.coffee'
 contactStore = require '../../stores/ContactStore.coffee'
-
-loadHandsOntableCss= ->
-    cssId = 'handontableCss'
-    if !document.getElementById(cssId)
-        head  = document.getElementsByTagName('head')[0]
-        link  = document.createElement('link')
-        link.id   = cssId
-        link.rel  = 'stylesheet'
-        link.type = 'text/css'
-        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.14.1/handsontable.full.min.css'
-        link.media = 'all'
-        head.appendChild(link)
-
-window.sources = ['name', 'phone', 'email']
+scripts = require '../../services/scripts.coffee'
+Select = require 'react-select'
 
 ImportContacts = React.createClass
   getInitialState: ->
     fields:contactStore.variableNames()
+    importing:contactStore.importing()
+    importSuccess:contactStore.imported()
+    importError:contactStore.importError()
+    addressList:contactStore.addressList()
 
   componentWillUnmount: ->
     contactStore.removeChangeListener @onChange
@@ -27,14 +18,21 @@ ImportContacts = React.createClass
   onChange:->
     @setState
       fields:contactStore.variableNames()
+      addressList:contactStore.addressList()
+      importing:contactStore.importing()
+      importSuccess:contactStore.imported()
+      importError:contactStore.importError()
 
+  addressChanged: (e, values)->
+    window.groups = values
 
   componentDidMount: ->
+    self = @
     contactStore.addChangeListener @onChange
     contactActions.triggerChange()
-    loadHandsOntableCss()
-    self = @
-    loadScript 'https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.14.1/handsontable.full.min.js', ->
+    scripts.loadCss('handsontableCss', scripts.handsOnTableCss)
+    scripts.loadJs scripts.papaParse
+    scripts.loadJs scripts.handsOnTableJs, ->
       data = [
         ["Name", "Phone"],
         ["Zulfat", '+7123456789'],
@@ -51,6 +49,7 @@ ImportContacts = React.createClass
 
         minSpareRows: 1
         fixedRowsTop:1
+        contextMenu: true
         rowHeaders: true
         cells: (row, col, prop) ->
           cellProperties = {}
@@ -60,6 +59,26 @@ ImportContacts = React.createClass
           cellProperties
 
   render: ->
-    <div id="handsontable"></div>
+    infoMessage="You can copy/paste contacts from Excel or Google Spreadsheets. Or upload a csv file."
+    if @state.importing
+      infoMessage="Saving contacts..."
+
+    if @state.importSuccess and not @state.importing
+      infoMessage="Contacts saved successfully!"
+
+    if @state.importError
+      infoMessage="Error occured while saving contacts"
+
+    <div className="import">
+      <Select
+        multi={true}
+        options={@state.addressList}
+        allowCreate={true}
+        placeholder="Groups"
+        className="input groupsInput"
+        onChange={@addressChanged} />
+      <div className="info">{infoMessage}</div>
+      <div id="handsontable"></div>
+    </div>
 
 module.exports = ImportContacts

@@ -5,6 +5,9 @@ _ = require 'lodash'
 
 _inProgress = false
 _saving = false
+_importing = false;
+_imported = false;
+_importError = null;
 _contactsList = []
 _allContacts = []
 _selectedContactGroups = []
@@ -35,12 +38,24 @@ class ContactStore extends BaseStore
     ContactList: ->
         _contactsList
 
+    imported: ->
+        _imported
+
+    importing:->
+        _importing
+
+    importError:->
+        _importError
+
     variableNames:()->
         names = _.map _variables, (v) ->
             v.name
 
         ['Name','Phone', 'Email'].concat names
 
+    origVariables:->
+        _variables
+        
     variables: ->
         _.map _variables, (v) ->
             text:v.name
@@ -128,7 +143,6 @@ class ContactStore extends BaseStore
 
         recipients: recipients
         newContacts: newContacts
-
 actions = {}
 
 actions[contactConstants.GET_CONTACTS] = (action) ->
@@ -149,6 +163,24 @@ actions[contactConstants.EDIT_CONTACT] = (action) ->
 
 actions[contactConstants.SAVE] = (action) ->
     _saving = true
+    storeInstance.emitChange()
+
+actions[contactConstants.IMPORT_CONTACTS] = (action) ->
+    _importing = true
+    _imported = false
+    _importError = null
+    storeInstance.emitChange()
+
+actions[contactConstants.CREATE_MULTIPLE_SUCCESS] = (action) ->
+    _importing = false
+    _imported = true
+    _importError = null
+    storeInstance.emitChange()
+
+actions[contactConstants.CREATE_MULTIPLE_FAIL] = (action) ->
+    _importing = false
+    _imported = false
+    _importError = action.error;
     storeInstance.emitChange()
 
 actions[contactConstants.SELECT_ALL_CONTACTS] = (action) ->

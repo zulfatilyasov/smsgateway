@@ -75,18 +75,18 @@ Messages = React.createClass
     _confirmDeletion: (submitAction) ->
         actions = @_getConfirmationActions(submitAction)
         uiEvents.showDialog
-          title:"Confirm Delete"
-          text: "Delete selected messages permanently?"
-          submitHandler:actions.submit
-          cancelHandler:actions.cancel
+            title:"Confirm Delete"
+            text: "Delete selected messages permanently?"
+            submitHandler:actions.submit
+            cancelHandler:actions.cancel
 
     _confirmResend: (submitAction) ->
         actions = @_getConfirmationActions(submitAction)
         uiEvents.showDialog
-          title:"Confirm Resend"
-          text: "Resend selected messages?"
-          submitHandler:actions.submit
-          cancelHandler:actions.cancel
+            title:"Confirm Resend"
+            text: "Resend selected messages?"
+            submitHandler:actions.submit
+            cancelHandler:actions.cancel
 
     handleDelete: (e) ->
         e.preventDefault()
