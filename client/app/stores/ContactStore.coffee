@@ -110,12 +110,13 @@ class ContactStore extends BaseStore
 
         return _groupOptions.concat contacts
 
-    stripContacts:(addressList) ->
+    stripContacts:(addressList, userId) ->
         newContacts= _(addressList)
             .filter (c) ->
                 c.value is c.label and not c.isContact and (isPhone(c.value) or isEmail(c.value))
             .map (c) ->
                 name: c.label
+                userId:userId
                 phone:if isPhone(c.value) then c.value else null
                 email:if isEmail(c.value) then c.value else null
                 id:null
@@ -134,7 +135,7 @@ class ContactStore extends BaseStore
                 .map (g) ->
                     g.value
                 .value()
-                
+
         contacts: contacts.concat(newContacts)
         groupIds: groupIds
 actions = {}

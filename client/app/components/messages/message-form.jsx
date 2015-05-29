@@ -116,7 +116,7 @@ class FormInner extends React.Component {
         e.preventDefault();
         var self = this;
         var userId = userStore.userId();
-        var recipients = contactStore.stripContacts(this.selectedAddresses);
+        var recipients = contactStore.stripContacts(this.selectedAddresses, userId);
         var message = {
             body: self.body,
             userId: userId,

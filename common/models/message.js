@@ -174,12 +174,13 @@ module.exports = function(Message) {
 
         var Contact = Message.app.models.Contact;
 
-        if (newContacts.lenth) {
+        if (newContacts.length) {
             Contact.create(newContacts, function(err, createdContacts) {
                 if (err) {
                     cb(err);
                     return;
                 }
+                console.log(createdContacts);
                 var contacts = existingContacts.concat(createdContacts);
                 sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
             });

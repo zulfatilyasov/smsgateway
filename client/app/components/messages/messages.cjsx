@@ -45,7 +45,6 @@ Messages = React.createClass
             @setState showForm:true
 
         if not messageStore.IsSending
-            debugger
             if @state.readyToClose
                 @setState
                     showForm:false
