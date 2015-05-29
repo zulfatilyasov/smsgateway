@@ -34,7 +34,7 @@ ContactList = React.createClass
         getState()
 
     checkLoadMore: ->
-        if not @appendingContacts and ui.bottomDistance() < 1300
+        if contactStore.hasMore and not @appendingContacts and ui.bottomDistance() < 1300
             @loadMoreContacts()
 
     componentDidMount: ->

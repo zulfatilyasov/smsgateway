@@ -4,6 +4,7 @@ groupConstants = require '../constants/GroupConstants.coffee'
 _ = require 'lodash'
 
 _inProgress = false
+_hasMore = true
 _saving = false
 _importing = false;
 _imported = false;
@@ -43,6 +44,9 @@ class ContactStore extends BaseStore
 
     importing:->
         _importing
+
+    hasMore:->
+        _hasMore
 
     importError:->
         _importError
@@ -241,6 +245,9 @@ actions[contactConstants.SAVE_FAIL] = (action) ->
     storeInstance.emitChange()
 
 actions[contactConstants.RECEIVED_ALL_CONTACTS] = (action) ->
+    if action.contacts.length < 50
+        _hasMore = false
+
     _contactsList = if action.skiped>0 then _contactsList.concat(action.contacts) else action.contacts
     if not action.isGroupContacts
         _allContacts = if action.skiped>0 then _allContacts.concat(action.contacts) else action.contacts
