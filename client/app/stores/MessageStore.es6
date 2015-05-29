@@ -117,7 +117,7 @@ actions[MessageConstants.MESSAGE_RECEIVED] = action => {
     message.status = 'received';
     message.incoming = true;
     message.new = true;
-    _messageList.push(message);
+    _messageList.unshift(message);
     storeInstance.emitChange();
 };
 
