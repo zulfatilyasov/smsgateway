@@ -103,8 +103,9 @@ class ContactStore extends BaseStore
 
     addressList: ->
         contacts = _.map _allContacts, (c) ->
-            value: c.phone
-            label: c.name
+            value:c.phone
+            label:c.name
+            id:c.id
             isContact: true
 
         return _groupOptions.concat contacts
@@ -121,6 +122,11 @@ class ContactStore extends BaseStore
             .value()
 
         contacts = _.filter addressList, (c) -> c.isContact or isPhone(c.value) or isEmail(c.value)
+        contacts = _.map contacts, (c) ->
+            name: c.label
+            phone:if isPhone(c.value) then c.value else null
+            email:if isEmail(c.value) then c.value else null
+            id:c.id
 
         groupIds =
             _(addressList)
@@ -128,18 +134,7 @@ class ContactStore extends BaseStore
                 .map (g) ->
                     g.value
                 .value()
-
-        # recipients = _(_allContacts)
-        #         .filter (c) ->
-        #             _(c.groups)
-        #                 .pluck 'id'
-        #                 .intersection groupIds
-        #                 .size()
-        #         .pluck 'phone'
-        #         .concat contacts
-        #         .uniq()
-        #         .value()
-
+                
         contacts: contacts.concat(newContacts)
         groupIds: groupIds
 actions = {}

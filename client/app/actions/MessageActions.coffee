@@ -187,7 +187,8 @@ MessageActions =
     sendToMultipleContacts:(message, contacts, groupIds)->
         apiClient.sendToMultipleContacts(message, contacts, groupIds)
              .then (resp) ->
-                savedMessages = resp.body
+                debugger
+                savedMessages = resp.body.messages
                 AppDispatcher.handleViewAction
                     actionType: MessageConstants.SEND_MULTIPLE_SUCCESS
                     messages: savedMessages
@@ -196,6 +197,9 @@ MessageActions =
                     actionType: MessageConstants.SEND_MULTIPLE_FAIL
                     error: err
                     message:message
+
+        AppDispatcher.handleViewAction
+            actionType: MessageConstants.SEND
 
     sendMultiple: (messages) ->
         apiClient.sendMessage messages

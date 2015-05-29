@@ -84,7 +84,7 @@ module.exports = function(Message) {
 
     Message.remoteMethod('send', {
         accepts: [{
-            arg:'message',
+            arg: 'message',
             type: 'object'
         }, {
             arg: 'contacts',
@@ -94,13 +94,18 @@ module.exports = function(Message) {
             type: 'array'
         }],
 
+        returns:{
+            arg: 'messages',
+            type: 'array'
+        },
+
         http: {
             path: '/send',
             verb: 'post'
         }
     });
 
-    var sendMessageToContactsAndGroups = function (message, contacts, groupIds, cb) {
+    var sendMessageToContactsAndGroups = function(message, contacts, groupIds, cb) {
         var contactIds = _.map(contacts, function(c) {
             return c.id;
         });
@@ -109,13 +114,16 @@ module.exports = function(Message) {
         var Contact = Message.app.models.Contact;
 
         Group.find({
-            contacts:true
-        },{
-            id:{
-                inq: groupIds
+            fields: {
+                contacts: true
+            },
+            where: {
+                id: {
+                    inq: groupIds
+                }
             }
-        }, function (err, groups) {
-            if(err){
+        }, function(err, groups) {
+            if (err) {
                 cb(err);
                 return;
             }
@@ -126,52 +134,56 @@ module.exports = function(Message) {
             var allContactsIds = groupContactIds.concat(contactIds);
             console.log(allContactsIds);
             Contact.find({
-                id:{
-                    inq:allContactsIds
+                where: {
+                    id: {
+                        inq: allContactsIds
+                    }
                 }
-            }, function (err, recipients) {
-                if(err){
+            }, function(err, recipients) {
+                if (err) {
                     cb(err);
                     return;
                 }
                 console.log(recipients.length);
 
-                var newMessages = _.map(recipients, function (recipient) {
+                var newMessages = _.map(recipients, function(recipient) {
                     var msg = _.cloneDeep(message);
                     msg.address = recipient.phone;
                     return msg
                 });
 
-                Message.create(newMessages, function (err, result) {
-                    if(err){
+                Message.create(newMessages, function(err, result) {
+                    if (err) {
                         cb(err)
                         return;
                     }
-                    cb(null);
+                    console.log(result);
+                    cb(null, result);
                 });
             });
         });
     }
 
     Message.send = function(message, contacts, groupIds, cb) {
-        var newContacts = _.filter(contacts, {id: null });
-        var existingContacts = _.filter(contacts, function (c) {
+        var newContacts = _.filter(contacts, {
+            id: null
+        });
+        var existingContacts = _.filter(contacts, function(c) {
             return !!c.id;
         });
 
         var Contact = Message.app.models.Contact;
 
-        if(newContacts.lenth){
-            Contact.create(newContacts, function (err, createdContacts) {
-                if(err){
+        if (newContacts.lenth) {
+            Contact.create(newContacts, function(err, createdContacts) {
+                if (err) {
                     cb(err);
                     return;
                 }
                 var contacts = existingContacts.concat(createdContacts);
                 sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
             });
-        }
-        else{
+        } else {
             sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
         }
     };

@@ -127,7 +127,7 @@ class FormInner extends React.Component {
         };
 
 
-        var sendToSingleAddress = function (message) {
+        var sendToSingleAddress = function () {
             var messageAddress = recipients.contacts[0].phone;
             var address = messageAddress.replace(/[^0-9]/g, '');
             if(address.length < 8 || address.length > 12) { 

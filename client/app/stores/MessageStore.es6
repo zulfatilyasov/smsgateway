@@ -58,13 +58,12 @@ actions[MessageConstants.SEND_SUCCESS] = action => {
 
 actions[MessageConstants.SEND_MULTIPLE_SUCCESS] = action => {
     _sendInProgress = false;
-    if(!action.messages){
-        return;
+    if(action.messages && action.messages.length > 0 && action.messages.length < 100){
+        for (var i = action.messages.length - 1; i >= 0; i--) {
+            action.messages[i].new = true;
+        };
+        _messageList =action.messages.concat(_messageList);
     }
-    for (var i = action.messages.length - 1; i >= 0; i--) {
-        action.messages[i].new = true;
-    };
-    _messageList = _messageList.concat(action.messages);
     _messageToResend = null;
     storeInstance.emitChange();
 };
