@@ -41,7 +41,7 @@ describe('Message Actions', function() {
         expect(apiClient.getUserMessages).toHaveBeenCalledWith(userId, section, skip, limit);
         expect(dispatcher.handleViewAction).toHaveBeenCalledWith({
             actionType: MessageContstants.RECEIVED_ALL_MESSAGES,
-            messages: messages
+            messages: messages,
             skiped: skip
         });
     });
