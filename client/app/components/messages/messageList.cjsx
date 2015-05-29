@@ -4,7 +4,6 @@ messageStore = require '../../stores/MessageStore.es6'
 userStore = require '../../stores/UserStore.coffee'
 messageActions = require '../../actions/MessageActions.coffee'
 ui = require '../../services/ui.coffee'
-$ = require '../../services/zepto.js'
 
 _animationOff = false
 animateItems = ->
@@ -44,6 +43,7 @@ MessageList = React.createClass
         messageActions.getUserMessages(userId, 'all', @pageId * 50)
 
     componentDidMount: ->
+        $('.toobarWrap').scrollToFixed()
         @pageId = 0
         window.onscroll = _.debounce @checkLoadMore, 250
         messageStore.addChangeListener @onChange

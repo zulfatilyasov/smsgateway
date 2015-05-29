@@ -11,6 +11,9 @@ var PageWithNav = React.createClass({
   propTypes: {
     menuItems: React.PropTypes.array
   },
+  componentDidMount: function() {
+    $(".secondary-nav").scrollToFixed();
+  },
 
   render: function() {
     var contentStyle = {minHeight:this.state.contentHeight}

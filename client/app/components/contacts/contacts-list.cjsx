@@ -4,7 +4,6 @@ contactActions = require '../../actions/ContactActions.coffee'
 userActions = require '../../actions/UserActions.coffee'
 contactStore = require '../../stores/ContactStore.coffee'
 userStore = require '../../stores/UserStore.coffee'
-$ = require '../../services/zepto.js'
 _ = require 'lodash'
 ui = require '../../services/ui.coffee'
 State = require('react-router').state
@@ -38,6 +37,7 @@ ContactList = React.createClass
             @loadMoreContacts()
 
     componentDidMount: ->
+        $('.toobarWrap').scrollToFixed()
         @pageId = 0
         window.onscroll = _.debounce @checkLoadMore, 250
         contactStore.addChangeListener(@onChange)

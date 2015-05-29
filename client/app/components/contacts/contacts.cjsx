@@ -61,11 +61,11 @@ Contacts = React.createClass
             contactActions.deleteGroup userId, groupId
 
     handleContactFormChange:(e)->
-        @formHeight = -1 * $('.form').height()
+        @formHeight = -1 * ($('.form').height() + 10)
 
     componentDidUpdate: (prevProps, prevState) ->
         self = @
-        @formHeight = -1 * $('.form').height()
+        @formHeight = -1 * ($('.form').height() + 10)
         $('.contacts .secondary-nav .mui-menu-item .mui-menu-item-icon')
             .each ->
                 if not $(@).is('.listening') and $(@).length

@@ -1,7 +1,6 @@
 React = require('react')
 classBuilder = require('classnames')
 contactActions = require '../../actions/ContactActions.coffee'
-$ = require '../../services/zepto.js'
 {Checkbox, FontIcon} = require 'material-ui'
 
 ContactItem = React.createClass

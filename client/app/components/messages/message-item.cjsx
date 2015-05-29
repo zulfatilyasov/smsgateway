@@ -1,7 +1,6 @@
 React = require('react')
 classBuilder = require('classnames')
 messageActions = require '../../actions/MessageActions.coffee'
-$ = require '../../services/zepto.js'
 {Checkbox, DropDownIcon, FontIcon} = require('material-ui')
 
 getItemStatusText  = (item) ->
