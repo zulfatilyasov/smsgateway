@@ -232,17 +232,18 @@ ContactActions =
       else
         @updateContactGroups contacts, selectedGroups, aggregatedGroups
 
-    getUserContacts: (userId, groupId) ->
+    getUserContacts: (userId, groupId, skip=0, limit=50) ->
         if @contactsLoaded
             console.log 'contacts already loaded'
             return
 
-        apiClient.getUserContacts userId, groupId
+        apiClient.getUserContacts userId, groupId, skip, limit
             .then (resp) ->
                     contacts = resp.body.contacts or resp.body
                     AppDispatcher.handleViewAction
                         actionType: ContactConstants.RECEIVED_ALL_CONTACTS
                         contacts: contacts
+                        skiped:skip
                         isGroupContacts: if groupId then true else false
                     @contactsLoaded = true
                 , (err) ->

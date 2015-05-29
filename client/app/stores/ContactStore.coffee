@@ -116,12 +116,7 @@ class ContactStore extends BaseStore
                 id:null
             .value()
 
-        contacts = 
-            _(addressList)
-                .filter (c) -> c.isContact or isPhone(c.value) or isEmail(c.value)
-                .map (c) ->
-                    c.value
-                .value()
+        contacts = _.filter addressList, (c) -> c.isContact or isPhone(c.value) or isEmail(c.value)
 
         groupIds =
             _(addressList)
@@ -130,24 +125,23 @@ class ContactStore extends BaseStore
                     g.value
                 .value()
 
-        recipients = _(_allContacts)
-                .filter (c) ->
-                    _(c.groups)
-                        .pluck 'id'
-                        .intersection groupIds
-                        .size()
-                .pluck 'phone'
-                .concat contacts
-                .uniq()
-                .value()
+        # recipients = _(_allContacts)
+        #         .filter (c) ->
+        #             _(c.groups)
+        #                 .pluck 'id'
+        #                 .intersection groupIds
+        #                 .size()
+        #         .pluck 'phone'
+        #         .concat contacts
+        #         .uniq()
+        #         .value()
 
-        recipients: recipients
-        newContacts: newContacts
+        contacts: contacts.concat(newContacts)
+        groupIds: groupIds
 actions = {}
 
 actions[contactConstants.GET_CONTACTS] = (action) ->
     _inProgress = true
-    _contactsList = []
     storeInstance.emitChange()
 
 actions[contactConstants.CLEAR_EDITED_CONTACT] = (action) ->
@@ -238,8 +232,7 @@ actions[contactConstants.SAVE_MULTIPLE_CONTACTS_SUCCESS] = (action) ->
         _allContacts = _allContacts.concat contacts
     else
         action.contacts.new = true
-        _allContacts.push(action.contacts)
-
+        _allContacts.push(action.contacts);
     storeInstance.emitChange()
 
 actions[contactConstants.SAVE_FAIL] = (action) ->
@@ -248,9 +241,9 @@ actions[contactConstants.SAVE_FAIL] = (action) ->
     storeInstance.emitChange()
 
 actions[contactConstants.RECEIVED_ALL_CONTACTS] = (action) ->
-    _contactsList = action.contacts
+    _contactsList = if action.skiped>0 then _contactsList.concat(action.contacts) else action.contacts
     if not action.isGroupContacts
-        _allContacts = action.contacts
+        _allContacts = if action.skiped>0 then _allContacts.concat(action.contacts) else action.contacts
     _inProgress = false;
     storeInstance.emitChange();
 

@@ -116,28 +116,27 @@ class FormInner extends React.Component {
         e.preventDefault();
         var self = this;
         var userId = userStore.userId();
-        var contacts = contactStore.stripContacts(this.selectedAddresses);
-        var messages = _.map(contacts.recipients, function (address) {
-            return {
-                body: self.body,
-                userId: userId,
-                status: 'queued',
-                address: address,
-                outcoming: true,
-                handler: self.provider,
-                origin: 'web'
-            };
-        });
+        var recipients = contactStore.stripContacts(this.selectedAddresses);
+        var message = {
+            body: self.body,
+            userId: userId,
+            status: 'queued',
+            outcoming: true,
+            handler: self.provider,
+            origin: 'web'
+        };
 
-        var checkAddressAndSend = function (message) {
-            var address = message.address.replace(/[^0-9]/g, '');
+
+        var sendToSingleAddress = function (message) {
+            var messageAddress = recipients.contacts[0].phone;
+            var address = messageAddress.replace(/[^0-9]/g, '');
             if(address.length < 8 || address.length > 12) { 
                 self._confirmWrongPhone(function () {
-                    messageActions.saveMessagesAndNewContacts(userId, message, contacts.newContacts);
+                    messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groupIds);
                 });
             }
-            else{
-                messageActions.saveMessagesAndNewContacts(userId, message, contacts.newContacts);
+            else {
+                messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groupIds);
             }            
         };
 
@@ -146,10 +145,10 @@ class FormInner extends React.Component {
                 self._alertCantUseNexmo();
                 return;
             }
-            if(messages.length === 1){
-                checkAddressAndSend(messages[0]);
+            if(recipients.contacts.length === 1 && recipients.groupIds.length===0){
+                sendToSingleAddress();
             } else {
-                messageActions.saveMessagesAndNewContacts(userId, messages, contacts.newContacts);
+                messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groupIds);
             }
         };
 
@@ -211,12 +210,13 @@ class FormInner extends React.Component {
 
                     <div className="button-wrap">
                         <div className="buttons">
-                            <RaisedButton className={sendButtonClass}
-                                          primary={true}
-                                          disabled={this.state.sending}
-                                          onClick={this._handleSendMessage.bind(this)}
-                                          linkButton={true}
-                                          label={primaryButtonLabel} >
+                            <RaisedButton
+                                className={sendButtonClass}
+                                primary={true}
+                                disabled={this.state.sending}
+                                onClick={this._handleSendMessage.bind(this)}
+                                linkButton={true}
+                                label={primaryButtonLabel} >
                             </RaisedButton>
 
                             <RaisedButton className="cancel-button" onClick={this.props.cancelClickHandler} linkButton={true}>

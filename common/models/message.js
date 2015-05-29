@@ -2,6 +2,7 @@ var messenger = require('../../server/io/messenger.coffee')
 var consts = require('./messageConstants.coffee');
 var MessageHelpers = require('./messageHelpers.coffee');
 var loopback = require('loopback');
+var _ = require('lodash');
 
 module.exports = function(Message) {
     var msgHelpers = new MessageHelpers(Message);
@@ -18,11 +19,11 @@ module.exports = function(Message) {
     };
 
     Message.observe('after save', function(ctx, next) {
-        if (!ctx.instance){
+        if (!ctx.instance) {
             next()
             return;
         }
-        
+
         var userId = ctx.instance.userId;
         if (ctx.instance && ctx.isNewInstance) {
             var userId = ctx.instance.userId;
@@ -80,6 +81,101 @@ module.exports = function(Message) {
             });
         }
     };
+
+    Message.remoteMethod('send', {
+        accepts: [{
+            arg:'message',
+            type: 'object'
+        }, {
+            arg: 'contacts',
+            type: 'array'
+        }, {
+            arg: 'groupIds',
+            type: 'array'
+        }],
+
+        http: {
+            path: '/send',
+            verb: 'post'
+        }
+    });
+
+    var sendMessageToContactsAndGroups = function (message, contacts, groupIds, cb) {
+        var contactIds = _.map(contacts, function(c) {
+            return c.id;
+        });
+
+        var Group = Message.app.models.Group;
+        var Contact = Message.app.models.Contact;
+
+        Group.find({
+            contacts:true
+        },{
+            id:{
+                inq: groupIds
+            }
+        }, function (err, groups) {
+            if(err){
+                cb(err);
+                return;
+            }
+            var groupContactIds = [];
+            for (var i = groups.length - 1; i >= 0; i--) {
+                groupContactIds = groupContactIds.concat(groups[i].contacts);
+            };
+            var allContactsIds = groupContactIds.concat(contactIds);
+            console.log(allContactsIds);
+            Contact.find({
+                id:{
+                    inq:allContactsIds
+                }
+            }, function (err, recipients) {
+                if(err){
+                    cb(err);
+                    return;
+                }
+                console.log(recipients.length);
+
+                var newMessages = _.map(recipients, function (recipient) {
+                    var msg = _.cloneDeep(message);
+                    msg.address = recipient.phone;
+                    return msg
+                });
+
+                Message.create(newMessages, function (err, result) {
+                    if(err){
+                        cb(err)
+                        return;
+                    }
+                    cb(null);
+                });
+            });
+        });
+    }
+
+    Message.send = function(message, contacts, groupIds, cb) {
+        var newContacts = _.filter(contacts, {id: null });
+        var existingContacts = _.filter(contacts, function (c) {
+            return !!c.id;
+        });
+
+        var Contact = Message.app.models.Contact;
+
+        if(newContacts.lenth){
+            Contact.create(newContacts, function (err, createdContacts) {
+                if(err){
+                    cb(err);
+                    return;
+                }
+                var contacts = existingContacts.concat(createdContacts);
+                sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
+            });
+        }
+        else{
+            sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
+        }
+    };
+
 
     Message.remoteMethod('deleteMany', {
         accepts: {
@@ -144,16 +240,16 @@ module.exports = function(Message) {
         }
     });
 
-    Message.sendQueued = function (userId) {
+    Message.sendQueued = function(userId) {
         console.log('sending queued');
-        msgHelpers.getUserMessagesByStatus(userId, 'queued', function (err, messages) {
+        msgHelpers.getUserMessagesByStatus(userId, 'queued', function(err, messages) {
             console.log(messages);
             if (err) {
                 console.log(err);
                 cb(err);
             } else {
                 for (var i = messages.length - 1; i >= 0; i--) {
-                    messenger.sendMessageToUserMobile(messages[i].userId, messages[i]); 
+                    messenger.sendMessageToUserMobile(messages[i].userId, messages[i]);
                 }
             }
         });

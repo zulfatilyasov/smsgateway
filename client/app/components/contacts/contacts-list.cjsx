@@ -5,10 +5,14 @@ userActions = require '../../actions/UserActions.coffee'
 contactStore = require '../../stores/ContactStore.coffee'
 userStore = require '../../stores/UserStore.coffee'
 $ = require '../../services/zepto.js'
+_ = require 'lodash'
+ui = require '../../services/ui.coffee'
 State = require('react-router').state
+InfiniteScroll = require('react-infinite-scroll')(React)
 
+_animationOff = false
 animateItems = ->
-    delay = 20
+    delay = if _animationOff  then 0 else 20
     $('.animated').each (i, el) ->
         unless $(@).is('.active')
             $(@)
@@ -20,6 +24,7 @@ animateItems = ->
 getState = ->
     contacts: contactStore.ContactList()
     loading: contactStore.InProgress()
+    hasMore: true
 
 ContactList = React.createClass
 
@@ -28,7 +33,13 @@ ContactList = React.createClass
     getInitialState: ->
         getState()
 
+    checkLoadMore: ->
+        if not @appendingContacts and ui.bottomDistance() < 1300
+            @loadMoreContacts()
+
     componentDidMount: ->
+        @pageId = 0
+        window.onscroll = _.debounce @checkLoadMore, 250
         contactStore.addChangeListener(@onChange)
         userId = userStore.userId();
         groupId = @props.params.groupId;
@@ -43,16 +54,37 @@ ContactList = React.createClass
         contactStore.removeChangeListener(@onChange)
         contactActions.clean()
 
+    hideLoadingMessage: ->
+        if @state.loadingContacts
+            setTimeout =>
+                if @state.loadingContacts
+                    @setState
+                        loadingContacts:false
+            , 1000
+
     onChange: ->
+        @hideLoadingMessage()
         @setState getState()
+
+    loadMoreContacts: (pageId) ->
+        _animationOff = true
+        @setState
+            loadingContacts:true
+        @appendingContacts = true
+        @pageId++
+        userId = userStore.userId();
+        groupId = @props.params.groupId;
+        console.log @pageId
+        contactActions.getUserContacts(userId, groupId, @pageId * 50)
 
     componentDidUpdate: (prevProps, prevState) ->
         animateItems()
+        @appendingContacts = false
 
     render: ->
         ContactList = <div>
                         {
-                            for contact in @state.contacts by -1
+                            for contact in @state.contacts
                                 contact.key = contact.id
                                 <ContactItem {...contact} />
                         }
@@ -69,6 +101,12 @@ ContactList = React.createClass
                     else 
                         <div className="no-messages">No contacts</div>
             }
+            <div>
+            {
+                if @state.loadingContacts
+                    <div className="loading">Loading...</div>
+            }
+            </div>
         </div>
 
 module.exports = ContactList

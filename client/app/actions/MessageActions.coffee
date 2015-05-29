@@ -115,17 +115,18 @@ MessageActions =
         AppDispatcher.handleViewAction
             actionType: MessageConstants.SEARCH_MESSAGES
 
-    getUserMessages: (userId, section) ->
+    getUserMessages: (userId, section, skip, limit) ->
         if @messagesLoaded
             console.log 'masseges already loaded'
             return
 
-        apiClient.getUserMessages userId, section
+        apiClient.getUserMessages userId, section, skip, limit
             .then (resp) ->
                     messages = resp.body
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.RECEIVED_ALL_MESSAGES
                         messages: messages
+                        skiped:skip
                     @messagesLoaded = true
                 , (err) ->
                     AppDispatcher.handleViewAction
@@ -180,6 +181,19 @@ MessageActions =
             , (err) ->
                 AppDispatcher.handleViewAction
                     actionType: MessageConstants.SEND_FAIL
+                    error: err
+                    message:message
+
+    sendToMultipleContacts:(message, contacts, groupIds)->
+        apiClient.sendToMultipleContacts(message, contacts, groupIds)
+             .then (resp) ->
+                savedMessages = resp.body
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.SEND_MULTIPLE_SUCCESS
+                    messages: savedMessages
+            , (err) ->
+                AppDispatcher.handleViewAction
+                    actionType: MessageConstants.SEND_MULTIPLE_FAIL
                     error: err
                     message:message
 

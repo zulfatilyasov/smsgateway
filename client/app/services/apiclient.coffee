@@ -11,23 +11,24 @@ class ApiClient
     _getToken: ->
         localStorage.getItem 'sg-token'
 
-    _getMessagesFilter: (section = 'all') ->
-        if section is 'all'
-            return ''
+    _getMessagesFilter: (section = 'all', skip=0, limit=50) ->
+        filter = '?filter[order]=id%20DESC&filter[limit]=' + limit + '&filter[skip]=' + skip
         if section is 'outcoming'
-            return '?filter[where][outcoming]=true'
+           filter += '&filter[where][outcoming]=true'
         if section is 'incoming'
-            return '?filter[where][incoming]=true'
+           filter += '&filter[where][incoming]=true'
         if section is 'starred'
-            return '?filter[where][starred]=true'
+           filter += '&filter[where][starred]=true'
         if section is 'sent'
-            return '?filter[where][status]=sent'
+           filter += '&filter[where][status]=sent'
         if section is 'failed'
-            return '?filter[where][status]=failed'
+           filter += '&filter[where][status]=failed'
         if section is 'queued'
-            return '?filter[where][status]=queued'
+           filter += '&filter[where][status]=queued'
         if section is 'cancelled'
-            return '?filter[where][status]=cancelled'
+           filter += '&filter[where][status]=cancelled'
+        return filter
+
 
     _abortRequest: (key) ->
         if @_pendingRequests[key]
@@ -72,6 +73,16 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
+    sendToMultipleContacts:(message, contacts, groupIds)->
+        request
+            .post @prefix + '/messages/send'
+            .send
+                message:message
+                contacts:contacts
+                groupIds:groupIds
+            .set 'Authorization', @_getToken()
+            .end()
+
     resend: (messageIds) ->
         request
             .post @prefix + '/messages/resend'
@@ -106,8 +117,8 @@ class ApiClient
             .send registrationData
             .end()
 
-    getUserMessages: (userId, section) ->
-        filter = @_getMessagesFilter(section)
+    getUserMessages: (userId, section, skip, limit) ->
+        filter = @_getMessagesFilter(section, skip, limit)
         request
             .get "#{@prefix}/users/#{userId}/messages#{filter}"
             .set 'Authorization', @_getToken()
@@ -199,15 +210,15 @@ class ApiClient
                 .end()
 
 
-    getUserContacts: (userId, groupId) ->
+    getUserContacts: (userId, groupId, skip, limit) ->
         if groupId
             request
-                .get @prefix + '/groups/' + groupId + '/contacts'
+                .get @prefix + '/groups/' + groupId + '/contacts?limit=' + limit + '&skip=' + skip
                 .set 'Authorization', @_getToken()
                 .end()
         else
             request
-                .get @prefix + '/users/' + userId + '/contacts'
+                .get @prefix + '/users/' + userId + '/contacts?filter[order]=id%20DESC&filter[limit]=' + limit + '&filter[skip]=' + skip
                 .set 'Authorization', @_getToken()
                 .end()
 

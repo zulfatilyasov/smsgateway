@@ -93,6 +93,7 @@
     "proxyquire": "^1.4.0",
     "react": "^0.13.2",
     "react-hot-loader": "^1.2.5",
+    "react-infinite-scroll": "^0.1.5",
     "react-router": "^0.13.2",
     "style-loader": "~0.10.2",
     "stylus-loader": "^1.1.0",

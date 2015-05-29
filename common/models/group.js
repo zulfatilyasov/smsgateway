@@ -111,7 +111,7 @@ module.exports = function(Group) {
     });
 
 
-    Group.contacts = function(id, cb) {
+    Group.contacts = function(id,limit,skip,cb) {
         Group.findById(id, function(err, group) {
             if (err) {
                 cb(err);
@@ -126,13 +126,23 @@ module.exports = function(Group) {
             }
 
             var Contact = Group.app.models.Contact;
-            Contact.find({
+
+            var filter = {
+                order:'id DESC',
                 where: {
                     id: {
                         inq: group.contacts
                     }
                 }
-            }, function(err, contacts) {
+            };
+
+            if(limit)
+                filter.limit = parseInt(limit);
+
+            if(skip)
+                filter.skip = parseInt(skip);
+
+            Contact.find(filter, function(err, contacts) {
                 if (err) {
                     cb(err);
                     return;
@@ -148,6 +158,14 @@ module.exports = function(Group) {
                 arg: 'id',
                 type: 'string',
                 required: true
+            },{
+                arg: 'limit',
+                type: 'number',
+                required: false
+            },{
+                arg: 'skip',
+                type: 'number',
+                required: false
             }],
             http: {
                 path: '/:id/contacts',

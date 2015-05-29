@@ -9,6 +9,7 @@ var _messageToResend = null
 var _sendInProgress = false;
 var _error = '';
 var _inProgress = false;
+var _hasMore = true;
 
 class MessageStore extends BaseStore {
     get InProgress(){
@@ -21,6 +22,10 @@ class MessageStore extends BaseStore {
 
     get IsSending() {
         return _sendInProgress;
+    }
+
+    get HasMore(){
+        return _hasMore;
     }
 
     get Error() {
@@ -53,6 +58,9 @@ actions[MessageConstants.SEND_SUCCESS] = action => {
 
 actions[MessageConstants.SEND_MULTIPLE_SUCCESS] = action => {
     _sendInProgress = false;
+    if(!action.messages){
+        return;
+    }
     for (var i = action.messages.length - 1; i >= 0; i--) {
         action.messages[i].new = true;
     };
@@ -115,7 +123,11 @@ actions[MessageConstants.MESSAGE_RECEIVED] = action => {
 };
 
 var receivedMessages = action => {
-    _messageList = action.messages;
+    if(action.messages.length < 50){
+        _hasMore = false
+    }
+
+    _messageList =  action.skiped>0 ? _messageList.concat(action.messages) : action.messages
     _inProgress = false;
     storeInstance.emitChange();
 };

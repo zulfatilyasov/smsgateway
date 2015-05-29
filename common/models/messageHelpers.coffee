@@ -21,6 +21,13 @@ class MessageHelpers
       cb err
     else
       cb null, token
+      
+  createMessages:(newMessages, cb) ->
+    @authenticate (authError, token) =>
+      if authError
+        cb authError
+      else
+        @Message.create newMessages, cb
 
   getUserMessagesByIds: (ids, cb) ->
     @authenticate (authError, token) =>
