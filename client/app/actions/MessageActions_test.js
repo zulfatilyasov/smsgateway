@@ -35,11 +35,14 @@ describe('Message Actions', function() {
     });
 
     it('should get messages through api', function() {
-        messageActions.getUserMessages(userId, section);
-        expect(apiClient.getUserMessages).toHaveBeenCalledWith(userId, section);
+        var skip = 0;
+        var limit = 50;
+        messageActions.getUserMessages(userId, section, skip, limit);
+        expect(apiClient.getUserMessages).toHaveBeenCalledWith(userId, section, skip, limit);
         expect(dispatcher.handleViewAction).toHaveBeenCalledWith({
             actionType: MessageContstants.RECEIVED_ALL_MESSAGES,
             messages: messages
+            skiped: skip
         });
     });
 });
