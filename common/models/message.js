@@ -132,7 +132,6 @@ module.exports = function(Message) {
                 groupContactIds = groupContactIds.concat(groups[i].contacts);
             };
             var allContactsIds = groupContactIds.concat(contactIds);
-            console.log(allContactsIds);
             Contact.find({
                 where: {
                     id: {
@@ -144,7 +143,6 @@ module.exports = function(Message) {
                     cb(err);
                     return;
                 }
-                console.log(recipients.length);
 
                 var newMessages = _.map(recipients, function(recipient) {
                     var msg = _.cloneDeep(message);
@@ -157,7 +155,6 @@ module.exports = function(Message) {
                         cb(err)
                         return;
                     }
-                    console.log(result);
                     cb(null, result);
                 });
             });
@@ -180,7 +177,6 @@ module.exports = function(Message) {
                     cb(err);
                     return;
                 }
-                console.log(createdContacts);
                 var contacts = existingContacts.concat(createdContacts);
                 sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
             });
