@@ -141,6 +141,9 @@ body
                 background-color #eee
 .loading
     position fixed
+    opacity 0
+    transform: translate(0px, -10px)
+    visibility hidden
     top 50%
     left 50%
     width 100px
@@ -148,7 +151,18 @@ body
     font-size 16px
     height 30px
     color #727272
+    margin-left 100px
+    background-color #f4f4f4
+    border 1px solid #eee
+    border-radius 3px
     text-align center
+    transition visibility 0s linear 0.5s, opacity 0.2s, transform 0.2s
+    &.open
+        transform: translate(0px, 0px);
+        visibility visible
+        transition-delay 0s
+        opacity 1
+
 
 .box-shadow:after
     content: ""

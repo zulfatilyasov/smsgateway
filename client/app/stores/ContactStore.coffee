@@ -5,10 +5,12 @@ _ = require 'lodash'
 
 _inProgress = false
 _hasMore = true
+_curGroupId = null
 _saving = false
 _importing = false;
 _imported = false;
 _importError = null;
+_pageId = 0;
 _contactsList = []
 _allContacts = []
 _selectedContactGroups = []
@@ -44,6 +46,9 @@ class ContactStore extends BaseStore
 
     importing:->
         _importing
+
+    pageId:->
+        _pageId
 
     hasMore:->
         _hasMore
@@ -241,8 +246,18 @@ actions[contactConstants.SAVE_FAIL] = (action) ->
     storeInstance.emitChange()
 
 actions[contactConstants.RECEIVED_ALL_CONTACTS] = (action) ->
-    if action.contacts.length < 50
+    if action.groupId is _curGroupId and action.contacts.length < 50
         _hasMore = false
+    else
+        _hasMore = true
+
+    if action.skiped is 0
+        _pageId = 1
+
+    if _curGroupId isnt action.groupId
+        _curGroupId = action.groupId
+    else
+        _pageId++
 
     _contactsList = if action.skiped>0 then _contactsList.concat(action.contacts) else action.contacts
     if not action.isGroupContacts

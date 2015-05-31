@@ -10,6 +10,8 @@ var _sendInProgress = false;
 var _error = '';
 var _inProgress = false;
 var _hasMore = true;
+var _curSection = null;
+var _pageId = 0;
 
 class MessageStore extends BaseStore {
     get InProgress(){
@@ -18,6 +20,10 @@ class MessageStore extends BaseStore {
 
     get MessageList() {
         return _messageList;
+    }
+
+    get PageId() {
+        return _pageId;
     }
 
     get IsSending() {
@@ -122,8 +128,22 @@ actions[MessageConstants.MESSAGE_RECEIVED] = action => {
 };
 
 var receivedMessages = action => {
-    if(action.messages.length < 50){
+    if(_curSection === action.section && action.messages.length < 50){
         _hasMore = false
+    }
+    else {
+        _hasMore = true
+    }
+
+    if(action.skiped === 0){
+        _pageId = 1
+    }
+
+    if(_curSection !== action.section){
+        _curSection = action.section
+    }
+    else{
+        _pageId++
     }
 
     _messageList =  action.skiped>0 ? _messageList.concat(action.messages) : action.messages

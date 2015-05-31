@@ -244,6 +244,7 @@ ContactActions =
                         actionType: ContactConstants.RECEIVED_ALL_CONTACTS
                         contacts: contacts
                         skiped:skip
+                        groupId:groupId
                         isGroupContacts: if groupId then true else false
                     @contactsLoaded = true
                 , (err) ->

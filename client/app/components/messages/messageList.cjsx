@@ -37,10 +37,10 @@ MessageList = React.createClass
         @setState
             loadingContacts:true
         @appendingContacts = true
-        @pageId++
+        pageId = messageStore.PageId
+        console.log pageId
         userId = userStore.userId();
-        console.log @pageId
-        messageActions.getUserMessages(userId, 'all', @pageId * 50)
+        messageActions.getUserMessages(userId, 'all', pageId * 50)
 
     componentDidMount: ->
         $('.toobarWrap').scrollToFixed()

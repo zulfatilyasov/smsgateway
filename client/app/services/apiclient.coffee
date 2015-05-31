@@ -11,7 +11,7 @@ class ApiClient
     _getToken: ->
         localStorage.getItem 'sg-token'
 
-    _getMessagesFilter: (section = 'all', skip=0, limit=50) ->
+    _getMessagesFilter: (section = 'all', skip, limit) ->
         filter = '?filter[order]=id%20DESC&filter[limit]=' + limit + '&filter[skip]=' + skip
         if section is 'outcoming'
            filter += '&filter[where][outcoming]=true'

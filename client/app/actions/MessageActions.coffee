@@ -115,7 +115,7 @@ MessageActions =
         AppDispatcher.handleViewAction
             actionType: MessageConstants.SEARCH_MESSAGES
 
-    getUserMessages: (userId, section, skip, limit) ->
+    getUserMessages: (userId, section, skip=0, limit=50) ->
         if @messagesLoaded
             console.log 'masseges already loaded'
             return
@@ -126,6 +126,7 @@ MessageActions =
                     AppDispatcher.handleViewAction
                         actionType: MessageConstants.RECEIVED_ALL_MESSAGES
                         messages: messages
+                        section:section
                         skiped:skip
                     @messagesLoaded = true
                 , (err) ->

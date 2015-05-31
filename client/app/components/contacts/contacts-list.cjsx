@@ -38,7 +38,6 @@ ContactList = React.createClass
 
     componentDidMount: ->
         $('.toobarWrap').scrollToFixed()
-        @pageId = 0
         window.onscroll = _.debounce @checkLoadMore, 250
         contactStore.addChangeListener(@onChange)
         userId = userStore.userId();
@@ -55,12 +54,15 @@ ContactList = React.createClass
         contactActions.clean()
 
     hideLoadingMessage: ->
-        if @state.loadingContacts
-            setTimeout =>
-                if @state.loadingContacts
-                    @setState
-                        loadingContacts:false
-            , 1000
+        setTimeout ->
+            $('.loading').removeClass('open')
+        , 1500
+
+        # if @state.loadingContacts setTimeout => if @state.loadingContacts
+
+        #             @setState
+        #                 loadingContacts:false
+        #     , 1000
 
     onChange: ->
         @hideLoadingMessage()
@@ -68,14 +70,15 @@ ContactList = React.createClass
 
     loadMoreContacts: (pageId) ->
         _animationOff = true
-        @setState
-            loadingContacts:true
-        @appendingContacts = true
-        @pageId++
-        userId = userStore.userId();
-        groupId = @props.params.groupId;
-        console.log @pageId
-        contactActions.getUserContacts(userId, groupId, @pageId * 50)
+        $('.loading').addClass('open')
+        setTimeout =>
+            @appendingContacts = true
+            userId = userStore.userId();
+            groupId = @props.params.groupId;
+            pageId = contactStore.pageId()
+            console.log pageId
+            contactActions.getUserContacts(userId, groupId, pageId * 50)
+        , 200
 
     componentDidUpdate: (prevProps, prevState) ->
         animateItems()
@@ -103,8 +106,7 @@ ContactList = React.createClass
             }
             <div>
             {
-                if @state.loadingContacts
-                    <div className="loading">Loading...</div>
+                <div className="loading">Loading...</div>
             }
             </div>
         </div>
