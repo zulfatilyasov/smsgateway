@@ -168,15 +168,15 @@ class FormInner extends React.Component {
         var className = this.state.sending ? 'sending' : '';
         var sendButtonClass = 'sendButton ' + className;
 
-        var menuItems = [
+        var handlers = [
            { payload: 'phone', text: 'Phone - ' + this.state.deviceModel },
            { payload: 'api', text: 'Nexmo api' }
         ];
 
         var devices = <div className="no-device">No device connected</div>;
         if (this.state.deviceModel){
-            this.provider = menuItems[0].payload;
-            devices = <DropDownMenu className="handlers" onChange={this._providerChanged.bind(this)} menuItems={menuItems} />;
+            this.provider = handlers[0].payload;
+            devices = <DropDownMenu className="handlers" onChange={this._providerChanged.bind(this)} menuItems={handlers} />;
         } else{
             this.provider = null
         }

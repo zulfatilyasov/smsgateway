@@ -209,6 +209,11 @@ class ApiClient
                 .set 'Authorization', @_getToken()
                 .end()
 
+    getAddressList:()->
+        request
+            .get @prefix + '/contacts/addresslist'
+            .set 'Authorization', @_getToken()
+            .end()
 
     getUserContacts: (userId, groupId, skip, limit) ->
         if groupId

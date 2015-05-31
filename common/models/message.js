@@ -94,7 +94,7 @@ module.exports = function(Message) {
             type: 'array'
         }],
 
-        returns:{
+        returns: {
             arg: 'messages',
             type: 'array'
         },

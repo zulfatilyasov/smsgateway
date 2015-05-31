@@ -107,13 +107,7 @@ class ContactStore extends BaseStore
         _groupOptions
 
     addressList: ->
-        contacts = _.map _allContacts, (c) ->
-            value:c.phone
-            label:c.name
-            id:c.id
-            isContact: true
-
-        return _groupOptions.concat contacts
+        _addressList
 
     stripContacts:(addressList, userId) ->
         newContacts= _(addressList)
@@ -168,6 +162,10 @@ actions[contactConstants.IMPORT_CONTACTS] = (action) ->
     _importing = true
     _imported = false
     _importError = null
+    storeInstance.emitChange()
+
+actions[contactConstants.GET_ADDRESSLIST_SUCCESS] = (action) ->
+    _addressList = action.addresses
     storeInstance.emitChange()
 
 actions[contactConstants.CREATE_MULTIPLE_SUCCESS] = (action) ->

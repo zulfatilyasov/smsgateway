@@ -42,6 +42,7 @@ describe('Message Actions', function() {
         expect(dispatcher.handleViewAction).toHaveBeenCalledWith({
             actionType: MessageContstants.RECEIVED_ALL_MESSAGES,
             messages: messages,
+            section:section,
             skiped: skip
         });
     });

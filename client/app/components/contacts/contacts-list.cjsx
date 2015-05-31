@@ -58,12 +58,6 @@ ContactList = React.createClass
             $('.loading').removeClass('open')
         , 1500
 
-        # if @state.loadingContacts setTimeout => if @state.loadingContacts
-
-        #             @setState
-        #                 loadingContacts:false
-        #     , 1000
-
     onChange: ->
         @hideLoadingMessage()
         @setState getState()

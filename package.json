@@ -35,21 +35,6 @@
     "serve-favicon": "^2.2.0",
     "socket.io": "^1.3.5"
   },
-  "jest": {
-    "scriptPreprocessor": "<rootDir>/preprocessor.js",
-    "testFileExtensions": [
-      "coffee",
-      "js",
-      "cjsx"
-    ],
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/material-ui",
-      "<rootDir>/client/node_modules/react",
-      "<rootDir>/client/node_modules/react-router",
-      "<rootDir>/client/node_modules/material-ui"
-    ]
-  },
   "optionalDependencies": {
     "loopback-explorer": "^1.7.2"
   },

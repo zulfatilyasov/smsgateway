@@ -33,6 +33,14 @@ ContactActions =
         AppDispatcher.handleViewAction
             actionType: ContactConstants.TRIGGER_CHANGE
 
+    getAddressList:()->
+      apiClient.getAddressList()
+        .then (resp) ->
+          addresses = resp.body.addresses
+          AppDispatcher.handleViewAction
+            actionType: ContactConstants.GET_ADDRESSLIST_SUCCESS
+            addresses: addresses
+
     getUserVariables:(userId) ->
       apiClient.getUserVariables(userId)
         .then (resp) ->

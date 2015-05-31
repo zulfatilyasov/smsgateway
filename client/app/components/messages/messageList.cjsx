@@ -18,12 +18,9 @@ animateItems = ->
 
 MessageList = React.createClass
     hideLoadingMessage: ->
-        if @state.loadingContacts
-            setTimeout =>
-                if @state.loadingContacts
-                    @setState
-                        loadingContacts:false
-            , 1000
+        setTimeout ->
+            $('.loading').removeClass('open')
+        , 1500
 
     checkLoadMore: ->
         if not @appendingContacts and messageStore.HasMore and ui.bottomDistance() < 1300
@@ -34,17 +31,17 @@ MessageList = React.createClass
 
     loadMoreMessages: (pageId) ->
         _animationOff = true
-        @setState
-            loadingContacts:true
-        @appendingContacts = true
-        pageId = messageStore.PageId
-        console.log pageId
-        userId = userStore.userId();
-        messageActions.getUserMessages(userId, 'all', pageId * 50)
+        $('.loading').addClass('open')
+        setTimeout =>
+            @appendingContacts = true
+            pageId = messageStore.PageId
+            console.log pageId
+            userId = userStore.userId();
+            messageActions.getUserMessages(userId, 'all', pageId * 50)
+        , 200
 
     componentDidMount: ->
         $('.toobarWrap').scrollToFixed()
-        @pageId = 0
         window.onscroll = _.debounce @checkLoadMore, 250
         messageStore.addChangeListener @onChange
         animateItems()
@@ -59,7 +56,6 @@ MessageList = React.createClass
         animateItems()
         @appendingContacts = false
 
-
     render: ->
         <div>
             {
@@ -69,8 +65,7 @@ MessageList = React.createClass
             }
             <div>
                 {
-                    if @state.loadingContacts
-                        <div className="loading">Loading...</div>
+                    <div className="loading">Loading...</div>
                 }
             </div>
         </div>

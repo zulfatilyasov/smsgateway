@@ -33,6 +33,7 @@ var Master = React.createClass({
     },
 
     componentDidMount() {
+        $('.menu-button').scrollToFixed({marginTop:40});
         if(this.state.authenticated){
             var userId  = userStore.userId();
             messageActions.startReceiving();
@@ -40,6 +41,7 @@ var Master = React.createClass({
             userActions.getUserDevice();
             contactActions.getUserGroups(userId);
             contactActions.getUserContacts(userId);
+            contactActions.getAddressList();
         }
 
         this.setState({
