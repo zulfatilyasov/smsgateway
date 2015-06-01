@@ -132,11 +132,11 @@ class FormInner extends React.Component {
             var address = messageAddress.replace(/[^0-9]/g, '');
             if(address.length < 8 || address.length > 12) { 
                 self._confirmWrongPhone(function () {
-                    messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groupIds);
+                    messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groups);
                 });
             }
             else {
-                messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groupIds);
+                messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groups);
             }            
         };
 
@@ -145,10 +145,10 @@ class FormInner extends React.Component {
                 self._alertCantUseNexmo();
                 return;
             }
-            if(recipients.contacts.length === 1 && recipients.groupIds.length===0){
+            if(recipients.contacts.length === 1 && recipients.groups.length===0){
                 sendToSingleAddress();
             } else {
-                messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groupIds);
+                messageActions.sendToMultipleContacts(message, recipients.contacts, recipients.groups);
             }
         };
 

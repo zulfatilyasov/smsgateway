@@ -3,6 +3,7 @@ var consts = require('./messageConstants.coffee');
 var MessageHelpers = require('./messageHelpers.coffee');
 var loopback = require('loopback');
 var _ = require('lodash');
+var agenda = require('../../server/jobs/agenda.js');
 
 module.exports = function(Message) {
     var msgHelpers = new MessageHelpers(Message);
@@ -26,7 +27,6 @@ module.exports = function(Message) {
 
         var userId = ctx.instance.userId;
         if (ctx.instance && ctx.isNewInstance) {
-            var userId = ctx.instance.userId;
             if (ctx.instance.origin === 'web') {
                 messenger.sendMessageToUserMobile(userId, ctx.instance);
             }
@@ -90,7 +90,7 @@ module.exports = function(Message) {
             arg: 'contacts',
             type: 'array'
         }, {
-            arg: 'groupIds',
+            arg: 'groups',
             type: 'array'
         }],
 
@@ -161,14 +161,38 @@ module.exports = function(Message) {
         });
     }
 
-    Message.send = function(message, contacts, groupIds, cb) {
+    function saveScheduled(message, cb) {
+        if (!message.sendDate) {
+            var error = new Error('Scheduled message should have send date');
+            error.statusCode = 401;
+            cb(err);
+            return;
+        }
+
+        Message.create(message, function(err, message) {
+            if (err) {
+                cb(err);
+                return;
+            }
+
+            agenda.schedule(message.sendDate, 'send message', {
+                id: message.id
+            });
+
+            cb(message);
+        });
+    }
+
+    Message.createContactsAndSend = function(message, contacts, groups, cb) {
         var newContacts = _.filter(contacts, {
             id: null
         });
+
         var existingContacts = _.filter(contacts, function(c) {
             return !!c.id;
         });
 
+        var groupsIds = _.pluck(groups, 'id');
         var Contact = Message.app.models.Contact;
 
         if (newContacts.length) {
@@ -182,6 +206,18 @@ module.exports = function(Message) {
             });
         } else {
             sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
+        }
+    }
+
+    Message.send = function(message, contacts, groups, cb) {
+        if (message.status === 'scheduled') {
+            message.address = {
+                contacts: contacts,
+                groups: groups
+            };
+            saveScheduled(message, cb);
+        } else {
+            Message.createContactsAndSend(message, contacts, groups, cb);
         }
     };
 

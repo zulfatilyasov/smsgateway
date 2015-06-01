@@ -3,7 +3,7 @@ var boot = require('loopback-boot');
 var path = require('path');
 require('coffee-script/register');
 var messenger = require('./io/messenger.coffee');
-
+var agenda = require('./jobs/agenda.js');
 var app = module.exports = loopback();
 
 app.start = function() {
@@ -24,5 +24,6 @@ boot(app, __dirname, function(err) {
     if (require.main === module) {
         app.io = require('socket.io')(app.start());
         messenger.initialize(app);
+        agenda.start();
     }
 });

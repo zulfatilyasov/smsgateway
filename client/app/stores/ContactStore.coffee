@@ -128,15 +128,16 @@ class ContactStore extends BaseStore
             email:if isEmail(c.value) then c.value else null
             id:c.id
 
-        groupIds =
+        groups =
             _(addressList)
                 .filter isGroup: true
                 .map (g) ->
-                    g.value
+                    id:g.value
+                    name:g.name
                 .value()
 
         contacts: contacts.concat(newContacts)
-        groupIds: groupIds
+        groups: groups
 actions = {}
 
 actions[contactConstants.GET_CONTACTS] = (action) ->

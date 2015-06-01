@@ -73,13 +73,13 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
-    sendToMultipleContacts:(message, contacts, groupIds)->
+    sendToMultipleContacts:(message, contacts, groups)->
         request
             .post @prefix + '/messages/send'
             .send
                 message:message
                 contacts:contacts
-                groupIds:groupIds
+                groups:groups
             .set 'Authorization', @_getToken()
             .end()
 

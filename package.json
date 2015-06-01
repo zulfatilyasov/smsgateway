@@ -9,6 +9,7 @@
     "start-client": "NODE_ENV=development node webpack-server.js"
   },
   "dependencies": {
+    "agenda": "^0.6.28",
     "coffee-react": "^3.1.0",
     "coffee-script": "*",
     "compression": "^1.4.3",

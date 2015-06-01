@@ -43,6 +43,10 @@ MessageItem = React.createClass
 
     statusText = getItemStatusText(@props)
 
+    address = @props.address
+    if @props.status is 'scheduled'
+      names = _.map @props.address, (a) -> a.name 
+
 
     <div className="list-item animated">
       <div className="list-item-icon">

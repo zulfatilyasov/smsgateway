@@ -185,8 +185,8 @@ MessageActions =
                     error: err
                     message:message
 
-    sendToMultipleContacts:(message, contacts, groupIds)->
-        apiClient.sendToMultipleContacts(message, contacts, groupIds)
+    sendToMultipleContacts:(message, contacts, groups)->
+        apiClient.sendToMultipleContacts(message, contacts, groups)
              .then (resp) ->
                 savedMessages = resp.body.messages
                 AppDispatcher.handleViewAction
