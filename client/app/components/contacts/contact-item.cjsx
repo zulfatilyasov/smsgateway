@@ -2,8 +2,12 @@ React = require('react')
 classBuilder = require('classnames')
 contactActions = require '../../actions/ContactActions.coffee'
 {Checkbox, FontIcon} = require 'material-ui'
+PureRenderMixin = require('react/addons').addons.PureRenderMixin
+
 
 ContactItem = React.createClass
+  mixins: [PureRenderMixin]
+  
   handleSelected: (e)->
     contactActions.selectSingle(@props.id)
 

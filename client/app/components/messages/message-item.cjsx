@@ -3,6 +3,7 @@ classBuilder = require('classnames')
 messageActions = require '../../actions/MessageActions.coffee'
 {Checkbox, DropDownIcon, FontIcon} = require('material-ui')
 fecha = require 'fecha'
+PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
 getItemStatusText  = (item) ->
     if item.incoming
@@ -17,6 +18,8 @@ getItemStatusText  = (item) ->
         return 'Cancelled: '
 
 MessageItem = React.createClass
+  mixins: [PureRenderMixin]
+
   handleSelected: ()->
     messageActions.selectSingle(@props.id)
 
