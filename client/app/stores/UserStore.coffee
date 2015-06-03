@@ -120,6 +120,10 @@ actions[userConstants.LOG_OUT] = ->
     localStorage.removeItem 'sg-token'
     storeInstance.emitChange()
 
+actions[userConstants.SHOW_SNACK] = (action) ->
+    _snackMessage = action.message
+    storeInstance.emitChange()
+
 actions[userConstants.DEVICE_CONNECTED] = (action) ->
     _deviceModel = action.deviceModel
     _snackMessage = 'Connected device ' + _deviceModel

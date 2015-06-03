@@ -195,6 +195,51 @@ module.exports = function(Contact) {
         }
     });
 
+    Contact.search = function(query, cb) {
+        var ctx = loopback.getCurrentContext();
+        var token = ctx && ctx.get('accessToken');
+        if (!token || !token.userId) {
+            cb(notAutorizedError())
+            return;
+        }
+        Contact.find({
+            where: {
+                userId: token.userId,
+                or: [{
+                    name: {
+                        like: query
+                    }
+                }, {
+                    phone: {
+                        like: query
+                    }
+                }, {
+                    email: {
+                        like: query
+                    }
+                }]
+            }
+        }, function(err, contacts) {
+            if (err) return cb(err);
+            cb(null, contacts);
+        });
+    };
+
+    Contact.remoteMethod('search', {
+        accepts: {
+            arg: 'query',
+            type: 'string'
+        },
+        http: {
+            path: '/search',
+            verb: 'get'
+        },
+        returns: {
+            arg: 'contacts',
+            type: 'array'
+        }
+    });
+
 
     Contact.deleteMany = function(ids, cb) {
         var ctx = loopback.getCurrentContext();

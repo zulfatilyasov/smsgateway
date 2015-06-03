@@ -164,6 +164,12 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
+    searchContacts:(query) ->
+        request
+            .get "#{@prefix}/contacts/search?query=#{query}"
+            .set 'Authorization', @_getToken()
+            .end()
+
     resetPassword: (accessToken, password, confirmation) ->
         requestData =
             accessToken: accessToken

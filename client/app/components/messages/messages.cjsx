@@ -87,6 +87,9 @@ Messages = React.createClass
             text: "Resend selected messages?"
             submitHandler:actions.submit
             cancelHandler:actions.cancel
+            
+    searchMessages:(query)->
+        messageActions.searchUserMessages(userStore.userId(), query)
 
     handleDelete: (e) ->
         e.preventDefault()
@@ -164,7 +167,7 @@ Messages = React.createClass
                     </div>
                     <div className={searchFormClasses}>
                       <div className="form-content">
-                        <SearchBar closeClickHandler={@cancelClickHandler} />
+                        <SearchBar search={@searchMessages} closeClickHandler={@cancelClickHandler} />
                       </div>
                     </div>
                   </div>

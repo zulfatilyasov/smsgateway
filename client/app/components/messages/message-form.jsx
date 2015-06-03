@@ -37,6 +37,12 @@ class FormInner extends React.Component {
         userStore.removeChangeListener(this._onChange.bind(this));
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(this.props.value && this.props.value.length) {
+            this.selectedAddresses = this.props.value;
+        }
+    }
+
     getState(){
         var state = {
             sending: messageStore.IsSending,
@@ -189,6 +195,7 @@ class FormInner extends React.Component {
                     <Select
                         multi={true}
                         options={this.state.addressList}
+                        value={this.props.value || []}
                         allowCreate={true}
                         placeholder="Address"
                         className="input phoneInput"

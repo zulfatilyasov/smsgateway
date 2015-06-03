@@ -4,11 +4,13 @@ mui = require 'material-ui'
 contactStore = require '../../stores/ContactStore.coffee'
 contactActions = require '../../actions/ContactActions.coffee'
 userStore = require '../../stores/UserStore.coffee'
+messageStore = require '../../stores/MessageStore.es6'
 uiEvents = require '../../uiEvents.coffee'
 {Dialog, Paper, MenuItem, Checkbox, IconButton, FlatButton} = mui
 ReactCSSTransitionGroupAppear = require '../../react-helpers/ReactCSSTransitionAppear.jsx'
 ContactForm = require './contact-form.cjsx'
 SearchBar = require '../search/searchbar.cjsx'
+NewMessageForm = require '../messages/message-form.jsx'
 PageWithNav = require '../page-with-nav/page-with-nav.jsx'
 headerEvents = require('../../headerEvents.coffee')
 PageHeader = require('../page-with-nav/pageHeader.cjsx')
@@ -78,6 +80,8 @@ Contacts = React.createClass
     componentDidMount: ->
         headerEvents.addChangeListener @onHeaderChange
         contactStore.addChangeListener @onChange
+        messageStore.addChangeListener @onChange
+        @formHeight = -1 * $('.form').height()
         userId = userStore.userId();
         if userStore.isAuthenticated()
             contactActions.getUserVariables(userId);
@@ -87,12 +91,14 @@ Contacts = React.createClass
     componentWillUnmount: ->
         headerEvents.removeChangeListener @onHeaderChange
         contactStore.removeChangeListener @onChange
+        messageStore.removeChangeListener @onChange
 
     onChange: ->
         isImport = _.includes @context.router.getCurrentPath(), 'contacts/import'
         state = 
             menuItems: contactStore.groupRouteList()
             showImportActions:isImport
+            savingMessage:messageStore.IsSending
             variables:contactStore.origVariables()
 
         if isImport
@@ -108,10 +114,23 @@ Contacts = React.createClass
                 state.showForm = false
             state.readyToClose = false
 
+        if messageStore.IsSending
+            @setState readyToCloseMessageForm: true
+        else
+            if @state.readyToCloseMessageForm
+                @setState
+                    showNewMessageForm:false
+                    readyToCloseMessageForm:false
+            else
+                @setState readyToCloseMessageForm: false
+
         @setState state
 
     onHeaderChange: (header) ->
         @setState header:header
+
+    searchContacts: (query)->
+        contactActions.searchContacts(query)
     
     handleCreateContactClick: ->
         @setState showForm:true
@@ -289,6 +308,10 @@ Contacts = React.createClass
     dialogCancelHandler:(e) ->
         @refs.dialog.dismiss()
 
+    cancelNewMessageClickHandler:(e) ->
+        @setState
+            showNewMessageForm: false
+
     dialogSubmitHandler:(e)->
         newVariable = @refs.form.getNewVariable()
         return unless newVariable
@@ -299,13 +322,18 @@ Contacts = React.createClass
         currentParams = @context.router.getCurrentParams()
         return i for menuItem, i in @state.menuItems when currentParams.groupId is menuItem.params?.groupId
 
+    handleSendMessage:(e)->
+        @setState
+            addressList:contactStore.getSelectedConactOptions()
+            showNewMessageForm: true
+
     render: ->
         formClasses = classBuilder
             form:true
             open:@state.showForm
 
-        formStyles =
-            transform: if @state.showForm then "translate(0px, 0px)" else "translate(0px, #{@formHeight}px)"
+        newMessageFormStyles =
+            transform: if @state.showNewMessageForm then "translate(0px, 0px)" else "translate(0px, #{@formHeight}px)"
 
         searchFormClasses = classBuilder
             searchForm:true
@@ -314,6 +342,10 @@ Contacts = React.createClass
         groupsFormCasses = classBuilder
             groupsForm:true
             open:@state.showGroupForm
+
+        newMessageFormClass = classBuilder
+            form:true
+            open:@state.showNewMessageForm
 
         dialogActions = [
           <FlatButton
@@ -328,6 +360,9 @@ Contacts = React.createClass
             key="cancel"
             onTouchTap={@dialogCancelHandler} />
         ]
+
+        formStyles =
+            transform: if @state.showForm then "translate(0px, 0px)" else "translate(0px, #{@formHeight}px)"
 
         ok = [
           <FlatButton
@@ -362,6 +397,7 @@ Contacts = React.createClass
                             <Checkbox ref="checkbox" onCheck={@handleSelectAll} value="1"/>
                             <IconButton tooltip="Add to Group" onClick={@handleAddToGroup} iconClassName="icon-person-add" />
                             <IconButton tooltip="import" onClick={@handleImport} iconClassName="icon-cloud-upload" />
+                            <IconButton tooltip="send message" onClick={@handleSendMessage} iconClassName="icon-paperplane" />
                             <IconButton tooltip="Delete" onClick={@handleDelete} iconClassName="icon-delete" />
                             <IconButton onClick={@handleSearchClick} tooltip="Search" iconClassName="icon-search" />
                             <div className="buttons">
@@ -375,6 +411,11 @@ Contacts = React.createClass
                         <ContactForm onChange={@handleContactFormChange} cancelClickHandler={@cancelClickHandler}/>
                       </div>
                     </div>
+                    <div style={newMessageFormStyles} className={newMessageFormClass}>
+                      <div className="form-content">
+                        <NewMessageForm value={@state.addressList} cancelClickHandler={@cancelNewMessageClickHandler}/>
+                      </div>
+                    </div>
                     <div className={groupsFormCasses}>
                       <div className="form-content">
                         <Groups closeClickHandler={@cancelClickHandler} />
@@ -382,7 +423,7 @@ Contacts = React.createClass
                     </div>
                     <div className={searchFormClasses}>
                       <div className="form-content">
-                        <SearchBar closeClickHandler={@cancelClickHandler} />
+                        <SearchBar search={@searchContacts} closeClickHandler={@cancelClickHandler} />
                       </div>
                     </div>
                   </div>

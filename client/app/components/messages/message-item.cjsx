@@ -2,6 +2,7 @@ React = require('react')
 classBuilder = require('classnames')
 messageActions = require '../../actions/MessageActions.coffee'
 {Checkbox, DropDownIcon, FontIcon} = require('material-ui')
+fecha = require 'fecha'
 
 getItemStatusText  = (item) ->
     if item.incoming
@@ -35,6 +36,16 @@ MessageItem = React.createClass
         'icon-sms-failed fail': @props.status is 'failed'
         'icon-close cancelled': @props.status is 'cancelled'
 
+    lastAction = 'Sent'
+    if @props.status is 'failed'
+      lastAction = 'Failed'
+
+    if @props.status is 'received'
+      lastAction = 'Received'
+
+    if @props.status is 'received'
+      lastAction = 'Received'
+
     statusClass = classBuilder
         success: @props.status is 'sent'
         fail: @props.status is 'failed'
@@ -44,6 +55,8 @@ MessageItem = React.createClass
     statusText = getItemStatusText(@props)
 
     address = @props.address
+    createDate = fecha.format(new Date(@props.addedOn), 'MM/DD/YY HH:mm')
+    updateDate = fecha.format(new Date(@props.updatedOn), 'MM/DD/YY HH:mm')
     if @props.status is 'scheduled'
       names = _.map @props.address, (a) -> a.name 
 
@@ -53,14 +66,33 @@ MessageItem = React.createClass
         <FontIcon className={iconClassName} />
       </div>
       <div className="list-item-inner">
-        <div className="address">
-          <span className={statusClass}>{statusText}</span>
-          <span className="message-address">
-           {@props.address}
-          </span>
+        <div className="top-line">
+          <div className="address">
+            <span className={statusClass}>
+             {statusText}
+            </span>
+            <span className="message-address">
+              {@props.address}
+            </span>
+          </div>
+          <div className="dates">
+            <span>
+              Created: {createDate}
+            </span>
+          </div>
         </div>
-        <div className="body">
-          {@props.body}
+        <div className="bottom-line">
+          <div className="body">
+            {@props.body}
+          </div>
+          <div className="dates">
+            {
+              if updateDate and @props.addedOn isnt @props.updatedOn
+                <span>
+                   {lastAction}: {updateDate}
+                </span>
+            }
+          </div>
         </div>
       </div>
       <div className="list-item-actions">

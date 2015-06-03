@@ -48,7 +48,6 @@
   max-width: 15px
   padding: 24px 0
   padding-left: 25px
-
   .mui-font-icon
     color: #212121
     font-size: 22px
@@ -61,13 +60,25 @@
     &.fail
       color: #F44336
 
-      
-.address 
-  .success
-    color: #388E3C;
-  .received
-    color: #AFB42B;
-  .sending, .queued
-    color: #795548;
-  .fail
-    color: #F44336;
+.bottom-line
+  cf()
+  .body
+    float left
+
+.dates
+  color #727272
+  line-height 30px
+  float right
+
+.top-line
+  cf()
+  .address 
+    float left
+    .success
+      color: #388E3C;
+    .received
+      color: #AFB42B;
+    .sending, .queued
+      color: #795548;
+    .fail
+      color: #F44336;

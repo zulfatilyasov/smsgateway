@@ -31,5 +31,6 @@ module.exports = keyMirror({
     CLEAR_EDITED_CONTACT:null,
     UPDATE_CONTACT:null,
     SELECT_ALL_CONTACTS:null,
+    SEARCH_CONTACTS:null,
     GET_ADDRESSLIST_SUCCESS:null
 });

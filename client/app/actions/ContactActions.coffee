@@ -29,6 +29,18 @@ ContactActions =
         AppDispatcher.handleViewAction
             actionType: ContactConstants.AGGREGATE_GROUPS
 
+    searchContacts:(query)->
+      console.log query
+      apiClient.searchContacts(query)
+        .then (resp) ->
+          contacts = resp.body.contacts
+          console.log contacts
+          AppDispatcher.handleViewAction
+              actionType: ContactConstants.SEARCH_CONTACTS
+              contacts: contacts
+        , (err) ->
+          console.log err
+
     triggerChange:()->
         AppDispatcher.handleViewAction
             actionType: ContactConstants.TRIGGER_CHANGE
@@ -48,7 +60,6 @@ ContactActions =
           AppDispatcher.handleViewAction
               actionType: ContactConstants.GET_VARIABLES_SUCCESS
               variables: variables
-
         , (err) ->
           AppDispatcher.handleViewAction
               actionType: ContactConstants.GET_VARIABLES_FAIL
@@ -58,7 +69,6 @@ ContactActions =
       apiClient.createContactVariable(variable)
         .then (resp)->
           savedVariable = resp.body
-          debugger
           AppDispatcher.handleViewAction
               actionType: ContactConstants.CREATE_VARIABLE_SUCCESS
               variable: savedVariable
@@ -137,7 +147,7 @@ ContactActions =
           groups = ContactActions.replaceGroups groups, createdGroups
           ContactActions.createMultipleContacts(contacts, groups, userId)
       else
-          ContactActions.createMultipleContacts(contacts, groups, userId)
+        ContactActions.createMultipleContacts(contacts, groups, userId)
 
       AppDispatcher.handleViewAction
         actionType: ContactConstants.IMPORT_CONTACTS

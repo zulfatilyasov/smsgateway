@@ -14,7 +14,6 @@ var _ = require('lodash');
 _.mixin(require("lodash-deep"));
 
 var getState = function () {
-    console.log(userStore.snackMessage());
     return {
         authenticated: userStore.isAuthenticated(),
         snackMessage: userStore.snackMessage()

@@ -192,7 +192,7 @@ module.exports = function(Message) {
             return !!c.id;
         });
 
-        var groupsIds = _.pluck(groups, 'id');
+        var groupIds = _.pluck(groups, 'id');
         var Contact = Message.app.models.Contact;
 
         if (newContacts.length) {

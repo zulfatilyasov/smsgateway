@@ -4,15 +4,12 @@ userStore = require '../../stores/UserStore.coffee'
 {TextField, RaisedButton} = require('material-ui')
 _ = require 'lodash'
 
-search = (query) ->
-  messageActions.searchUserMessages(userStore.userId(), query)
-
-debouncedSearch = _.debounce search, 500
-
 SearchBar = React.createClass
+  componentDidMount: ->
+    @search = _.debounce @props.search, 300
 
   handleSearchChange:(e) ->
-    debouncedSearch(e.target.value)
+    @search(e.target.value)
 
   render: ->
     <div className="search">

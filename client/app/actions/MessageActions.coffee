@@ -1,6 +1,7 @@
 AppDispatcher = require '../AppDispatcher.coffee'
 MessageConstants = require '../constants/MessageConstants.js'
 ContactConstants = require '../constants/ContactConstants.coffee'
+userConstants = require '../constants/UserConstants.js'
 ioConstants = require '../../../common/constants/ioConstants.coffee'
 apiClient = require '../services/apiclient.coffee'
 config = require '../config.coffee'
@@ -152,39 +153,6 @@ MessageActions =
 
             setTimeout notifyUpdate, 1000
 
-    saveMessagesAndNewContacts: (userId, messages, newContacts) ->
-        sendMessages = =>
-            if _.isArray(messages) then @sendMultiple(messages) else @sendSingle(messages)
-
-        if _.isEmpty(newContacts)
-            sendMessages()
-        else
-            apiClient.saveContact(userId, newContacts)
-                .then (resp) ->
-                    savedContacts = resp.body
-                    AppDispatcher.handleViewAction
-                        actionType: ContactConstants.SAVE_MULTIPLE_CONTACTS_SUCCESS
-                        contacts: savedContacts
-                    sendMessages()
-                , (err) ->
-                    console.log err
-
-        AppDispatcher.handleViewAction
-            actionType: MessageConstants.SEND
-
-    sendSingle: (message) -> 
-        apiClient.sendMessage message
-            .then (resp) ->
-                savedMessage = resp.body
-                AppDispatcher.handleViewAction
-                    actionType: MessageConstants.SEND_SUCCESS
-                    message: savedMessage
-            , (err) ->
-                AppDispatcher.handleViewAction
-                    actionType: MessageConstants.SEND_FAIL
-                    error: err
-                    message:message
-
     sendToMultipleContacts:(message, contacts, groups)->
         apiClient.sendToMultipleContacts(message, contacts, groups)
              .then (resp) ->
@@ -192,6 +160,13 @@ MessageActions =
                 AppDispatcher.handleViewAction
                     actionType: MessageConstants.SEND_MULTIPLE_SUCCESS
                     messages: savedMessages
+
+                if savedMessages?.length
+                    messageBody = savedMessages[0].body
+                    AppDispatcher.handleViewAction
+                        actionType: userConstants.SHOW_SNACK
+                        message: 'Created message ' + messageBody
+
             , (err) ->
                 AppDispatcher.handleViewAction
                     actionType: MessageConstants.SEND_MULTIPLE_FAIL
@@ -200,18 +175,5 @@ MessageActions =
 
         AppDispatcher.handleViewAction
             actionType: MessageConstants.SEND
-
-    sendMultiple: (messages) ->
-        apiClient.sendMessage messages
-            .then (resp) ->
-                savedMessages = resp.body
-                AppDispatcher.handleViewAction
-                    actionType: MessageConstants.SEND_MULTIPLE_SUCCESS
-                    messages: savedMessages
-            , (err) ->
-                AppDispatcher.handleViewAction
-                    actionType: MessageConstants.SEND_MULTIPLE_FAIL
-                    error: err
-                    messages:messages
 
 module.exports = MessageActions;

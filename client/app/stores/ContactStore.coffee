@@ -85,6 +85,16 @@ class ContactStore extends BaseStore
     editedContact: ->
         _editedContact
 
+    getSelectedConactOptions:->
+        _(_contactsList)
+            .filter({'checked': true})
+            .map (c) ->
+                id:c.id
+                isContact:true,
+                label:c.name
+                value:c.phone
+            .value()
+
     selectedContactIds: ->
         _.pluck(_.filter(_contactsList, {'checked': true}), 'id')
 
@@ -303,6 +313,10 @@ actions[groupConstants.SAVE_GROUP_SUCCESS] = (action) ->
     _groupOptions = _groupOptions.concat(options)
     _groupRouteList = _groupRouteList.concat(routeList)
     _groups = _groups.concat(action.groups)
+    storeInstance.emitChange()
+
+actions[contactConstants.SEARCH_CONTACTS] = (action)->
+    _contactsList = action.contacts
     storeInstance.emitChange()
 
 actions[groupConstants.RECEIVED_ALL_GROUPS] = (action) ->
