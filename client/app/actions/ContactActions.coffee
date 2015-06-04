@@ -129,9 +129,9 @@ ContactActions =
         c.groups = groups
         return c
 
-      apiClient.saveContact(userId, contacts)
+      apiClient.import(contacts)
         .then (resp) ->
-          savedContacts = resp.body
+          savedContacts = resp.body.contacts
           AppDispatcher.handleViewAction
             actionType: ContactConstants.CREATE_MULTIPLE_SUCCESS
             contacts: savedContacts

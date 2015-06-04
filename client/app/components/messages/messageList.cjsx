@@ -20,10 +20,10 @@ MessageList = React.createClass
     hideLoadingMessage: ->
         setTimeout ->
             $('.loading').removeClass('open')
-        , 1500
+        , 750
 
     checkLoadMore: ->
-        if not @appendingContacts and messageStore.HasMore and ui.bottomDistance() < 1300
+        if not @appendingContacts and messageStore.HasMore and ui.bottomDistance() < 1600
             @loadMoreMessages()
 
     getInitialState: ->

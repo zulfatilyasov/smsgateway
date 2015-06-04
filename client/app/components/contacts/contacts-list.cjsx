@@ -33,7 +33,7 @@ ContactList = React.createClass
         getState()
 
     checkLoadMore: ->
-        if contactStore.hasMore() and not @appendingContacts and ui.bottomDistance() < 1300
+        if contactStore.hasMore() and not @appendingContacts and ui.bottomDistance() < 1600
             @loadMoreContacts()
 
     componentDidMount: ->
@@ -56,7 +56,7 @@ ContactList = React.createClass
     hideLoadingMessage: ->
         setTimeout ->
             $('.loading').removeClass('open')
-        , 1500
+        , 750
 
     onChange: ->
         @hideLoadingMessage()

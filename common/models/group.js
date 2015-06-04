@@ -63,7 +63,6 @@ module.exports = function(Group) {
             Group.upsert(groups[i], function (err, info) {
                 if(err){
                     cb(err);
-                    return;
                 } else {
                     updatedCount++;
                     if(updatedCount === groups.length) {
@@ -72,7 +71,7 @@ module.exports = function(Group) {
                 }
             });
         };
-    }
+    };
 
     Group.remoteMethod('updateMany', {
         accepts: {

@@ -225,7 +225,7 @@ actions[contactConstants.SELECT_CONTACT] = (action) ->
 actions[contactConstants.SAVE_SUCCESS] = (action) ->
     _saving = false
     if action.contact.new
-        _contactsList.push action.contact
+        _contactsList.unshift action.contact
     else
         _contactsList = _.map _contactsList, (c) ->
             if c.id is action.contact.id then action.contact else c

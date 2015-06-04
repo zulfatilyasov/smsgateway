@@ -201,6 +201,13 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
+    import:(contacts)->
+        request
+            .post @prefix + '/contacts/import'
+            .send contacts:contacts
+            .set 'Authorization', @_getToken()
+            .end()
+            
     saveContact:(userId, contact) ->
         if not _.isArray(contact) and contact.id
             request
