@@ -1,30 +1,30 @@
 {
-  "restApiRoot": "/api",
-  "domain": "smsgateway.zulfat.net",
-  "domainPort": 80,
-  "emailFrom": "mail@zulfat.net",
-  "host": "0.0.0.0",
-  "port": 3200,
-  "remoting": {
-    "context": {
-      "enableHttpContext": false
+    "restApiRoot": "/api",
+    "domain": "smsgateway.zulfat.net",
+    "domainPort": 80,
+    "emailFrom": "mail@zulfat.net",
+    "host": "0.0.0.0",
+    "port": 3200,
+    "remoting": {
+        "context": {
+            "enableHttpContext": false
+        },
+        "rest": {
+            "normalizeHttpPath": false,
+            "xml": false
+        },
+        "json": {
+            "strict": false,
+            "limit": "10000kb"
+        },
+        "urlencoded": {
+            "extended": true,
+            "limit": "10000kb"
+        },
+        "cors": false,
+        "errorHandler": {
+            "disableStackTrace": false
+        }
     },
-    "rest": {
-      "normalizeHttpPath": false,
-      "xml": false
-    },
-    "json": {
-      "strict": false,
-      "limit": "3000kb"
-    },
-    "urlencoded": {
-      "extended": true,
-      "limit": "3000kb"
-    },
-    "cors": false,
-    "errorHandler": {
-      "disableStackTrace": false
-    }
-  },
-  "legacyExplorer": false
+    "legacyExplorer": false
 }
