@@ -6,7 +6,7 @@ _ = require 'lodash'
 
 SearchBar = React.createClass
   componentDidMount: ->
-    @search = _.debounce @props.search, 300
+    @search = _.debounce @props.search, 600
 
   handleSearchChange:(e) ->
     @search(e.target.value)

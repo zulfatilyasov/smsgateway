@@ -2,7 +2,7 @@ React = require('react')
 contactStore = require '../../stores/ContactStore.coffee'
 contactActions = require '../../actions/ContactActions.coffee'
 userStore = require '../../stores/UserStore.coffee'
-{DropDownMenu, Dialog, Checkbox, DatePicker, RaisedButton, FlatButton, TextField} = require 'material-ui'
+{FontIcon, DropDownMenu, Dialog, Checkbox, DatePicker, RaisedButton, FlatButton, TextField} = require 'material-ui'
 Select = require('react-select')
 ContactVariableForm = require './contact-variable-form.cjsx'
 _ = require 'lodash'
@@ -179,6 +179,12 @@ ContactForm = React.createClass
     @setState
       groupValue: @groups
 
+  handleDeleteVar:(e)->
+    varCode = e.target.children.namedItem('code').innerText
+    vars = @state.vars
+    _.remove vars, {code:varCode}
+    @setState vars:vars
+
   render: ->
     primaryButtonLabel = if @state.saving then 'Saving..' else 'Save'
     className = if @state.saving then 'saving' else ''
@@ -247,32 +253,46 @@ ContactForm = React.createClass
               _.map @state.vars, (customField, n) =>
                 if customField.type is 'date'
                   date = if customField.value then new Date(customField.value) else null
-                  return <DatePicker
-                    name={customField.name}
-                    defaultDate={date}
-                    onClick={@handleDateFieldClick}
-                    onChange={@handleDateFieldChange}
-                    key={customField.code + n}
-                    hintText={customField.name} />
+                  return <div key={customField.code + n} className="varInput">
+                          <DatePicker
+                            name={customField.name}
+                            className="var"
+                            defaultDate={date}
+                            onClick={@handleDateFieldClick}
+                            onChange={@handleDateFieldChange}
+                            hintText={customField.name} />
+                          <FontIcon onClick={@handleDeleteVar} className="icon icon-close">
+                            <span className="hidden" name="code">{customField.code}</span>
+                          </FontIcon>
+                        </div>
 
                 if customField.type is 'boolean'
-                  return <Checkbox
-                    name={customField.name}
-                    defaultSwitched={customField.value}
-                    type='checkbox'
-                    label={customField.name}
-                    key={customField.code + n}
-                    onCheck={@handleCustomFieldChange} />
+                  return <div key={customField.code + n} className="varInput">
+                          <Checkbox
+                            name={customField.name}
+                            defaultSwitched={customField.value}
+                            className="var"
+                            type='checkbox'
+                            label={customField.name}
+                            onCheck={@handleCustomFieldChange} />
+                          <FontIcon onClick={@handleDeleteVar} className="icon icon-close">
+                            <span className="hidden" name="code">{customField.code}</span>
+                          </FontIcon>
+                        </div>
 
                 if customField.type is 'text'
-                  return <TextField
-                    name={customField.name}
-                    type='text'
-                    key={customField.code + n}
-                    defaultValue={customField.value}
-                    floatingLabelText={customField.name}
-                    onChange={@handleCustomFieldChange}
-                    className="input"/>
+                  return <div  key={customField.code + n} className="varInput">
+                          <TextField
+                            name={customField.name}
+                            type='text'
+                            defaultValue={customField.value}
+                            floatingLabelText={customField.name}
+                            onChange={@handleCustomFieldChange}
+                            className="var input"/>                
+                          <FontIcon onClick={@handleDeleteVar} className="icon icon-close">
+                            <span className="hidden" name="code">{customField.code}</span>
+                          </FontIcon>
+                        </div>
           }
 
         </div>

@@ -8,13 +8,8 @@ function notAutorizedError() {
     return err;
 }
 
-module.exports = function (Contact) {
-    Contact.afterRemote('create', function (context, user, next) {
-        debugger;
-        next();
-    });
-
-    Contact.observe('after save', function (ctx, next) {
+module.exports = function(Contact) {
+    Contact.observe('after save', function(ctx, next) {
         if (ctx.options && ctx.options.skipGroupUpdates) return next();
 
         var contact = ctx.instance;
@@ -26,7 +21,7 @@ module.exports = function (Contact) {
         var userId = contact.userId;
         var groups = contact.groups;
         var groupIds = _.pluck(groups, 'id');
-        var groupObjectIds = _.map(groupIds, function (stringId) {
+        var groupObjectIds = _.map(groupIds, function(stringId) {
             return new ObjectId(stringId);
         });
         var GroupCollection = Contact.dataSource.connector.db.collection("Group");
@@ -41,7 +36,7 @@ module.exports = function (Contact) {
             }
         }, {
             multi: true
-        }, function (err, info) {
+        }, function(err, info) {
             if (err) {
                 next(err);
                 return;
@@ -52,7 +47,7 @@ module.exports = function (Contact) {
                 _id: {
                     "$nin": groupObjectIds
                 }
-            }).toArray(function (err, groups) {
+            }).toArray(function(err, groups) {
                 console.log(groups);
                 if (err) {
                     next(err);
@@ -75,7 +70,7 @@ module.exports = function (Contact) {
                     }
                 }, {
                     multi: true
-                }, function (err, info) {
+                }, function(err, info) {
                     if (err) {
                         next(err);
                         return;
@@ -87,7 +82,7 @@ module.exports = function (Contact) {
         });
     });
 
-    Contact.addressList = function (cb) {
+    Contact.addressList = function(cb) {
         var Group = Contact.app.models.Group;
         var addresses = [];
         var ctx = loopback.getCurrentContext();
@@ -106,12 +101,12 @@ module.exports = function (Contact) {
             where: {
                 userId: userId
             }
-        }, function (err, groups) {
+        }, function(err, groups) {
             if (err) {
                 cb(err);
                 return;
             }
-            var groupsMapped = _.map(groups, function (g) {
+            var groupsMapped = _.map(groups, function(g) {
                 return {
                     value: g.id,
                     label: g.name,
@@ -131,12 +126,12 @@ module.exports = function (Contact) {
                 where: {
                     userId: userId
                 }
-            }, function (err, contacts) {
+            }, function(err, contacts) {
                 if (err) {
                     cb(err);
                     return;
                 }
-                var contactsMapped = _.map(contacts, function (c) {
+                var contactsMapped = _.map(contacts, function(c) {
                     return {
                         label: c.name,
                         value: c.phone || c.email,
@@ -161,7 +156,7 @@ module.exports = function (Contact) {
         }
     });
 
-    Contact.import = function (contacts, cb) {
+    Contact.import = function(contacts, cb) {
         var ctx = loopback.getCurrentContext();
         var token = ctx && ctx.get('accessToken');
         if (!token || !token.userId) {
@@ -171,12 +166,12 @@ module.exports = function (Contact) {
 
         Contact.create(contacts, {
             skipGroupUpdates: true
-        }, function (err, contacts) {
+        }, function(err, contacts) {
             if (err) return cb(err);
             if (contacts && contacts.length) {
                 var groups = contacts[0].groups;
                 var groupIds = _.pluck(groups, 'id');
-                var groupObjectIds = _.map(groupIds, function (stringId) {
+                var groupObjectIds = _.map(groupIds, function(stringId) {
                     return new ObjectId(stringId);
                 });
                 var GroupCollection = Contact.dataSource.connector.db.collection("Group");
@@ -194,8 +189,8 @@ module.exports = function (Contact) {
                     }
                 }, {
                     multi: true
-                }, function (err) {
-                    if(err) return cb(err);
+                }, function(err) {
+                    if (err) return cb(err);
                     cb(null, contacts);
                 });
             } else {
@@ -220,7 +215,7 @@ module.exports = function (Contact) {
     });
 
 
-    Contact.updateMany = function (contacts, cb) {
+    Contact.updateMany = function(contacts, cb) {
         var ctx = loopback.getCurrentContext();
         var token = ctx && ctx.get('accessToken');
         if (!token || !token.userId) {
@@ -234,7 +229,7 @@ module.exports = function (Contact) {
                 cb(notAutorizedError());
                 return;
             }
-            Contact.upsert(contacts[i], function (err, info) {
+            Contact.upsert(contacts[i], function(err, info) {
                 if (err) {
                     cb(err);
                     return;
@@ -245,8 +240,7 @@ module.exports = function (Contact) {
                     }
                 }
             });
-        }
-        ;
+        };
     }
 
     Contact.remoteMethod('updateMany', {
@@ -260,7 +254,7 @@ module.exports = function (Contact) {
         }
     });
 
-    Contact.search = function (query, cb) {
+    Contact.search = function(query, cb) {
         var ctx = loopback.getCurrentContext();
         var token = ctx && ctx.get('accessToken');
         if (!token || !token.userId) {
@@ -268,6 +262,7 @@ module.exports = function (Contact) {
             return;
         }
         Contact.find({
+            limit: 300,
             where: {
                 userId: token.userId,
                 or: [{
@@ -284,7 +279,7 @@ module.exports = function (Contact) {
                     }
                 }]
             }
-        }, function (err, contacts) {
+        }, function(err, contacts) {
             if (err) return cb(err);
             cb(null, contacts);
         });
@@ -306,7 +301,7 @@ module.exports = function (Contact) {
     });
 
 
-    Contact.deleteMany = function (ids, cb) {
+    Contact.deleteMany = function(ids, cb) {
         var ctx = loopback.getCurrentContext();
         var token = ctx && ctx.get('accessToken');
         if (!token || !token.userId) {
@@ -322,7 +317,7 @@ module.exports = function (Contact) {
                 },
                 userId: userId
             }
-        }, function (err, contacts) {
+        }, function(err, contacts) {
             if (err) {
                 cb(err);
                 return;
@@ -338,7 +333,7 @@ module.exports = function (Contact) {
             for (var i = contacts.length - 1; i >= 0; i--) {
                 groupIds = groupIds.concat(_.pluck(contacts[i].groups, 'id'));
             }
-            var groupObjectIds = _.map(groupIds, function (stringId) {
+            var groupObjectIds = _.map(groupIds, function(stringId) {
                 return new ObjectId(stringId);
             });
             var GroupCollection = Contact.dataSource.connector.db.collection('Group');
@@ -347,7 +342,7 @@ module.exports = function (Contact) {
                     inq: ids
                 },
                 userId: userId
-            }, function (err, info) {
+            }, function(err, info) {
                 if (err) {
                     cb(err);
                     return;
@@ -361,7 +356,7 @@ module.exports = function (Contact) {
                     "$pullAll": {
                         "contacts": contactIds
                     }
-                }, function (err, info) {
+                }, function(err, info) {
                     if (err) {
                         cb(err);
                     } else {
@@ -383,14 +378,14 @@ module.exports = function (Contact) {
         }
     });
 
-    Contact.observe('before delete', function (ctx, next) {
+    Contact.observe('before delete', function(ctx, next) {
         if (!ctx.instance) {
             next();
             return
         }
         var contactId = contactId;
         var groupIds = _.pluck(ctx.instance.groups, 'id');
-        var groupObjectIds = _.map(groupIds, function (stringId) {
+        var groupObjectIds = _.map(groupIds, function(stringId) {
             return new ObjectId(stringId);
         });
         var db = Contact.dataSource.connector.db;
@@ -406,7 +401,7 @@ module.exports = function (Contact) {
             }, {
                 multi: true
             },
-            function (err, info) {
+            function(err, info) {
                 if (err) {
                     next(err);
                 } else {
