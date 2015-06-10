@@ -231,7 +231,6 @@ ContactActions =
         , (err) ->
           console.log err
 
-
     submitContacts: (contacts) ->
       contacts = _.map contacts, (c) -> _.omit c, ['checked', 'key', 'new']
       apiClient.updateMultipleContacts contacts
@@ -241,6 +240,23 @@ ContactActions =
             contacts: contacts
         , (err) ->
           console.log err
+
+    filter:(filters) ->
+      apiClient.filterContacts(filters)
+        .then (resp) ->
+          contacts = resp.body.contacts
+          console.log contacts
+          AppDispatcher.handleViewAction
+            actionType: ContactConstants.FILTER_SUCCESS
+            contacts: contacts
+
+        , (err) ->
+          AppDispatcher.handleViewAction
+            actionType: ContactConstants.FILTER_FAIL
+            contacts: contacts
+
+        AppDispatcher.handleViewAction
+          actionType: ContactConstants.FILTER
 
     checkNewGroupsAndUpdateContacts:(userId, contacts, selectedGroups, newGroups, aggregatedGroups) ->
       if newGroups.length

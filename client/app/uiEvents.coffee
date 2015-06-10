@@ -8,6 +8,7 @@ SHOW_DIALOG = 'show-dialog'
 CLOSE_DIALOG = 'close-dialog'
 SHOW_IMPORT_TOOLBAR = 'show-import-toolbar'
 SHOW_CONTACTS_TOOLBAR = 'show-contacts-toolbar'
+SHOW_ADD_FIELD_DIALOG = 'show-add-field-dialog'
 
 class HeaderEvents 
     constructor: ->
@@ -64,6 +65,15 @@ class HeaderEvents
         @on SHOW_CONTACTS_TOOLBAR, callback 
 
     removeShowContactsToolbarListener:(callback)->
+        @removeListener SHOW_CONTACTS_TOOLBAR, callback
+
+    showAddFieldDialog:(position) ->
+        @emit SHOW_CONTACTS_TOOLBAR, position
+
+    addShowAddFieldDialog:(callback) ->
+        @on SHOW_CONTACTS_TOOLBAR, callback 
+
+    removeShowAddFieldDialog:(callback)->
         @removeListener SHOW_CONTACTS_TOOLBAR, callback
         
 assign(HeaderEvents.prototype, EventEmitter.prototype)

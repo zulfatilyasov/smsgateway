@@ -50,6 +50,14 @@ class ApiClient
             .set 'Authorization',  @_getToken()
             .end()
 
+    filterContacts:(filters)->
+        filters = JSON.stringify(filters)
+        request
+            .get @prefix + '/contacts/filter'
+            .set 'Authorization',  @_getToken()
+            .query filters:filters
+            .end()
+
     deleteMany: (messageIds) ->
         request
             .post @prefix + '/messages/delete_many'

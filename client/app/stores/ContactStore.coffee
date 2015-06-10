@@ -60,9 +60,9 @@ class ContactStore extends BaseStore
         names = _.map _variables, (v) ->
             v.name
 
-        ['Name','Phone', 'Email'].concat names
+        ['Name', 'Phone', 'Email'].concat names
 
-    origVariables:->
+    origVariables: ->
         _variables
         
     variables: ->

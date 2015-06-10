@@ -2,6 +2,7 @@ React = require('react')
 contactActions = require '../../actions/ContactActions.coffee'
 contactStore = require '../../stores/ContactStore.coffee'
 scripts = require '../../services/scripts.coffee'
+uiEvents = require '../../uiEvents.coffee'
 Select = require 'react-select'
 
 ImportContacts = React.createClass
@@ -17,8 +18,10 @@ ImportContacts = React.createClass
     contactActions.resetImportMessages()
 
   onChange:->
+    fields = contactStore.variableNames()
+    fields.push 'Create New'
     @setState
-      fields:contactStore.variableNames()
+      fields:fields
       addressList:contactStore.groupOptions()
       importing:contactStore.importing()
       importSuccess:contactStore.imported()
@@ -26,6 +29,10 @@ ImportContacts = React.createClass
 
   addressChanged: (e, values)->
     window.groups = values
+
+  componentWillUnmount: ->
+    if hot
+      hot.destroy() 
 
   componentDidMount: ->
     self = @
@@ -51,11 +58,25 @@ ImportContacts = React.createClass
         fixedRowsTop:1
         contextMenu: true
         rowHeaders: true
+        beforeChange: (changes, source)->
+          if changes[0][3] is 'Create New'
+            position =
+              row:changes[0][0]
+              col:changes[0][1]
+            setTimeout ->
+              uiEvents.showAddFieldDialog(position)
+            , 100
+            return false
         cells: (row, col, prop) ->
           cellProperties = {}
           if row is 0
             cellProperties.type= 'dropdown'
             cellProperties.source = self.state.fields
+            cellProperties.renderer = (instance, TD, row, col, prop, value, cellProperties)->
+              if not _.includes self.state.fields, value
+                TD.style.backgroundColor = 'red';
+                TD.style.color = 'white';
+              Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
           cellProperties
 
   render: ->

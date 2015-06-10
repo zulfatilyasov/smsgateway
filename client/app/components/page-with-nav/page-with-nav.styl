@@ -32,6 +32,11 @@
   border-bottom 1px solid #eee
   position relative
   background #f4f4f4
+  .mui-menu
+    background: #fff
+  .mui-menu-control:hover
+    .mui-menu-control-bg
+      opacity 0
   .secondary-actions
     display inlin-block
     
@@ -87,11 +92,7 @@
         .handlers
           col(0.7)
           float left
-          .mui-menu
-            background: #fff
-          .mui-menu-control:hover
-            .mui-menu-control-bg
-              opacity 0
+          
       .button-wrap
         .buttons
           float right
@@ -105,10 +106,14 @@
 
   .searchForm, .groupsForm
     transform translate(0px, -70px);
-    transition-duration: 0.3s
     height 67px
+    transition-duration: 0.3s
     &.open
       transform translate(0px, 0px);
+
+  .filterForm
+    transform translate(0px, -1000px);
+    height auto
       
   .toolbar-content
     cf()

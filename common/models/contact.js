@@ -9,6 +9,30 @@ function notAutorizedError() {
 }
 
 module.exports = function(Contact) {
+
+    Contact.observe('before save', function(ctx, next) {
+        var contact = ctx.instance || ctx.data;
+        if (!contact || !contact.vars) {
+            next();
+            return;
+        }
+        var variables = contact.vars
+        console.log(variables);
+        for (var j = variables.length - 1; j >= 0; j--) {
+            if (variables[j].type === 'text' && (typeof variables[j].value === 'string')) {
+                variables[j].value = variables[j].value.toString();
+            }
+            if (variables[j].type === 'boolean' && (typeof variables[j].value === 'string')) {
+                variables[j].value = variables[j].value === "true" ? true : false;
+            }
+            if (variables[j].type === 'date' && (typeof variables[j].value === 'string')) {
+                variables[j].value = new Date(variables[j].value);
+            }
+        };
+        contact.vars = variables;
+        next();
+    });
+
     Contact.observe('after save', function(ctx, next) {
         if (ctx.options && ctx.options.skipGroupUpdates) return next();
 
@@ -48,7 +72,6 @@ module.exports = function(Contact) {
                     "$nin": groupObjectIds
                 }
             }).toArray(function(err, groups) {
-                console.log(groups);
                 if (err) {
                     next(err);
                     return;
@@ -213,6 +236,77 @@ module.exports = function(Contact) {
             type: 'array'
         }
     });
+
+    Contact.remoteMethod('filter', {
+        accepts: {
+            arg: 'filters',
+            type: 'string'
+        },
+        http: {
+            path: '/filter',
+            verb: 'get'
+        },
+        returns: {
+            arg: 'contacts',
+            type: 'array'
+        }
+    });
+
+
+    function getPropFilter(filter) {
+        if (filter.operator === 'contains') {
+            return new RegExp(filter.value, "g");
+        } else if (filter.operator === 'startsWith') {
+            return new RegExp('^' + filter.value, "g");
+        } else if (filter.operator === 'endsWith') {
+            return new RegExp(filter.value + '$', "g");
+        } else if (filter.operator === 'lt') {
+            return {
+                '$lt': new Date(filter.value)
+            };
+        } else if (filter.operator === 'gt') {
+            return {
+                '$gt': new Date(filter.value)
+            };
+        } else {
+            return filter.value;
+        }
+    }
+
+    function getVariableFilter(filter, propName) {
+        return {
+            '$elemMatch': {
+                'code': propName,
+                'value': getPropFilter(filter)
+            }
+        };
+    }
+
+    Contact.filter = function(filters, cb) {
+        var filters = JSON.parse(filters);
+        var where = {
+            '$and': []
+        };
+
+        for (prop in filters) {
+            var propFilter = {}
+            if (filters[prop].isVariable) {
+                propFilter['vars'] = getVariableFilter(filters[prop], prop);
+            } else {
+                propFilter[prop] = getPropFilter(filters[prop]);
+            }
+            where['$and'].push(propFilter);
+        }
+
+        console.log(JSON.stringify(where, null, 2));
+
+        var contactCollection = Contact.dataSource.connector.db.collection("Contact");
+        contactCollection.find(where, function(err, contacts) {
+            contacts.toArray(function(err, contacts) {
+                cb(null, contacts);
+            });
+        });
+    }
 
 
     Contact.updateMany = function(contacts, cb) {

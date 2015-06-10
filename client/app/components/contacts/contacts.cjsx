@@ -10,6 +10,7 @@ uiEvents = require '../../uiEvents.coffee'
 ReactCSSTransitionGroupAppear = require '../../react-helpers/ReactCSSTransitionAppear.jsx'
 ContactForm = require './contact-form.cjsx'
 SearchBar = require '../search/searchbar.cjsx'
+Filter = require '../contacts/filter.cjsx'
 NewMessageForm = require '../messages/message-form.jsx'
 PageWithNav = require '../page-with-nav/page-with-nav.jsx'
 headerEvents = require('../../headerEvents.coffee')
@@ -64,6 +65,7 @@ Contacts = React.createClass
 
     handleContactFormChange:(e)->
         @formHeight = -1 * ($('.form').height() + 10)
+        @filterFormHeight = -1 * ($('.searchForm').height() + 10)
 
     componentDidUpdate: (prevProps, prevState) ->
         self = @
@@ -81,6 +83,7 @@ Contacts = React.createClass
         headerEvents.addChangeListener @onHeaderChange
         contactStore.addChangeListener @onChange
         messageStore.addChangeListener @onChange
+        uiEvents.addShowAddFieldDialog @onShowDialog
         @formHeight = -1 * $('.form').height()
         userId = userStore.userId();
         if userStore.isAuthenticated()
@@ -92,6 +95,12 @@ Contacts = React.createClass
         headerEvents.removeChangeListener @onHeaderChange
         contactStore.removeChangeListener @onChange
         messageStore.removeChangeListener @onChange
+        uiEvents.removeShowAddFieldDialog @onShowDialog
+
+    onShowDialog:(position)->
+        @hotCurrentRow = position.row
+        @hotCurrentCol = position.col
+        @refs.dialog.show() 
 
     onChange: ->
         isImport = _.includes @context.router.getCurrentPath(), 'contacts/import'
@@ -230,6 +239,8 @@ Contacts = React.createClass
                 return false
             else
                 return Boolean(value)
+        if type is 'text' 
+            return value.toString()
         return value
 
     handleImportContacts:(e) ->
@@ -316,6 +327,10 @@ Contacts = React.createClass
         newVariable = @refs.form.getNewVariable()
         return unless newVariable
         contactActions.createContactVariable newVariable
+        if hot
+            setTimeout =>
+                hot.setDataAtCell @hotCurrentRow, @hotCurrentCol, newVariable.name
+            , 700
         @refs.dialog.dismiss()
 
     getSelecetedIndex: () ->
@@ -335,8 +350,12 @@ Contacts = React.createClass
         newMessageFormStyles =
             transform: if @state.showNewMessageForm then "translate(0px, 0px)" else "translate(0px, #{@formHeight}px)"
 
+        filterFormStyles =
+            transform: if @state.showSearchForm then "translate(0px, 0px)" else "translate(0px, #{@filterFormHeight}px)"
+
         searchFormClasses = classBuilder
             searchForm:true
+            filterForm:true
             open:@state.showSearchForm
 
         groupsFormCasses = classBuilder
@@ -421,9 +440,12 @@ Contacts = React.createClass
                         <Groups closeClickHandler={@cancelClickHandler} />
                       </div>
                     </div>
-                    <div className={searchFormClasses}>
+                    <div style={filterFormStyles} className={searchFormClasses}>
                       <div className="form-content">
-                        <SearchBar search={@searchContacts} closeClickHandler={@cancelClickHandler} />
+                        {
+                            if @state.showSearchForm
+                                <Filter closeClickHandler={@cancelClickHandler}/>
+                        }
                       </div>
                     </div>
                   </div>
@@ -442,8 +464,6 @@ Contacts = React.createClass
                 actions={ok}>
                 {@state.dialogMessage}
             </Dialog>
-
-
 
             <Paper zDepth={1}>
                 <div className="section">
