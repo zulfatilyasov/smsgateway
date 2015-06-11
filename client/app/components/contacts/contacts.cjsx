@@ -50,18 +50,22 @@ Contacts = React.createClass
     handleCreateField:(e)->
         @refs.dialog.show()
 
+    handleDeleteGroupContactsCheckbox:(e, value)->
+        @deleteContacts = value
+
     _confirmGroupDeletion: (submitAction) ->
         actions = @_getConfirmationActions(submitAction)
         uiEvents.showDialog
-          title:"Confirm Delete"
-          text:"Delete group permanently?"
+          title:"Confirm Group Delete"
+          text:<div className="delete-contacts"><div className="message">Delete all contacts that belong to this group only?</div> <Checkbox onCheck={@handleDeleteGroupContactsCheckbox} /></div>
           submitHandler:actions.submit
           cancelHandler:actions.cancel
 
     deleteGroup: (groupId) ->
+        self = @
         @_confirmGroupDeletion ->
             userId = userStore.userId()
-            contactActions.deleteGroup userId, groupId
+            contactActions.deleteGroup userId, groupId, self.deleteContacts
 
     handleContactFormChange:(e)->
         @formHeight = -1 * ($('.form').height() + 10)
@@ -108,6 +112,7 @@ Contacts = React.createClass
             menuItems: contactStore.groupRouteList()
             showImportActions:isImport
             savingMessage:messageStore.IsSending
+            isFiltering: contactStore.isFiltering()
             variables:contactStore.origVariables()
 
         if isImport
@@ -132,6 +137,16 @@ Contacts = React.createClass
                     readyToCloseMessageForm:false
             else
                 @setState readyToCloseMessageForm: false
+
+        if contactStore.isFiltering()
+            @setState readyToCloseSearchForm: true
+        else
+            if @state.readyToCloseSearchForm
+                @setState
+                    showSearchForm:false
+                    readyToCloseSearchForm:false
+            else
+                @setState readyToCloseSearchForm: false
 
         @setState state
 
@@ -444,7 +459,7 @@ Contacts = React.createClass
                       <div className="form-content">
                         {
                             if @state.showSearchForm
-                                <Filter closeClickHandler={@cancelClickHandler}/>
+                                <Filter isFiltering={@state.isFiltering} closeClickHandler={@cancelClickHandler}/>
                         }
                       </div>
                     </div>

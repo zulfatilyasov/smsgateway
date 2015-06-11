@@ -7,10 +7,11 @@ _inProgress = false
 _hasMore = true
 _curGroupId = null
 _saving = false
-_importing = false;
-_imported = false;
-_importError = null;
-_pageId = 0;
+_filtering = false
+_importing = false
+_imported = false
+_importError = null
+_pageId = 0
 _contactsList = []
 _allContacts = []
 _selectedContactGroups = []
@@ -75,6 +76,9 @@ class ContactStore extends BaseStore
 
     isSaving: ->
         _saving
+
+    isFiltering: ->
+        _filtering
 
     loadingGroups: ->
         _loadingGroups
@@ -167,6 +171,19 @@ actions[contactConstants.EDIT_CONTACT] = (action) ->
 
 actions[contactConstants.SAVE] = (action) ->
     _saving = true
+    storeInstance.emitChange()
+
+actions[contactConstants.FILTER] = (action) ->
+    _filtering = true
+    storeInstance.emitChange()
+
+actions[contactConstants.FILTER_SUCCESS] = (action) ->
+    _filtering = false
+    _contactsList = action.contacts
+    storeInstance.emitChange()
+
+actions[contactConstants.FILTER_FAIL] = (action) ->
+    _filtering = false
     storeInstance.emitChange()
 
 actions[contactConstants.IMPORT_CONTACTS] = (action) ->

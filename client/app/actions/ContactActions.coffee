@@ -198,8 +198,8 @@ ContactActions =
         AppDispatcher.handleViewAction
             actionType: GroupConstants.GET_GROUPS
 
-    deleteGroup: (userId, groupId) ->
-      apiClient.deleteGroup userId, groupId
+    deleteGroup: (userId, groupId, deleteContacts) ->
+      apiClient.deleteGroup userId, groupId, deleteContacts
         .then (resp) ->
                 AppDispatcher.handleViewAction
                     actionType: GroupConstants.GROUP_DELETED

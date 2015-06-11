@@ -17,7 +17,6 @@ module.exports = function(Contact) {
             return;
         }
         var variables = contact.vars
-        console.log(variables);
         for (var j = variables.length - 1; j >= 0; j--) {
             if (variables[j].type === 'text' && (typeof variables[j].value === 'string')) {
                 variables[j].value = variables[j].value.toString();
@@ -119,7 +118,8 @@ module.exports = function(Contact) {
         Group.find({
             filter: {
                 id: true,
-                name: true
+                name: true,
+                contacts: true
             },
             where: {
                 userId: userId
@@ -132,7 +132,7 @@ module.exports = function(Contact) {
             var groupsMapped = _.map(groups, function(g) {
                 return {
                     value: g.id,
-                    label: g.name,
+                    label: g.name + ' (' + g.contacts.length + ')',
                     id: g.id,
                     isGroup: true
                 };
@@ -145,7 +145,7 @@ module.exports = function(Contact) {
                     phone: true,
                     email: true
                 },
-                limit: 3000,
+                limit: 1000,
                 where: {
                     userId: userId
                 }
@@ -262,11 +262,11 @@ module.exports = function(Contact) {
             return new RegExp(filter.value + '$', "g");
         } else if (filter.operator === 'lt') {
             return {
-                '$lt': new Date(filter.value)
+                '$lte': new Date(filter.value)
             };
         } else if (filter.operator === 'gt') {
             return {
-                '$gt': new Date(filter.value)
+                '$gte': new Date(filter.value)
             };
         } else {
             return filter.value;
@@ -290,10 +290,11 @@ module.exports = function(Contact) {
 
         for (prop in filters) {
             var propFilter = {}
+            var name = filters[prop].code || prop;
             if (filters[prop].isVariable) {
-                propFilter['vars'] = getVariableFilter(filters[prop], prop);
+                propFilter['vars'] = getVariableFilter(filters[prop], name);
             } else {
-                propFilter[prop] = getPropFilter(filters[prop]);
+                propFilter[name] = getPropFilter(filters[prop]);
             }
             where['$and'].push(propFilter);
         }
@@ -301,8 +302,8 @@ module.exports = function(Contact) {
         console.log(JSON.stringify(where, null, 2));
 
         var contactCollection = Contact.dataSource.connector.db.collection("Contact");
-        contactCollection.find(where, function(err, contacts) {
-            contacts.toArray(function(err, contacts) {
+        contactCollection.find(where, function(err, cursor) {
+            cursor.limit(250).toArray(function(err, contacts) {
                 cb(null, contacts);
             });
         });

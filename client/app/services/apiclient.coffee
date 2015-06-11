@@ -196,10 +196,14 @@ class ApiClient
             .set 'Authorization', @_getToken()
             .end()
 
-    deleteGroup: (userId, groupId) ->
+    deleteGroup: (userId, groupId, deleteContacts) ->
+        debugger
         request
-            .del "#{@prefix}/users/#{userId}/groups/#{groupId}" 
+            .post "#{@prefix}/groups/deleteGroup"
             .set 'Authorization', @_getToken()
+            .send
+                id:groupId
+                deleteContacts:deleteContacts
             .end()
 
     createUserGroups:(userId, groups) ->

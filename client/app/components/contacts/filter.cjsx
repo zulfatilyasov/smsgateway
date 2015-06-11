@@ -1,9 +1,10 @@
 React = require('react')
 contactStore = require '../../stores/ContactStore.coffee'
 contactActions = require '../../actions/ContactActions.coffee'
-{Checkbox, DropDownMenu, DatePicker, RaisedButton, TextField} = require 'material-ui'
+{Dialog, Checkbox, DropDownMenu, DatePicker, FlatButton, RaisedButton, TextField} = require 'material-ui'
+_ = require 'lodash'
 
-defaultVariabels = [{
+defaultVariables = [{
         name:'Name'
         type:'text'
         code:'name'
@@ -21,20 +22,30 @@ defaultVariabels = [{
         code:'email'
         isVariable:false
       }
+      {
+        name:'Last Contacted'
+        type:'date'
+        code:'lastContacted'
+        isVariable:false
+      }
+
     ]
 Filter = React.createClass
 
   getInitialState: ->
     @filters = {}
     @operators = {}
-    {variables: @getVariables()}
+
+    selectableVariables : contactStore.variables()
+    variables: @getVariables()
 
   getVariables: ->
-    vars = contactStore.origVariables()
-    for vr in vars
-      vr.isVariable = true
+    # vars = contactStore.origVariables()
+    # for vr in vars
+    #   vr.isVariable = true
 
-    vars = defaultVariabels.concat(vars)
+    # vars = defaultVariables.concat(vars)
+    vars = defaultVariables
     for v in vars
       if v.type is 'text'
         @operators[v.code] = 'contains'
@@ -50,6 +61,7 @@ Filter = React.createClass
   
   onChange:->
     @setState
+      selectableVariables : contactStore.variables()
       variables: @getVariables()
 
   handleOperationChange:(propName, e, index, item)->
@@ -67,6 +79,7 @@ Filter = React.createClass
     propName = e.target.name
     if not value and e.target.type is 'text'
       delete @filters[propName]
+      return
 
     propertyFilter =
       isVariable: isVariable
@@ -74,30 +87,80 @@ Filter = React.createClass
       operator: @operators[propName]
 
     @filters[propName] = propertyFilter
+    console.log @filters
 
   handleFilterClick:(e)->
     contactActions.filter @filters
 
-  datePropChanged:(isVariable, dateInputType, propName, e, value)->
+  handleAddCustomField:()->
+    @refs.dialog.show()
+
+  dialogCancelHandler:()->
+    @refs.dialog.dismiss()
+
+  dialogSubmitHandler:()->
+    vars = @state.variables
+
+    if not @selectedVar and @state.selectableVariables.length
+      @selectedVar = @state.selectableVariables[0].payload
+
+    if _.some @state.variables, {code:@selectedVar.code}
+      @refs.dialog.dismiss()
+      return
+
+    @selectedVar.isVariable = true
+
+    if @selectedVar.type is 'text'
+      @operators[@selectedVar.code] = 'contains'
+    if @selectedVar.type is 'boolean'
+      @operators[@selectedVar.code] = 'equals'
+
+    vars.push @selectedVar
+    @setState
+      variables: vars
+
+    @refs.dialog.dismiss()
+
+  handleVarSelected:(e, index, item)->
+    @selectedVar = item.payload
+
+  datePropChanged:(isVariable, dateInputType, name, e, value)->
     filter =
       isVariable: isVariable
       value: value
-
-    if not @filters[propName]
-      @filters[propName] = {}
+      code: name
 
     if dateInputType is 'from'
       filter.operator = 'gt'
     else
       filter.operator = 'lt'
 
+    propName = name + filter.operator
+    if not @filters[propName]
+      @filters[propName] = {}
+
     @filters[propName] = filter
+    console.log @filters
 
   render: ->
     menuItems =[
       { payload: 'contains', text: 'Contains' }
       { payload: 'startsWith', text: 'Starts with' }
       { payload: 'endsWith', text: 'Ends with' }
+    ]
+    filterButtonLabel = if @props.isFiltering then 'Filtering..' else 'Filter'
+    dialogActions = [
+      <FlatButton
+        label="Add"
+        key="ok"
+        primary={true}
+        onTouchTap={@dialogSubmitHandler} />,
+
+      <FlatButton
+        label="Cancel"
+        secondary={true}
+        key="cancel"
+        onTouchTap={@dialogCancelHandler} />
     ]
 
     getPropInputs = (prop) =>
@@ -155,11 +218,26 @@ Filter = React.createClass
           </div>
       }
 
+      <Dialog
+        title="Add Custom Field"
+        className="custom-field-dialog"
+        ref="dialog"
+        actions={dialogActions}>
+        <div>
+          <div>
+            Please select custom field
+          </div>
+          <DropDownMenu key={@state.selectableVariables.length + 'variables'} onChange={@handleVarSelected} menuItems={@state.selectableVariables} />
+        </div>
+      </Dialog>
+
+
       <div className="actions">
         <RaisedButton  className="close" primary={false} label="Close" onClick={@props.closeClickHandler}>
         </RaisedButton>
-        <RaisedButton onClick={@handleFilterClick} className="filter" primary={true} label="Filter">
+        <RaisedButton onClick={@handleFilterClick} className="filter" primary={true} disabled={@props.isFiltering} label={filterButtonLabel}>
         </RaisedButton>
+        <FlatButton className="add-field" secondary={true} label="Add Custom Field" onClick={@handleAddCustomField} />
       </div>
     </div>
 

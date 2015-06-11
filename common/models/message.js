@@ -155,9 +155,22 @@ module.exports = function(Message) {
                         cb(err)
                         return;
                     }
+                    udpateLastContactedDate(recipients);
                     cb(null, result);
                 });
             });
+        });
+    }
+
+    function udpateLastContactedDate(contacts) {
+        var ids = _.pluck(contacts, 'id');
+        console.log(ids);
+        Message.app.models.Contact.updateAll({
+            id: {
+                inq: ids
+            }
+        }, {
+            lastContacted: new Date()
         });
     }
 
@@ -207,7 +220,7 @@ module.exports = function(Message) {
         } else {
             sendMessageToContactsAndGroups(message, contacts, groupIds, cb);
         }
-    }
+    };
 
     Message.send = function(message, contacts, groups, cb) {
         if (message.status === 'scheduled') {
