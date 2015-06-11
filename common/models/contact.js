@@ -283,8 +283,16 @@ module.exports = function(Contact) {
     }
 
     Contact.filter = function(filters, cb) {
+        var ctx = loopback.getCurrentContext();
+        var token = ctx && ctx.get('accessToken');
+        if (!token || !token.userId) {
+            cb(notAutorizedError());
+            return;
+        }
+
         var filters = JSON.parse(filters);
         var where = {
+            userId: token.userId,
             '$and': []
         };
 
@@ -307,7 +315,7 @@ module.exports = function(Contact) {
                 cb(null, contacts);
             });
         });
-    }
+    };
 
 
     Contact.updateMany = function(contacts, cb) {
